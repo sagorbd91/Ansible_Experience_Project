@@ -1,0 +1,28 @@
+#! /bin/sh
+#
+#  -- Bourne shell script for mailListener
+#
+# Usage:- mailListener.sh
+#
+# environment: none.
+# input:       none.
+# output:      none.
+# returns:     nothing.
+#
+# Copyright (c) 1993-2015 Dassault Systemes.
+#
+
+################################################################################
+#
+# Set up Java parameters
+# For smtp debugging add -Dematrix.smtp.debug=true to JAVA_OPTIONS
+#
+################################################################################
+JAVA_OPTIONS="-Xss512k -Xms256m -Xmx256m"
+CLASSPATH={{mcs_server_dir}}/linux_a64/docs/javaserver/eMatrixServletRMI.jar:{{mcs_server_dir}}/linux_a64/docs/javacommon/mail.jar:{{mcs_server_dir}}/linux_a64/docs/javacommon/activation.jar:{{mcs_server_dir}}/linux_a64/docs/javaserver/mailListener.jar:{{mcs_server_dir}}/linux_a64/docs/javaserver/mx_jdom_1.0.jar
+
+echo "Starting mailListener"
+echo "Using JAVA_OPTIONS:   $JAVA_OPTIONS"
+echo "Using CLASSPATH:      $CLASSPATH"
+
+{{mcs_java_path}}/bin/java $JAVA_OPTIONS -classpath $CLASSPATH com.matrixone.mailListener.MailListener {{mcs_server_dir}}/linux_a64/etc/mailListener.xml > {{mcs_server_dir}}/logs/mailListener.out 2>&1 &

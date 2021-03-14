@@ -1,0 +1,40 @@
+--3.1.7. Commands for 3DOrchestrate:
+USE master;
+GO
+IF  EXISTS (SELECT name FROM sys.databases WHERE name = N'$(dbname)') 
+	BEGIN
+		DROP DATABASE $(dbname);
+		PRINT 'DROP DB SUCCESSFUL';
+	END
+ELSE
+	BEGIN
+		PRINT 'DB NOT EXISTS';
+	END
+GO
+USE master;
+GO
+--create database x3dorchestrate 
+CREATE DATABASE $(dbname) ON PRIMARY (NAME = '$(dbname)',FILENAME = N'$(dbdirectory)\$(dbname).mdf',SIZE = 200MB,FILEGROWTH = 50%)
+LOG ON (NAME = '$(dbname)_log',FILENAME = N'$(dbdirectory)\$(dbname).ldf',
+SIZE = 10MB,FILEGROWTH = 25%);
+PRINT 'DB CREATED' 
+GO
+
+ALTER DATABASE $(dbname) SET READ_COMMITTED_SNAPSHOT ON;
+ALTER DATABASE $(dbname) SET ALLOW_SNAPSHOT_ISOLATION ON;
+GO
+
+USE master;
+GO
+CREATE LOGIN x3dorch WITH PASSWORD = '$(pasword1)',CHECK_POLICY = OFF,CHECK_EXPIRATION = OFF,DEFAULT_DATABASE = $(dbname);
+GO
+USE $(dbname);
+GO
+CREATE USER x3dorch FOR LOGIN x3dorch;
+GO
+GRANT CREATE TABLE,ALTER,REFERENCES,SELECT,INSERT,UPDATE,DELETE ON DATABASE::$(dbname) TO x3dorch;
+GO
+PRINT 'GRANT PRIVELGE SUCCESFULLY..'
+GO
+PRINT 'Task successful'
+

@@ -1,0 +1,9 @@
+---
+
+- name: Install 3dswym
+  hosts: 3dswym_servers
+  vars_files:
+      - 3dswym/vars/main.yml
+      - 3dswym/vars/{{ env_name }}.yml
+  roles:
+    - 3dswym

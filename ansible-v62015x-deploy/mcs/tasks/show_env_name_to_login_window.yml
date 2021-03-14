@@ -1,0 +1,17 @@
+---
+
+- name: Copy File 'emxFrameworkStringResource.properties' for MCS-no-CAS
+  remote_user: "{{ plm_user }}"
+  template: src="disp_emxFrameworkStringResource_en.properties.j2" dest="/{{disp_env_emxproperty_file_nocas_dir}}/emxFrameworkStringResource_en.properties" owner={{ plm_user }} group={{ plm_group }}
+  when: not mcs_with_cas
+  tags: 
+   - disp-env-name-mcsnocas
+   - post-task
+
+- name: Copy File 'emxFrameworkStringResource.properties' for MCS-CAS
+  remote_user: "{{ plm_user }}"
+  template: src="disp_emxFrameworkStringResource_en.properties.j2" dest="/{{disp_env_emxproperty_file_cas_dir}}/emxFrameworkStringResource_en.properties" owner={{ plm_user }} group={{ plm_group }}
+  when: mcs_with_cas
+  tags: 
+   - disp-env-name-mcscas
+   - post-task

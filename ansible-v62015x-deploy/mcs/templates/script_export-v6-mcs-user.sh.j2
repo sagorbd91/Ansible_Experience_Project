@@ -1,0 +1,10 @@
+#!/bin/sh
+
+
+
+for user in `cat /tmp/PO_list_person.txt`
+do
+echo "=============================="$user"======================"
+./VPLMPosExport.sh -server http://localhost:8081/internal -user PLMADM -password PLMADM -context 'VPLMAdmin.Company Name.Default' -object person:$user -exportlicenseassignment -file /tmp/POexport-$user.txt
+done
+

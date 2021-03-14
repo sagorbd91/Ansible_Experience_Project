@@ -1,0 +1,35 @@
+---
+ 
+- name: Create the atk dir for Studio Federation Toolkit or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_atk_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2777
+  tags: 
+     - install-studiotoolkit
+     - install-mcs
+    
+- name: Copy the Studio Federation Toolkit Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_studio_toolkit.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAStudioFederationToolkit.Linux64/1/answer_studio_toolkit.txt" mode=2777
+  tags: 
+     - install-studiotoolkit
+     - install-mcs
+
+- name: Executing the Studio Federation Toolkit installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_studio_toolkit.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIAStudioFederationToolkit.Linux64/1
+  tags: 
+     - install-studiotoolkit
+     - install-mcs
+   
+
+- name: Remove the Studio Federation Toolkit Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIAStudioFederationToolkit.Linux64/1/answer_studio_toolkit.txt" state=absent
+  tags: 
+     - install-studiotoolkit
+     - install-mcs

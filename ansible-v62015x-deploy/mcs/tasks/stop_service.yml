@@ -1,0 +1,8 @@
+---
+- name: stop mcs services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=stopped
+  with_dict: "{{ instances }}"
+  tags:
+   - stop_service

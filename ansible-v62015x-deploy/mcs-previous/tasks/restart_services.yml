@@ -1,0 +1,45 @@
+---
+
+- name: Restart Tomcat instances.
+  remote_user: monitor
+  sudo: true
+  service: name={{ item.key }} state=restarted
+  with_dict: instances
+  tags: 
+   - restart-services
+   - install-mcs
+   - install-mcsfx
+   - start-service
+
+
+- name: stop fcs services
+  remote_user: monitor
+  sudo: true
+  service: name={{ item.key }} state=stopped
+  with_dict: instances
+  tags: 
+    - stop-mcs
+    
+- name: start fcs services
+  remote_user: monitor
+  sudo: true
+  service: name={{ item.key }} state=started
+  with_dict: instances
+  tags: 
+    - start-mcs
+
+   
+- name: wait for tomcat to start
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port={{ item.value.port_http }}
+      delay=60
+      timeout=240
+  with_dict: instances
+  tags: 
+     - start-mcs
+     - restart-services
+     - install-mcs
+     - install-mcsfx
+  

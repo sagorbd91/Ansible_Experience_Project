@@ -1,0 +1,18 @@
+---
+fcsremote_instance: "fcs_remote_appleton"
+fcs_type: ""
+instances:
+   was_fcsremote_appleton_1:
+     app_name: fcs1-appleton
+     port_http: 8683
+     port_jmx: 8693
+     port_ajp: 8612
+     port_shutdown: 8607
+     port_redirect: 9046
+   was_fcsremote_appleton_2:
+     app_name: fcs2-appleton
+     port_http: 8684
+     port_jmx: 8694
+     port_ajp: 8613
+     port_shutdown: 8608
+     port_redirect: 9047

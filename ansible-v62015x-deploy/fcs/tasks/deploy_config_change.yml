@@ -1,0 +1,25 @@
+---
+
+- name: tomcat instance server.xml config
+  remote_user: "{{ plm_user }}"
+  template: src="tomee.server.xml.j2" dest="{{fcs_instance_path}}/{{ item.key }}/conf/server.xml"
+  with_dict: "{{ instances }}"   
+  tags: 
+     - deploy-config2
+     - install-fcs
+  
+- name: tomcat instance setenv.sh config
+  remote_user: "{{ plm_user }}"
+  template: src="tomcat.setenv.sh.j2" dest="{{fcs_instance_path}}/{{ item.key }}/bin/setenv.sh"
+  with_dict: "{{ instances }}"
+  tags: 
+     - deploy-config
+     - install-fcs 
+  
+- name: Config tomcat user
+  remote_user: "{{ plm_user }}"
+  template: src="tomcat.users.xml.j2" dest="{{fcs_instance_path}}/{{ item.key }}/conf/tomcat-users.xml"
+  with_dict: "{{ instances }}"
+  tags: 
+     - deploy-config
+     - install-fcs

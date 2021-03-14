@@ -1,0 +1,39 @@
+---
+  
+- name: Copy Business Process Service Fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_business_processfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIABusinessProcessServices.Unix64/1/answer_business_process.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-businessfx
+    - install-mcsfx
+  
+  
+- name: Copy Business Process Service Fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_business_processfx_nudb.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIABusinessProcessServices.Unix64/1/answer_business_process.txt" mode=2777
+  when: not update_database
+  tags: 
+    - install-businessfx
+    - install-mcsfx
+
+
+- name: Executing the Business Process Service Fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_business_process.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIABusinessProcessServices.Unix64/1
+  tags: 
+    - install-businessfx
+    - install-mcsfx
+   
+   
+- name: Remove the Business Process Service Fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIABusinessProcessServices.Unix64/1/answer_business_process.txt" state=absent
+  tags: 
+     - install-businessfx
+     - install-mcsfx

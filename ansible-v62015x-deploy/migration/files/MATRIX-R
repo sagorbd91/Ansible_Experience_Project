@@ -1,0 +1,6 @@
+Username=v6admin
+Password==3GmD3MNNhw==
+ConnectString=v6db
+Driver=DB2/CLI
+EncryptionVersion=10
+JdbcUrl=jdbc:db2://jkls0326vm45a.vstage.co:25000/V6DB

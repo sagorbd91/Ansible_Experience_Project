@@ -1,0 +1,34 @@
+---
+
+- name: Check if studio fixpack installer path exists
+  stat: path="{{studio_fp_installer_path}}"
+  register: check_path
+  tags: install-studiofx
+
+
+- name: Studio fixpack installer doesn't exist
+  fail: msg="studio fixpack installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: install-studiofx
+  
+  
+- name: Copy the Studio Modeling Platform RichClients fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_studiofx.j2" dest="{{ studio_fp_installer_path }}/1/answer_studiofx.txt" mode=2777
+  tags: install-studiofx
+
+
+- name: Executing the Studio Modeling Platform RichClients fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh < answer_studiofx.txt
+  args:
+    chdir: /{{ studio_fp_installer_path }}/1
+  tags: install-studiofx
+  
+
+- name: Remove the Studio Modeling Platform RichClients fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ studio_fp_installer_path }}/1/answer_studiofx.txt" state=absent
+  tags: install-studiofx

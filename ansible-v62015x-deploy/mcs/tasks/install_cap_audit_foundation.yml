@@ -1,0 +1,51 @@
+---
+ 
+
+- name: create symbolic link for java 7
+  remote_user: monitor
+  become: true
+  file: src="{{ java7_version_dir }}" dest="{{ mcs_java_path }}" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags: 
+    - ENOVIACAPAandAuditFoundation
+    
+  
+- name: Copy the CAPA and Audit Foundation Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_cap_audit_foundation.j2" dest="{{ mcs_conf_dir }}/answer_cap_audit_foundation.txt" mode=2777
+  when: update_database
+  tags: 
+    - ENOVIACAPAandAuditFoundation
+    - install-mcs
+    - install-apps-ga
+   
+- name: Copy the CAPA and Audit Foundation Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_cap_audit_foundation_nudb.j2" dest="{{ mcs_conf_dir }}/answer_cap_audit_foundation.txt" mode=2777
+  when: not update_database
+  tags: 
+     - ENOVIACAPAandAuditFoundation
+     - install-mcs
+     - install-apps-ga
+
+- name: Executing the CAPA and Audit Foundation installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < {{ mcs_conf_dir }}/answer_cap_audit_foundation.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIACAPAandAuditFoundation.Unix64/1
+  tags: 
+     - ENOVIACAPAandAuditFoundation
+     - install-mcs
+     - install-apps-ga
+   
+
+- name: Remove the CAPA and Audit Foundation Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_conf_dir }}/answer_cap_audit_foundation.txt" state=absent
+  tags: 
+     - ENOVIACAPAandAuditFoundation
+     - install-mcs
+     - install-apps-ga
+

@@ -1,0 +1,58 @@
+---
+
+    
+- name: Test mcs config file
+  shell: grep localhost {{ mcs_config_xml }}
+  register: checkconf
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  tags: 
+    - run-full-index
+    - set-fts-config
+  
+    
+- name: Update mcs config for fts
+  lineinfile:
+    dest: "{{ mcs_config_xml }}"
+    regexp: '<SERVER host='
+    line: '  <SERVER host="{{ fts_host }}" baseport="{{ fts_base_port }}"/>'
+  tags: 
+    - run-full-index
+    - set-fts-config
+    - update-fts-host
+  
+  
+- name: Update mcs config for fts
+  lineinfile:
+    dest: "{{ mcs_config_xml }}"
+    regexp: '<SERVER host='
+    line: '  <SERVER host="{{fts_master_host}}" baseport="19000" buildgroup="bg0" searchtarget="st0"/>
+             <SERVER host="{{fts_slave_host}}" baseport="19000" buildgroup="bg1" searchtarget="st1"/>'
+  tags: 
+    - update-config-highavailable
+
+  
+    
+- name: Copy script.full.search.j2 in bin dir
+  template: src="script.full.search.j2" dest="{{ mcs_bin_dir }}/run_full_search_index.sh" mode=0755
+  tags: run-full-index
+     
+- name: Execute the run_full_search_index.sh script
+  shell: ./run_full_search_index.sh > run_full_search_index.log 2>&1
+  args:
+    chdir: /{{ mcs_bin_dir }}
+  tags: run-full-index
+  
+  
+- name: Copy set_fts_config.sh in bin dir
+  template: src="script.set.fts.config.sh.j2" dest="{{ mcs_bin_dir }}/set_fts_config.sh" mode=0755
+  tags: set-fts-config
+  
+- name: Execute Set fts config
+  shell: ./set_fts_config.sh > set_fts_config.log 2>&1
+  args:
+    chdir: /{{ mcs_bin_dir }}
+  tags: set-fts-config
+
+    

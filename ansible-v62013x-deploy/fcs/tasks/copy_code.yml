@@ -1,0 +1,21 @@
+---
+- name: copy the code
+  remote_user: monitor
+  sudo: true
+  synchronize:
+      src: "{{ mount_dest_dir }}/backups/catia-v6/old-platforms/clone/fcs/prd/fcs/code" 
+      dest: "{{ fcs_install_rel_path }}"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+  - install-fcs
+  - copy-code
+- name: change ownership
+  remote_user: monitor
+  sudo: true
+  command: chown -R "{{plm_user}}":"{{plm_group}}" "{{fcs_install_rel_path}}" 
+  tags: 
+   - install-fcs
+   - copy-code

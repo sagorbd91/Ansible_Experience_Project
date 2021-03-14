@@ -1,0 +1,31 @@
+---
+- name: clear current java version or make sure dir is empty
+  remote_user: monitor
+  sudo: true
+  shell: rm -rf "{{ mcs_java_dir }}/*"
+  tags: 
+   - install-mcs
+   - install-java
+  
+- name: untar jdk inside instance
+  remote_user: monitor
+  sudo: true
+  unarchive: src="{{installer_path}}/{{java_installer}}" dest="{{ mcs_java_dir }}" owner={{ plm_user }} group={{ plm_group }} copy=no mode="u=rwx,g=rw"
+  tags: 
+   - install-mcs
+   - install-java
+   
+- name: get java path
+  shell: ls {{ mcs_java_dir }}
+  register: dir_content
+  tags: 
+   - install-mcs
+   - install-java  
+   
+- name: create symbolic link for the java path
+  remote_user: monitor
+  sudo: true
+  file: src="./{{ dir_content.stdout }}" dest="{{mcs_java_dir}}/jdk-mcs" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags: 
+   - install-mcs
+   - install-java

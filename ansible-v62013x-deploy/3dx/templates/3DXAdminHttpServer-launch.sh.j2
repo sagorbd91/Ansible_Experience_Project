@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Source 15x_functions
+. {{ function_dir }}/15x_functions
+
+
+CheckRunUser {{ plm3dx_user }}
+
+
+{{ e3dx_install_path }}/linux_a64/code/command/catstart -run "CATBBDHTTPServer 8091" -env {{ e3denv_name }} -direnv {{ INDEX_ENV_DIR }} >> {{LOG_FILE}} 2>&1 &
+
+
+
+
+# ${INDEXSRV_INSTALL_DIR}/linux_a64/code/command/catstart -run "CATBBDHTTPServer 8091" -env ${INDEX_ENV_NAME} -direnv ${INDEX_ENV_DIR} >> ${LOG_FILE} 2>&1 &
+# $v3DXCodeDir/code/linux_a64/code/command/catstart -run "CATBBDHTTPServer 8091" $v3DXCodeDir/CATEnv >/dev/null 2>&1 &

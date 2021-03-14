@@ -1,0 +1,53 @@
+---
+
+- name: create the vhost dir or make sure it exist
+  file: path="{{ vhost_path }}" state=directory owner=root group=root mode=2755
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+    - deploy-3ddash-vhost
+
+
+- name: 3dspace secure(https) vhost deploy
+  template: src="3dspace.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3dspace.conf"
+  tags:
+    - deploy-vhost
+    - install-reverseproxy
+
+
+- name: 3dspace unsecured(http) vhost deploy
+  template: src="unsecured-3dspace.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-unsecured-3dspace.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+    
+- name: 3dspace untrusted(http) vhost deploy
+  template: src="untrusted-3dspace.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-untrusted-3dspace.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+  
+  
+- name: 3dpassport secure(https) vhost deploy
+  template: src="3dpassport.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3dpassport.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+    - deploy-3dpass-vhost
+  
+  
+- name: fcs secure(https) vhost deploy
+  template: src="fcs-central.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-fcs-central.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+
+- name: 3ddash secure(https) vhost deploy
+  template: src="3ddash.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3ddash.conf"
+  tags: 
+    - deploy-3ddash-vhost
+
+- name: Include 3ddash vhost to httpd.conf
+  lineinfile: path="{{ http_install_path }}/conf/httpd.conf" line='Include {{ vhost_path }}/{{ env_name }}-3ddash.conf'
+  tags: 
+    - deploy-3ddash-vhost

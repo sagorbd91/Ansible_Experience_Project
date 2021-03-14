@@ -1,0 +1,39 @@
+---
+ 
+
+- name: Copy the Variant Configuration Central fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_variantconf_centralfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAVariantConfigurationCentral.Unix64/1/answer_variantconf_centralfx.txt" mode=2777
+  when: update_database
+  tags: 
+     - install-variantconffix
+     - install-mcsfx
+   
+- name: Copy the Variant Configuration Central fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_variantconf_centralfx_nudb.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAVariantConfigurationCentral.Unix64/1/answer_variantconf_centralfx.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-variantconffix
+     - install-mcsfx
+
+- name: Executing the Variant Configuration Central fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_variantconf_centralfx.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAVariantConfigurationCentral.Unix64/1
+  tags: 
+     - install-variantconffix
+     - install-mcsfx
+   
+
+- name: Remove the Variant Configuration Central fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAVariantConfigurationCentral.Unix64/1/answer_variantconf_centralfx.txt" state=absent
+  tags: 
+     - install-variantconffix
+     - install-mcsfx
+     

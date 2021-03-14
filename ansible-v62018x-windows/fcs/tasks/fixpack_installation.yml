@@ -1,0 +1,32 @@
+---
+
+- name: Stop FCS Service
+  win_service: name=FileCollaborationServer_R2018x state=stopped
+  tags:
+     - install-fcs-fp
+
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_fcs_fixpack.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_fcs_fixpack.xml"
+  tags: install-fcs-fp
+
+- name: Copy fcs-fp installer from NFS to local
+  win_copy:
+    src: '{{ FCS_Installer_FP_Path }}'
+    dest: '{{ windows_tmp_path }}\fcscentralFP'
+    remote_src: True
+  tags: install-fcs-fp
+
+- name: Executing platform GA installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\fcscentralFP\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_fcs_fixpack.xml --xmlreport {{ windows_tmp_path }}\Report_fcs_fixpack.xml'
+     elevated: yes
+  tags: install-fcs-fp
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_fcs_fixpack.xml" state=absent
+  tags: install-fcs-fp
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\fcscentralFP" state=absent
+  tags: install-fcs-fp
+

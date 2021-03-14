@@ -1,0 +1,20 @@
+---
+
+- name: Copy File '3dxp_en.properties'
+  remote_user: "{{ plm_user }}"
+  template: src="disp_3dxp_en.properties.j2" dest="/{{ disp_env_3dxp_property_file_dir }}/3dxp_en.properties" owner={{ plm_user }} group={{ plm_group }}
+  tags: 
+   - disp_env_name_3dpass
+
+- name: Copy File 'login.jsp'
+  remote_user: "{{ plm_user }}"
+  template: src="disp_login.jsp.j2" dest="/{{ disp_env_login_file_dir }}/login.jsp" owner={{ plm_user }} group={{ plm_group }}
+  tags: 
+   - disp_env_name_3dpass
+
+- name: Copy File 'notranslate_en.properties'
+  remote_user: "{{ plm_user }}"
+  template: src="disp_notranslate_en.properties.j2" dest="/{{ disp_env_notranslate_property_file_dir }}/notranslate_en.properties" owner={{ plm_user }} group={{ plm_group }}
+
+
+

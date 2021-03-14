@@ -1,0 +1,34 @@
+---
+- name: pre task 
+  hosts: fcs_servers
+  remote_user: monitor 
+  sudo: true
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+- name: install fcs
+  hosts: fcs_servers
+  vars:
+   plm_user: "v6fcs1"
+   plm_group: "enovia"
+  remote_user: "{{ plm_user }}"
+  sudo: false
+  roles:
+     - { role: fcs  }		
+     #- { role: haproxy }
+     #- { role: stop_service  }
+
+
+
+- name: post tasks
+  hosts: fcs_servers
+  remote_user: monitor 
+  sudo: true
+  post_tasks:
+    - name: mounting NFS to local
+      mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=unmounted
+      tags: mounting

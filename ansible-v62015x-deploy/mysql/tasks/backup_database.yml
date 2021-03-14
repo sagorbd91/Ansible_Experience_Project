@@ -1,0 +1,19 @@
+---
+
+- name: Generate Timestamp
+  remote_user: monitor
+  shell: 'date +%Y%m%d%H%M%S'
+  register: timestamp
+  tags:
+     - backup-database
+     
+- name: Grant all permission to mysql root user
+  remote_user: monitor
+  mysql_user: name=root priv=*.*:ALL,GRANT login_user=root login_password={{ mysql_root_db_pass }}
+
+- name: Backup the database
+  remote_user: monitor
+  become: true
+  mysql_db: state=dump name=all target={{ mysql_backup_dir }}/mysql_backup_{{timestamp.stdout}}.sql login_user=root login_password={{ mysql_root_db_pass }}
+  tags:
+     - backup-database

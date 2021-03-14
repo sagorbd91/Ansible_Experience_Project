@@ -1,0 +1,37 @@
+---
+
+- name: check iptables not running
+  remote_user: monitor
+  become: true
+  shell: service iptables status | grep not | awk '{ print $4 }'
+  register: iptables_stoped
+  tags:
+   - config-firewall
+   - install-fcs
+
+- name: Allow JMX ports ip in iptable rule
+  remote_user: monitor
+  become: true
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ item.value.port_jmx }} -j ACCEPT
+  with_dict: "{{ instances }}"
+  tags:
+   - config-firewall
+   - install-fcs
+   
+- name: Allow HTTP ports to zabbix server for webcheck
+  remote_user: monitor
+  become: true
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ item.value.port_http }} -j ACCEPT
+  with_dict: "{{ instances }}"
+  tags:
+   - config-firewall
+   - install-fcs
+
+- name: Save iptables
+  remote_user: monitor
+  become: true
+  command: service iptables save
+  tags:
+   - config-firewall
+   - install-fcs
+  

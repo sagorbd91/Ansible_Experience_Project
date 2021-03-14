@@ -1,0 +1,99 @@
+---
+
+- name: Create 'data' Directory if not exists
+  remote_user: "monitor"
+  become: true
+  file:  path={{passport_install_rel_path}}/data/import-user-data state=directory owner={{ plm_user }} group={{ plm_group }} mode=0755
+  tags: 
+   - import-v6-user
+
+- name: Clean previous 'imported-user-data' before new Import
+  remote_user: "{{ plm_user }}"
+  shell: rm -rf *
+  args:
+    chdir: /{{passport_install_rel_path}}/data/import-user-data
+  tags: import-v6-user
+
+- name: Copy Exported_v6_user File
+  remote_user: "{{ plm_user }}"
+  #become: true
+  #synchronize: src="{{ mcs_bin_dir }}/data/export-user-data/" dest="{{passport_install_rel_path}}/data/import-user-data/" recursive=yes
+  shell: scp  {{mcs_plm_user}}@{{mcs_hostname}}:{{ mcs_bin_dir }}/data/export-user-data/* {{passport_install_rel_path}}/data/import-user-data/
+  tags: import-v6-user
+
+- name: Copy the UserImport.sh to Execute the PassportUserImport.sh
+  remote_user: monitor
+  become: true
+  template: src="UserImport.sh.j2" dest="{{passport_code_dir}}/linux_a64/code/command/UserImport.sh" owner={{ plm_user }} group={{ plm_group }}  mode=0777
+  tags: import-v6-user
+
+- name: Execuing the script 'UserImport.sh' to Execute the PassportUserImport.sh
+  remote_user: "{{ plm_user }}"
+  shell: ./UserImport.sh > /tmp/user-import-script.log
+  args:
+    chdir: /{{passport_code_dir}}/linux_a64/code/command/
+  tags: import-v6-user
+
+- name: Check if imported user log file exist or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{ passport_install_rel_path }}/data/import_v6_user.log"
+  register: check_imp_logfile
+  tags: import-v6-user
+
+- name: List successful imported users to File 'imported_user_success.txt'
+  remote_user: "{{ plm_user }}"
+  shell: cat import_v6_user.log | grep -B1 '\"messages\"\:\[\"ok\"\]' |grep -v "\"messages\"\:\[\"ok\"\]" | grep Person | cut -d, -f1,2,6 |  grep -o 'id=.*' | cut -d] -f1 >> imported_user_success.txt 
+  args:
+    chdir: /{{ passport_install_rel_path }}/data/
+  when: check_imp_logfile.stat.exists
+  tags: import-v6-user
+  
+- name: List users failed to import to File 'imported_user_fail.txt'
+  remote_user: "{{ plm_user }}"
+  shell: cat import_v6_user.log | grep -B1 '\"code\"\:\-1\,\"messages\"' > imported_user_fail.txt 
+  args:
+    chdir: /{{ passport_install_rel_path }}/data/
+  when: check_imp_logfile.stat.exists
+  ignore_errors: True
+  tags: import-v6-user
+  
+- name: Check if 'imported_user_success.txt' file exist or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{ passport_install_rel_path }}/data/imported_user_success.txt"
+  register: check_imp_success
+  tags: import-v6-user
+
+- name: Append the List of successfully imported users to 'PO-imported-person.txt' File on remote MCS server
+  remote_user: "{{ plm_user }}"
+  shell: cat imported_user_success.txt | cut -d, -f1 | cut -d= -f2 | ssh {{mcs_plm_user}}@{{mcs_hostname}} "cat >> {{mcs_bin_dir}}/data/PO-imported-person.txt" 
+  args:
+    chdir: /{{ passport_install_rel_path }}/data/
+  when: check_imp_success.stat.exists
+  tags: import-v6-user
+
+- name: Append the List of successfully imported users to 'PO-imported-person.txt' File When MCS in same server
+  remote_user: "{{ plm_user }}"
+  shell: cat imported_user_success.txt | cut -d, -f1 | cut -d= -f2 >> {{mcs_bin_dir}}/data/PO-imported-person.txt
+  args:
+    chdir: /{{ passport_install_rel_path }}/data/
+  when: check_imp_success.stat.exists 
+    
+- name: Import status of V6 user
+  remote_user: "{{ plm_user }}"
+  debug: msg="To know the import status Check the log file import_v6_user.log"
+  when: check_imp_logfile.stat.exists
+  tags: import-v6-user
+  
+  
+- name: Copy Send-mail script to 3DPass-Data Directory
+  remote_user: "{{ plm_user }}"
+  template: src="send-mail.sh.j2" dest="{{ passport_install_rel_path }}/data/send-mail.sh" owner={{ plm_user }} group={{ plm_group }}  mode=0777 
+  tags: send-mail-to-imported-user
+  
+- name: Execute Send-mail script to send e-mail to successfully imported users
+  remote_user: "{{ plm_user }}"
+  shell: ./send-mail.sh > /tmp/send-mail-script.log
+  args:
+    chdir: /{{ passport_install_rel_path }}/data/ 
+  tags: send-mail-to-imported-user
+  

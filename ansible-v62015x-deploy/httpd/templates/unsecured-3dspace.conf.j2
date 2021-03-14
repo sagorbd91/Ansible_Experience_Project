@@ -1,0 +1,25 @@
+#====================================
+# VirtualHost for 3DSpace NOCAS en http
+#====================================
+<VirtualHost *:{{ mcs_cas_http_port }}>
+ServerName {{ mcs_unsecured_common_name }}
+ServerAlias {{ mcs_unsecured_common_name }}
+ErrorLog logs/{{ env_name }}_unsecured-3dspace_error_log
+TransferLog logs/{{ env_name }}_unsecured-3dspace_access_log
+LogLevel warn
+SetEnvIf User-Agent ".*MSIE.*" \
+         nokeepalive ssl-unclean-shutdown \
+         downgrade-1.0 force-response-1.0
+<Location ~ \.eot$>
+      Header unset Cache-Control
+      Header unset Pragma
+</Location>
+RequestHeader set X-Forwarded-Proto "http"
+ProxyPass /internal {{ mcs_no_cas_server }}
+ProxyPassReverse /internal {{ mcs_no_cas_server }}
+Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "accept, x-requested-method, origin, x-requested-with, x-request"
+</VirtualHost>
+

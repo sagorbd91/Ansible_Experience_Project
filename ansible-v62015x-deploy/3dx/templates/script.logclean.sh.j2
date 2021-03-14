@@ -1,0 +1,37 @@
+#!/bin/bash
+
+logcheck=false
+rm -rf /tmp/start
+now="$(date +'%Y-%m-%d')"
+select_date=`date --date="-14 days"`
+touch --date "$select_date" /tmp/start
+
+echo "" >> {{ e3dx_bin_dir }}/logclean-info.log
+echo "Cleaning Below Log Files Dated - $now" >> {{ e3dx_bin_dir }}/logclean-info.log
+echo "-------------------------------------" >> {{ e3dx_bin_dir }}/logclean-info.log
+
+
+ListFile=(`find ~/CATTemp \( -name '*.log' -o -name '*.txt' -o -name 'requests.*' \) ! -newer /tmp/start  -exec ls {} \;`)
+echo ${ListFile[@]} >> {{ e3dx_bin_dir }}/logclean-info.log
+
+if [ "${ListFile[0]}" != "0" ]; then
+
+	if [ $logcheck = false ]; then
+                rm -rf ${ListFile[@]}
+        else
+
+
+        	if [ -f /tmp/rsStatLog/*.log ]; then
+
+                	GetLogFileDate=`stat -c %y /tmp/rsStatLog/*.log | awk '{print $1}'`
+                	GetStartFileDate=`stat -c %y /tmp/start | awk '{print $1}'`
+                	LogDate=$(date -d "$GetLogFileDate" +"%Y%m%d")
+                	FileDate=$(date -d "$GetStartFileDate" +"%Y%m%d")
+
+                	if [ "$FileDate" -le "$LogDate" ]; then
+                        	rm -rf ${ListFile[@]}
+                	fi
+        	fi
+	fi
+fi
+

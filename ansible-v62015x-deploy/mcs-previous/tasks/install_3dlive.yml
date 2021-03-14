@@ -1,0 +1,28 @@
+---
+ 
+- name: Copy the 3DLiveExamine Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_3dlive.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIA3DLiveExamine.AllOS/1/answer_3dlive.txt" mode=2777
+  tags: 
+     - install-3dlive
+     - install-mcs
+
+- name: Executing the 3DLiveExamine installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_3dlive.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIA3DLiveExamine.AllOS/1
+  tags: 
+     - install-3dlive
+     - install-mcs
+   
+
+- name: Remove the 3DLiveExamine Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIA3DLiveExamine.AllOS/1/answer_3dlive.txt" state=absent
+  tags: 
+     - install-3dlive
+     - install-mcs
+

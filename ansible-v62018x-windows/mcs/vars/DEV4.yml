@@ -1,0 +1,118 @@
+env_name: 'DEV4'
+
+#MCS Installer details
+Resource_server_path: '\\v0667a\D\Data\Sources'
+Installer_source_path: '{{ Resource_server_path }}\dsproducts\enoviav6\R2018x\server-side\3DSpace'
+Installer_path_local: '{{ installer_path }}\3DSpace'
+
+mcs_installer_path: '{{installer_path}}\3DSpace'
+platform_GA_installer_path: '{{mcs_installer_path}}\ga\platform\Windows64\1'
+platform_FP_installer_path: '{{ mcs_installer_path }}\{{ fix_pack_version }}\platform\3DSpace.Windows64\1'
+apps_GA_installer_path: '{{mcs_installer_path}}\ga\apps'
+apps_FP_installer_path: '{{mcs_installer_path}}\{{ fix_pack_version }}\apps'
+installer_creo: 'C:\Installer\3DSpace\ga\apps\ConnectorforCreoParametricServer'
+
+
+#MCS Installation path and parameters
+application_root_path: 'D:\PLM\{{ env_name }}'
+installation_path: '{{application_root_path}}\3DSpace'
+mcs_server_dir: '{{installation_path}}\Server'
+data_target: '{{ installation_path }}\Data'
+target_path: '{{ mcs_server_dir }}'
+common_dir: '{{application_root_path}}\common'
+instance_dir: '{{mcs_server_dir}}\win_b64\code'
+command_dir: '{{ instance_dir }}\command'
+bin_dir: '{{ instance_dir }}\bin'
+
+
+#Database infos
+db_user_name: 'm1'
+db_user_pwd: 'm1#01'
+db_instance_name: 'spacedb'
+db_server: 'V0642A\CATIASQLSERVER'
+db_temp_path: 'D:\DassaultSystemes\3DEXP_DB'
+admin_user_pwd: 'Admpas_Dev4'
+creator_password: 'creator.'
+data_fg: 'M1_DATA'
+data_index: 'M1_INDEX'
+
+apps_dir: '{{mcs_server_dir}}\Apps'
+tbs_data: 'I1_DATA'
+tbs_index: 'I1_INDEX'
+vplm_data: 'V1_DATA'
+vplm_index: 'V1_INDEX'
+tbs: ''
+
+
+
+#email and deploy information
+smtp_host: 'smtp.valmet.com'
+mail_sender: 'test-admin.plm@valmet.com'
+mcscas_appname: '3dspace'
+mcscas_instance_port: '8181'
+cert_repo: '{{ common_dir }}\conf\ssl'
+port_cas: '8181'
+ui: ""
+system_path: 'C:\Windows\System32'
+
+#update license information
+license_file_location: 'C:\ProgramData\DassaultSystemes\Licenses'
+license_name: 'license-pool1.vstage.co:4085'
+
+#FCS and FTS config
+config_xml_path: '{{ mcs_server_dir }}\Apps\BusinessProcessServices\V6R2018x\Modules\ENOFramework\AppInstall\Programs\config.xml'
+fcs_store_location_path: '{{application_root_path}}\Fcscentral\stores'
+
+#URL 
+X3DCSMA_3DPassportURL: 'https://3dpassport-18x{{ env_name.lower() }}.plm.valmet.com:8280/3dpassport'
+X3DCSMA_3DDashboardURL: 'https://3ddashboard-18x{{ env_name.lower() }}.plm.valmet.com:443/3ddashboard'
+X3DCSMA_3DCompassURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_6WTAGURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_3DSWYMURL: 'https://3dswym-18x{{ env_name.lower() }}.plm.valmet.com:8480/3dswym'
+X3DCSMA_3DSpaceURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_FEDERATED_SEARCH: 'https://federated-18x{{ env_name.lower() }}.plm.valmet.com:8980/federated'
+X3DCSMA_3DCommentURL: 'https://3dcomment-18x{{ env_name.lower() }}.plm.valmet.com:8780/3dcomment'
+X3DCSMA_3DNotificationURL: 'https://3dnotification-18x{{ env_name.lower() }}.plm.valmet.com:8880/3dnotification'
+X3DCSMA_FTSURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:19000'
+X3DCSMA_CloudViewURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:29000'
+X3DCSMA_ENOVIAV5: 'https://v0642a.vstage.co:443/enoviav5'
+fcsSrvURL: 'https://fcscentral-18x{{ env_name.lower() }}.plm.valmet.com:8580/enoviafcs'
+
+
+#DateTime_Format
+DATETIME_FORMAT : 'moy/dom/yr4 h12:min:sec'
+
+
+#Display Env and Release note
+resource_properties_dir: '{{ instance_dir }}\tomee\webapps\3dspace\WEB-INF\classes'
+topbar_html_dir: '{{ instance_dir }}\tomee\webapps\3dspace\webapps\TopBar\assets\templates'
+
+
+#Update Time Out
+conf_dir: '{{ instance_dir }}\tomee\conf'
+
+#Built and deploy templete
+shutdownPort: '9006'
+ajpPort: '9007'
+jvmsize: 'large'
+set_serviceNameTomEE: '3DSpaceTomEE'
+set_admin_user: 'creator'
+serviceurl: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180'
+
+instances:
+   tomee1:
+     port_http: 8182
+     port_ajp: 9017
+     port_shutdown: 9016
+     port_jmx: 9181
+   tomee2:
+     port_http: 8183
+     port_ajp: 9027
+     port_shutdown: 9026
+     port_jmx: 9182
+
+
+
+
+
+

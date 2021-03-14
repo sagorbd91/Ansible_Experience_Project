@@ -1,0 +1,55 @@
+---
+    
+- name: create the ssl dir or make sure it exist
+  file: path="{{ ssl_directory }}" state=directory owner=root group=root mode=2755
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy 3dpass.crt in ssl dir
+  copy: src="{{ env_name }}-3dpass.crt" dest="{{ http_install_path }}/ssl/{{passport_crt}}.crt" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy 3dpass.key in ssl dir
+  copy: src="{{ env_name }}-3dpass.key" dest="{{ http_install_path }}/ssl/{{passport_crt}}.key" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy 3dspace.crt in ssl dir
+  copy: src="{{ env_name }}-3dspace.crt" dest="{{ http_install_path }}/ssl/{{mcs_cas_crt}}.crt" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy 3dspace.key in ssl dir
+  copy: src="{{ env_name }}-3dspace.key" dest="{{ http_install_path }}/ssl/{{mcs_cas_crt}}.key" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy fcssecured.crt in ssl dir
+  copy: src="{{ env_name }}-fcssecured.crt" dest="{{ http_install_path }}/ssl/{{fcs_crt}}.crt" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy fcssecured.key in ssl dir
+  copy: src="{{ env_name }}-fcssecured.key" dest="{{ http_install_path }}/ssl/{{fcs_crt}}.key" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+
+- name: copy 3ddashboard.crt in ssl dir
+  copy: src="{{dashboard_crt}}.crt" dest="{{ http_install_path }}/ssl/{{dashboard_crt}}.crt" mode=0644
+  tags: 
+    - deploy-3ddash-certs
+    - install-reverseproxy
+    
+- name: copy 3ddashboard.key in ssl dir
+  copy: src="{{ dashboard_crt }}.key" dest="{{ http_install_path }}/ssl/{{ dashboard_crt }}.key" mode=0644
+  tags: 
+    - deploy-3ddash-certs
+    - install-reverseproxy

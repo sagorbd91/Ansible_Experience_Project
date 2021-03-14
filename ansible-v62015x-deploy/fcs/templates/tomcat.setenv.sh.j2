@@ -1,0 +1,24 @@
+echo "-------------Begin of setenv.sh------------------------"
+#*******************************************************************
+# This script allows to define custom variables used by Tomcat
+#********************************************************************
+
+# Source ENOVIA variables
+# Source ENOVIA variables
+. {{ fcs_code_dir }}/scripts/mxEnv.sh
+
+CATALINA_OPTS="-Dfile.encoding=UTF-8 -server"
+CATALINA_OPTS="$CATALINA_OPTS -XX:+UseCompressedOops"
+# Used to monitor JVM through JMX
+CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false"
+CATALINA_OPTS="$CATALINA_OPTS -Dcom.sun.management.jmxremote.port={{ item.value.port_jmx }}"
+CATALINA_OPTS="$CATALINA_OPTS -Djava.rmi.server.hostname={{ inventory_hostname }}"
+CATALINA_OPTS="$CATALINA_OPTS -DAPPNAME="{{ env_name }}-{{ item.value.app_name }}""
+echo "CATALINA_OPTS=$CATALINA_OPTS"
+
+JAVA_HOME={{ fcs_java_path }}
+PATH=$PATH:$JAVA_HOME/bin
+CLASSPATH=$CLASSPATH:$JAVA_HOME/lib
+export JAVA_HOME PATH CLASSPATH
+
+echo "-------------"

@@ -1,0 +1,52 @@
+---
+    
+- name: Copy script.compile.mcs.mql.j2 in scripts
+  template: src="script.compile.mcs.mql.j2" dest="{{ mcs_bin_dir }}/mcs_mql_compile.sh" mode=0755
+  tags: 
+     - compile-code
+     - install-mcsfx
+     
+     
+     
+- name: Execute the 3mcs_mql_compile.sh script
+  shell: ./mcs_mql_compile.sh > mcs_mql_compile.log 2>&1
+  args:
+    chdir: /{{ mcs_bin_dir }}
+  tags: 
+     - compile-code
+     - install-mcsfx
+  
+  
+  
+- name: Check Compile Successfull
+  shell: cat {{ mcs_bin_dir }}/mcs_mql_compile.log
+  register: build_result
+  tags: 
+     - compile-code
+     - install-mcsfx
+
+
+- fail: msg="Compile Not Successfull"
+  when: "'Compile error' in build_result.stdout"
+  tags: 
+     - compile-code
+     - install-mcsfx
+
+  
+
+#- name: Copy script.user.license.j2 in scripts
+#  template: src="script.user.license.j2" dest="{{ mcs_bin_dir }}/mcs_user_license.sh" mode=0755
+#  tags: 
+#     - user-license
+#     - install-mcsfx
+#     - post-task
+     
+
+#- name: Execute the mcs_user_license.sh script
+#  shell: ./mcs_user_license.sh > mcs_user_license.log 2>&1
+#  args:
+#    chdir: /{{ mcs_bin_dir }}
+#  tags: 
+#     - user-license
+#     - install-mcsfx
+

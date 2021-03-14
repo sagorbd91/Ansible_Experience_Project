@@ -1,0 +1,28 @@
+---
+- include: create_dirs.yml
+#- include: copy_code.yml
+- include: install_java.yml
+- include: install_instances.yml
+- include: deploy_config_change.yml
+
+- name: install the services
+  remote_user: monitor
+  sudo: true
+  template: src="service.j2" dest="{{ service_dir }}/{{item.key}}" owner=root group=root mode="u=rwx,g=rx,o=rx"  
+  with_dict: instances
+  tags: 
+   - install_fcs
+   - deploy_service
+- include: create_stores.yml
+
+- name: start services
+  remote_user: monitor
+  sudo: true
+  service: name={{ item.key }} state=started enabled=yes
+  with_dict: instances
+  tags:
+   - install_fcs
+   - deploy_service
+
+- include: open_firewall.yml
+

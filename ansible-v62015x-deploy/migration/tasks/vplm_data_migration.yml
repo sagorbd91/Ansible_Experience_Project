@@ -1,0 +1,27 @@
+---
+
+
+- name: deploy R&D fix for transaction optimization 
+  remote_user: monitor
+  become: true
+  template: src="VPLMRnDFixDeployment.sh.j2" dest="{{ r15x_server_bin_dir }}/VPLMRnDFixDeployment.sh" mode=0777
+  tags: 
+    - pre-vplm-data-migration
+    
+- name: Execute VPLM R&D fix deploy
+  shell: ./VPLMRnDFixDeployment.sh > VPLMRnDFixDeployment.log 2>&1
+  args:
+    chdir: /{{ r15x_server_bin_dir }}
+  tags: 
+   - pre-vplm-data-migration
+  
+- name: Run the mql script for VPLM Data Migration try1
+  shell: nohup time ./mql -c "set context user creator password creator.;exec program VPLMDataMigration;quit;" 2>&1 > {{r15x_server_dir}}/logs/mql-VPLMDataMigration.txt &
+  args:
+    chdir: /{{ r15x_server_script_dir }}
+  tags:
+    - vplm-data-migration
+  
+
+
+

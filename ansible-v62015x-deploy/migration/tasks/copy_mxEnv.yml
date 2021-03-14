@@ -1,0 +1,6 @@
+---
+
+- name: Copy the mxEnv.sh script to Migration Server
+  template: src="script.mxEnv.sh.j2" dest="{{ r15x_server_script_dir }}/mxEnv.sh" mode=0755
+  tags: 
+    - copy-mxenv

@@ -1,0 +1,28 @@
+---
+
+- name: Ensure OpenSSL is installed
+  apt: name=openssl state=present
+  when: ansible_os_family == "Redhat"
+  tags: [ssl-certs,packages]
+  
+- name: Remove certificate dir if exits
+  remote_user: monitor
+  become: true
+  file: path="{{ ssl_certs_path }}" state=absent
+  tags: [ssl-certs,configuration]
+  
+  
+- name: Ensure ssl folder exist
+  file:
+      path: "{{ ssl_certs_path }}"
+      state: directory
+      owner: "{{ ssl_certs_path_owner }}"
+      group: "{{ ssl_certs_path_group }}"
+      mode: "{{ ssl_certs_mode }}"
+  tags: [ssl-certs,configuration]
+  
+
+- include: generate.yml
+  tags: [ssl-certs,configuration]
+    
+  

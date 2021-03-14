@@ -1,0 +1,9 @@
+- name: Firing -> Run test script for 3dSpaceIndex
+  win_command: '{{ TARGET_PATH_3dindex }}\win_b64\code\command\run_test.bat'
+  register: outputListCommand
+  tags: 
+     - run_test
+- name: Printing -> Run test output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - run_test

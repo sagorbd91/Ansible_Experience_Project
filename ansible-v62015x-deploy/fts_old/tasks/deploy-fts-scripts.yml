@@ -1,0 +1,34 @@
+---
+
+- name: copy startXLAdvancedSearchServer.sh to Fts Command Directory
+  template: src="startXLAdvancedSearchServer.sh.j2" dest="{{ fts_command_dir }}/startXLAdvancedSearchServer.sh" mode=0755
+  tags: 
+    - deploy-fts-script
+      
+- name: copy startXLPartialSearchIndex.sh to Fts Command Directory
+  template: src="startXLPartialSearchIndex.sh.j2" dest="{{ fts_command_dir }}/startXLPartialSearchIndex.sh" mode=0755
+  tags: 
+    - deploy-fts-script
+
+- name: copy stopXLAdvancedSearchServer.sh to Fts Command Directory
+  template: src="stopXLAdvancedSearchServer.sh.j2" dest="{{ fts_command_dir }}/stopXLAdvancedSearchServer.sh" mode=0755
+  tags: 
+    - deploy-fts-script
+
+- name: Execute the stopXLAdvancedSearchServer.sh script
+  command: sh "{{ fts_command_dir }}/stopXLAdvancedSearchServer.sh"
+  ignore_errors: yes
+  tags: 
+    - run-fts-script
+
+- name: Execute the startXLAdvancedSearchServer.sh script
+  command: sh "{{ fts_command_dir }}/stopXLAdvancedSearchServer.sh"
+  ignore_errors: yes
+  tags: 
+    - run-fts-script
+
+- name: Execute the startXLPartialSearchIndex.sh script
+  command: sh "{{ fts_command_dir }}/startXLPartialSearchIndex.sh"
+  ignore_errors: yes
+  tags:
+    - run-fts-Partial-script

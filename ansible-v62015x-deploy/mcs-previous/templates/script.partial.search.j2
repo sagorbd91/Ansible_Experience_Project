@@ -1,0 +1,17 @@
+#!/bin/sh
+
+cd {{ mcs_server_dir }}/scripts
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  start searchindex vault * mode PARTIAL;
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  start searchindex vault * mode PARTIAL;
+  quit;
+EOF
+fi

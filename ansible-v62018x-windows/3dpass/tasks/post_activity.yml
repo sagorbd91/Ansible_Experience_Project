@@ -1,0 +1,51 @@
+---
+
+- name: Modify login.jsp for displaying environment name
+  win_lineinfile:
+    path: '{{ pass_login_jsp_dir }}\login.jsp'
+    state: present
+    regexp: '^(.*)3DPassport - Login(.*)$'
+    line: <jsp:param name="pageTitle" value="3DPassport - {{ env_name }} Login" />
+    backrefs: yes
+  tags:
+   - env-on-topbar
+
+    
+- name: Modify login.jsp for displaying release note
+  win_lineinfile:
+    path: '{{ pass_login_jsp_dir }}\login.jsp'
+    state: present
+    line: '<jsp:param name="releaseNote" value="{{ release_note }}" />'
+    insertafter: '^(.*)jsMainFile(.*)$'
+  tags:
+   - env-on-topbar
+
+- name: Modify _dsp-login-template.jsp for displaying release note
+  win_lineinfile:
+    path: '{{ pass_login_tempplate_dir }}\_dsp-login-template.jsp'
+    state: present
+    line: '{{ item.line }}'
+    insertafter: '{{ item.insertafter }}'
+  with_items:
+    - line: <div style="position:absolute;text-align:left;padding:10px;bottom:0px;">
+      insertafter: '^<body>(.*)$'
+    - line: <span style="color:white">${param.releaseNote}</span>
+      insertafter: '^(.*)position:absolute(.*)$'
+    - line: '</div>'
+      insertafter: '^(.*)param.releaseNote(.*)$'
+  tags:
+   - env-on-topbar
+
+- name: Update timeout (Modify server.xml)
+  win_lineinfile:
+    path: '{{ conf_dir }}\server.xml'
+    state: present
+    regexp: '^(.*)connectionTimeout="20000" URIEncoding="UTF-8"(.*)$'
+    line: '               connectionTimeout="{{ time_out_limit }}" URIEncoding="UTF-8"'
+    backrefs: yes
+    
+  tags:
+   - update-timeout
+   - post-activity
+
+   

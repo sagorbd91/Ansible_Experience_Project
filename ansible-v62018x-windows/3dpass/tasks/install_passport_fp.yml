@@ -1,0 +1,30 @@
+---
+- name: Stop 3DPass Service
+  win_service: name=3DPassport_R2018x state=stopped
+  tags: install-passport-fp
+
+- name: Copy passport-fp userintention file to target
+  template: src="templates/UserIntentions_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_pass_fp.xml"
+  tags: install-passport-fp
+ 
+- name: Copy passport-fp installer from NFS to local
+  win_copy:
+    src: '{{ passport_installer_path_fp }}'
+    dest: '{{ windows_tmp_path }}\PassportFp'
+    remote_src: True
+  tags: install-passport-fp   
+
+- name: Executing passport-fp installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\PassportFp\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_pass_fp.xml --xmlreport {{ windows_tmp_path }}\report_passport_fp.xml'
+     elevated: yes
+  tags: install-passport-fp
+
+- name: Remove the user Intension file of passport-fp
+  win_file: path="{{windows_tmp_path}}\UserIntentions_pass_fp.xml" state=absent
+  tags: install-passport-fp
+
+- name: Remove the installer folder of passport-fp
+  win_file: path="{{windows_tmp_path}}\PassportFp\1" state=absent
+  tags: install-passport-fp
+

@@ -1,0 +1,24 @@
+#fcs_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+fcs_install_path: "{{ eplm_server_base_path }}"
+fcs_install_rel_path: "{{fcs_install_path}}/fcsremote-sha"
+fcs_instance_path: "{{fcs_install_rel_path}}/instances"
+fcs_code_dir: "{{fcs_install_rel_path}}/code"
+fcs_log_dir: "{{fcs_install_rel_path}}/logs"
+fcs_java_dir: "{{fcs_install_rel_path}}/softs"
+fcs_build_path: "distrib/enoviafcs.war"
+fcs_file_store_dir: "{{ apps_file_storage_dir }}/fcs-remote-sha"
+instances:
+  was_fcs_sha_1:
+    app_name: was_fcs_sha_1
+    port_http: 8381
+    port_jmx: 8189
+    port_ajp: 8310
+    port_shutdown: 8306
+    port_redirect: 8344 
+#  was_fcs_2:
+#    app_name: fcs2-SHA
+#    port_http: 8381
+#    port_jmx: 8189
+#    port_ajp: 8310
+#    port_shutdown: 8306
+#    port_redirect: 8344

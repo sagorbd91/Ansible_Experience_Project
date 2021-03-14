@@ -1,0 +1,14 @@
+echo "modify fcs language store"
+set server={{ mcs_server_dir }}
+set os=win_b64
+set user=creator
+set password={{ creator_password }}
+
+if "%password%"=="" (
+  set context=set context user %user%
+) else (
+  set context=set context user %user% password %password%
+)
+
+ call %server%\%os%\code\bin\mql -t -c "%context% ;
+ echo "modify fcs language store"

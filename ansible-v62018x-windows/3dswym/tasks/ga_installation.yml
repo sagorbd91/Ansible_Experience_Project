@@ -1,0 +1,26 @@
+---
+
+- name: Copy 3dswym-ga UserIntention file to target
+  template: src="templates/UserIntentions_3dswym_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3dswym_ga.xml"
+  tags: install-3dswym-ga
+ 
+- name: Copy 3dswym-ga installer from NFS to local
+  win_copy:
+    src: '{{ installer_GA_path_3dsw }}'
+    dest: '{{ windows_tmp_path }}\3dswym'
+    remote_src: True
+  tags: install-3dswym-ga  
+
+- name: Executing 3dswym-ga installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\3dswym\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3dswym_ga.xml --xmlreport {{ windows_tmp_path }}\report_3dswym_ga.xml'
+     elevated: yes
+  tags: install-3dswym-ga
+
+- name: Remove the user Intension file of swym
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3dswym_ga.xml" state=absent
+  tags: install-3dswym-ga
+
+- name: Remove the installer folder swym
+  win_file: path="{{windows_tmp_path}}\3dswym" state=absent
+  tags: install-3dswym-ga

@@ -1,0 +1,30 @@
+---
+ 
+- name: Copy the Connector for AutoCAD Server Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_conn_autocad.j2" dest="{{ mcs_apps_ga_installer }}/ConnectorforAutoCADServer.Unix64/1/answer_conn_autocad.txt" mode=2777
+  tags: 
+   - install-autocadsrv
+   - install-mcs
+   
+- name: Executing the Connector for AutoCAD Server installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_conn_autocad.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ConnectorforAutoCADServer.Unix64/1
+  tags: 
+   - install-mcs
+   - install-autocadsrv
+   
+
+- name: Remove the Connector for AutoCAD Server Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ConnectorforAutoCADServer.Unix64/1/answer_conn_autocad.txt" state=absent
+  tags: 
+   - install-mcs
+   - install-autocadsrv
+
+
+

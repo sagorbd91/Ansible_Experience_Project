@@ -1,0 +1,57 @@
+	<Location ~ \.eot$>
+		Header unset Cache-Control
+		Header unset Pragma
+	</Location>
+
+	
+	<Location /socket.io>
+		# Preserve bookmark links from 14 version
+		RewriteEngine on
+
+		RewriteCond %{REQUEST_URI} ^/socket.io          [NC]
+		RewriteCond %{QUERY_STRING} transport=websocket  [NC]
+			
+		RewriteRule .* ws://{{ notifiacation_instance_server }}:{{ notification_instance_port }}%{REQUEST_URI} [P]
+		
+		ProxyPass http://{{ notifiacation_instance_server }}:{{ notification_instance_port }}/socket.io
+		ProxyPassReverse http://{{ notifiacation_instance_server }}:{{ notification_instance_port }}/socket.io
+
+	</Location>
+	
+	<Location /3dnotification>
+		ProxyPass http://{{ notifiacation_instance_server }}:{{ notification_instance_port }} timeout=300
+		ProxyPassReverse http://{{ notifiacation_instance_server }}:{{ notification_instance_port }}
+
+		
+
+		SetEnvIf Host ^(.*?)(:[0-9]+|)$ custom_host=$1
+		RequestHeader set x-forwarded-hostname "%{custom_host}e"
+		RequestHeader set x-forwarded-port {{ notification_proxy_port }}
+		RequestHeader set x-forwarded-proto https
+		RequestHeader set x-forwarded-contextpath /
+		Header edit Set-Cookie "^(JSESSIONID=.*; Path=)/(?:/|)(.*?)$" "$1/$2"
+
+
+
+		SetEnvIf Request_URI "^/healthcheck/$" dontlog
+
+		#Header set X-Frame-Options SAMEORIGIN
+		Header set X-XSS-Protection "1; mode=block"
+		Header set X-Content-Type-Options nosniff
+		#Header set Strict-Transport-Security "max-age=500; includeSubDomains"
+
+
+		AddOutputFilterByType DEFLATE text/plain
+		AddOutputFilterByType DEFLATE text/xml
+		AddOutputFilterByType DEFLATE text/html
+		AddOutputFilterByType DEFLATE text/css
+		AddOutputFilterByType DEFLATE application/xml
+		AddOutputFilterByType DEFLATE application/x-javascript
+		AddOutputFilterByType DEFLATE application/javascript
+		#AddOutputFilterByType DEFLATE application/x-httpd-php
+		AddOutputFilterByType DEFLATE application/json
+		AddOutputFilterByType DEFLATE text/javascript
+		AddOutputFilterByType DEFLATE application/xhtml+xml
+		AddOutputFilterByType DEFLATE application/rss+xml
+		AddOutputFilterByType DEFLATE application/atom_xml
+	</Location>

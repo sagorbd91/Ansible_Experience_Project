@@ -1,0 +1,14 @@
+---
+
+- name: Copy the script "mql_site_change.sh"
+  template: src="mql_site_change.sh.j2" dest="{{ mcs_bin_dir }}/mql_site_change.sh" owner={{ plm_user }} mode=0755
+  tags: mql_site_change
+
+- name: Run the script "mql_site_change.sh"
+  remote_user: "{{ plm_user }}"
+  shell: "{{ mcs_bin_dir }}/mql_site_change.sh > {{ mcs_bin_dir }}/mql_site_change.log "
+  tags: mql_site_change
+
+- name: Fetch file to Ansible  
+  fetch: src="/tmp/mql_site_change" dest="/tmp/mql_site_change" flat="yes"
+  tags: mql_site_change

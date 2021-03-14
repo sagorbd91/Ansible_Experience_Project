@@ -1,0 +1,56 @@
+---
+
+    
+- name: PromotionChecks properties file to R15x Migration server
+  synchronize:
+      src: "{{nfs_promchecks_properties}}/PromotionChecks_ENOSTProductReference.properties" 
+      dest: "{{ r15x_STAGING_properties_path }}"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+    - copy-13x-properties
+    
+    
+- name: create the migration temp dir
+  remote_user: monitor
+  become: true
+  file: path="{{ tmp_properties_path }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode=0777
+  tags: 
+    - create-tmp-dir
+    - copy-13x-properties
+    
+    
+# copy r13x class file from NFS to 15x temp dir
+
+- name: copy the class
+  synchronize:
+      src: "{{ nfs_migration_dir }}/mcsnocas/race-config/server/distrib/enovia/WEB-INF/classes/" 
+      dest: "{{ tmp_properties_path }}"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+   - copy-class
+   - copy-13x-properties
+   
+   
+- name: copy emxTeamSite properties file to tmp dir
+  synchronize:
+      src: "{{r15x_managed_properties_path}}/emxTeamSite.properties" 
+      dest: "{{ tmp_migration_dir }}"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+    - copy-13x-properties
+
+       
+
+
+
+
+    

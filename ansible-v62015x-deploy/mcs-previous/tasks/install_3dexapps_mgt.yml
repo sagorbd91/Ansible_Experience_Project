@@ -1,0 +1,44 @@
+---
+ 
+- name: create the mya dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_mya_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2755
+  tags: 
+   - install-mcs
+   - install-3dexapps
+   
+- name: copy answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_3dexapps.j2" dest="{{ mcs_ga_installer }}/3DEXPERIENCEAppsManagement.Unix64/1/answer_3dexapps.txt" mode=2777
+  when: update_database
+  tags: 
+   - install-mcs
+   - install-3dexapps
+   
+- name: copy answer file (database will not update)
+  remote_user: monitor
+  sudo: true
+  template: src="answer_3dexapps_nudb.j2" dest="{{ mcs_ga_installer }}/3DEXPERIENCEAppsManagement.Unix64/1/answer_3dexapps.txt" mode=2777
+  when: not update_database
+  tags: 
+   - install-mcs
+   - install-3dexapps
+
+- name: Executing the installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_3dexapps.txt
+  args:
+    chdir: /{{ mcs_ga_installer }}/3DEXPERIENCEAppsManagement.Unix64/1
+  tags: 
+   - install-mcs
+   - install-3dexapps
+
+- name: remove the answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_ga_installer }}/3DEXPERIENCEAppsManagement.Unix64/1/answer_3dexapps.txt" state=absent
+  tags: 
+   - install-mcs
+   - install-3dexapps

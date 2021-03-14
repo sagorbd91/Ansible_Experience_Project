@@ -1,0 +1,37 @@
+@echo off
+echo "Start code compile"
+set server={{ mcs_server_dir }}
+set os=win_b64
+set user=creator
+set password={{ creator_password }}
+set lock=%server%\logs\code_compile.lock
+set maxtime=900
+if "%password%"=="" (
+  set context=set context user %user%
+) else (
+  set context=set context user %user% password %password%
+)
+for /f "delims=" %%x in ('cscript /nologo %server%\%os%\code\command\toEpoch.vbs') do set begin_ts=%%x
+for /f "delims=" %%a in ('cscript /nologo %server%\%os%\code\command\delta.vbs %lock% %begin_ts% %maxtime%') do set delta=%%a
+if not exist %lock% (
+  goto do_compile
+) else (
+  goto do_compare
+)
+:do_compare
+if "%delta%"=="LARGER" (
+  goto do_compile
+) else (
+  goto do_end
+)
+:do_compile
+<nul set /p ".=%begin_ts%" > %lock%
+
+  call %server%\%os%\code\bin\mql -t -c "%context% ; compile prog * force update;"
+  echo "Code compile END"
+
+if exist "%lock%" del /Q "%lock%"
+exit /B 0
+
+:do_end
+exit /B 0

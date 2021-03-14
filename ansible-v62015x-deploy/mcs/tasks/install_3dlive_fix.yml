@@ -1,0 +1,37 @@
+---
+
+- name: create symbolic link for the java path
+  remote_user: monitor
+  become: true
+  file: src="{{ java8_version_dir }}" dest="{{ mcs_java_path }}" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags: 
+     - ENOVIA3DLiveExamine-FP
+  
+  
+- name: Copy the 3DLiveExamine fixpack Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_3dlivefx.j2" dest="{{ mcs_conf_dir }}/answer_3dlivefx.txt" mode=2777
+  tags: 
+     - ENOVIA3DLiveExamine-FP
+     - install-mcsfx
+     - install-apps-fp
+
+- name: Executing the 3DLiveExamine fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_fp_installer_path }} < {{ mcs_conf_dir }}/answer_3dlivefx.txt
+  args:
+    chdir: /{{ mcs_apps_fp_installer }}/ENOVIA3DLiveExamine/1
+  tags: 
+     - ENOVIA3DLiveExamine-FP
+     - install-mcsfx
+     - install-apps-fp
+
+- name: Remove the 3DLiveExamine fixpack Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_conf_dir }}/answer_3dlivefx.txt" state=absent
+  tags: 
+     - ENOVIA3DLiveExamine-FP
+     - install-mcsfx
+     - install-apps-fp

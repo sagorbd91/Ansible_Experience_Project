@@ -1,0 +1,5 @@
+Username=v6admin
+Password==3GmD3MNNhw==
+ConnectString=plm2sb2
+Driver=DB2/CLI
+EncryptionVersion=10

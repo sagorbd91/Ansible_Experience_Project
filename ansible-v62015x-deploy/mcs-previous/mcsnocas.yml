@@ -1,0 +1,60 @@
+---
+
+- name: pre task 
+  hosts: mcs_servers
+  remote_user: monitor 
+  sudo: true
+  tags: install-mcs
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+- name: Create user
+  hosts: mcs_servers
+  tags: install-mcs
+  remote_user: "monitor"
+  sudo: true
+  vars:
+    plm_user: "plmm3ma"
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }	
+
+
+- name: install mcs
+  hosts: mcs_servers
+  vars:
+    plm_user: "plmm3ma"
+    plm_group: "plm"
+    mcs_with_cas: false
+    update_database: false
+    mcs_type: "mcsnocas"
+    instance_name: "was_mcs_1"
+    
+    instances:
+      was_mcs_1:
+         app_name: was_mcs_1
+         port_http: 8181
+         port_jmx: 8189
+         port_ajp: 8012
+         port_shutdown: 8007
+         port_redirect: 8445
+  remote_user: "{{ plm_user }}"
+  sudo: false
+  roles:
+      - { role: mcs  }	
+
+- name: install zabbix-agent
+  hosts: mcs_servers
+  vars:
+    port_jmx: "8089"
+    tem_os_linux: "Template OS Linux"
+    tem_tomcat: "Template JMX Generic"
+    host_group: "CATIA V6 15x DEV ENV"
+  remote_user: monitor
+  sudo: true
+  roles:
+     - { role: ansible-zabbix-agent }

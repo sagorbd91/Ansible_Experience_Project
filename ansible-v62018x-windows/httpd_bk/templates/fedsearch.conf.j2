@@ -1,0 +1,27 @@
+#====================================
+# VirtualHost for Federated Search
+#====================================
+Listen {{ fed_proxy_port }}
+
+SSLRandomSeed startup builtin
+SSLRandomSeed connect builtin
+SSLCryptoDevice builtin
+
+<VirtualHost *:{{ fed_proxy_port }}>
+ServerName {{ fed_server_common_name }}
+ServerAlias {{ fed_server_common_name }}
+
+ErrorLog    logs\federated_error_log.txt
+TransferLog    logs\federated_access_log.txt
+CustomLog    logs\federated_ssl_request_log.txt "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b" 
+
+LogLevel error
+
+SSLEngine on
+SSLProxyEngine on
+
+SSLCertificateFile     {{ ssl_directory }}\{{ certificate_fed }}.crt
+SSLCertificateKeyFile     {{ ssl_directory }}\{{ certificate_fed }}.key
+
+Include {{ Fed_dir }}\win_b64\templates\federated_httpd_fragment.conf
+</VirtualHost>

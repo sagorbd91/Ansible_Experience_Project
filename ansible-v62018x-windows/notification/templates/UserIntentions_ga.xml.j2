@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Media mediaLevel="420" mediaName="CODE\win_b64\X3D_INTF_SC.media\media">
+	<SetVariable name="Java@jdk">
+		<SetJavaPath value="{{ Java_Path }}"/>
+	</SetVariable>
+	<SetVariable name="installEmbeddedServerJRE">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DPassportURL">
+		<SetText value="{{ X3DCSMA_3DPassportURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DDashboardURL">
+		<SetText value="{{ X3DCSMA_3DDashboardURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DCompassURL">
+		<SetText value="{{ X3DCSMA_3DCompassURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DSWYMURL">
+		<SetText value="{{ X3DCSMA_3DSWYMURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DNotificationURL">
+		<SetText value="{{ X3DCSMA_3DNotificationURL }}"/>
+	</SetVariable>
+	<SetVariable name="NODEINFRACONF_DIR">
+		<SetPath value="{{ notification_shared_storage_dir }}"/>
+	</SetVariable>
+	<SetVariable name="NODEINFRALOG_DIR">
+		<SetPath value="{{ notification_log_dir }}"/>
+	</SetVariable>
+	<SetVariable name="NODEINFRATMP_DIR">
+		<SetPath value="{{ notification_runtime_temp_dir }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_SMTP_HOST">
+		<SetText value="{{ X3DCSMA_SMTP_HOST }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_SMTP_MAIL_SENDER">
+		<SetText value="{{ X3DCSMA_SMTP_MAIL_SENDER }}"/>
+	</SetVariable>
+	<SetVariable name="DB_MSSQL_SERVER">
+		<SetText value="{{ notification_database_host_port }}"/>
+	</SetVariable>
+	<SetVariable name="DB_MSSQL_DBNAME">
+		<SetText value="{{ notification_database }}"/>
+	</SetVariable>
+	<SetVariable name="DB_MSSQL_ADMIN_USER">
+		<SetText value="{{ notification_database_user_admin }}"/>
+	</SetVariable>
+	<SetVariable name="DB_MSSQL_ADMIN_PASSWORD">
+		<SetText value="{{ notification_token_database_user_password }}"/>
+	</SetVariable>
+	<SetVariable name="DB_MSSQL_USER">
+		<SetText value="{{ notification_database_user }}"/>
+	</SetVariable>
+	<SetVariable name="DB_MSSQL_PASSWORD">
+		<SetText value="{{ notification_database_user_password }}"/>
+	</SetVariable>
+	<SetVariable name="DB_MSSQL_ODBC_DRIVER">
+		<SetText value="{{ notification_databse_odbc_driver }}"/>
+	</SetVariable>
+	<SetVariable name="NODEBACKEND_URL_PORT">
+		<SetText value="{{ nodejs_server_port }}"/>
+	</SetVariable>
+	<SetVariable name="DB_TYPE">
+        <SetText value="{{ notification_db_type }}"/>
+	</SetVariable>
+	<SetVariable name="DB_TYPE?oracle">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="DB_TYPE?sqlserver">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="TARGET_PATH">
+		<SetPath value="{{ installation_path_notification }}"/>
+	</SetVariable>
+	<SetVariable name="FinishPanel"/>
+	<SetVariable name="DSYWelcomePanel">
+        <SetWelcome value="true"/>
+	</SetVariable>
+</Media>

@@ -1,0 +1,9 @@
+---
+
+- name: Copy the Service Run Script to FTS bin Directory
+  remote_user: monitor
+  become: true
+  template: src="check_run.sh.j2" dest="{{ fts_bin_path }}/check_run.sh" mode=0755
+  tags: 
+   - install-fts
+   - deploy-script

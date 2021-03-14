@@ -1,0 +1,21 @@
+---
+
+- name: create the vhost dir or make sure it exist
+  file: path="{{ vhost_path }}" state=directory owner=root group=root mode=2755
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+  
+  
+- name: fcs remote 1 vhost deploy
+  template: src="fcs-remote1.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-fcsremote1.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+    
+- name: fcs remote 2 vhost deploy
+  template: src="fcs-remote2.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-fcsremote2.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+

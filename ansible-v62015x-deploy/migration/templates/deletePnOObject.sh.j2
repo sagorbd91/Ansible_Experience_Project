@@ -1,0 +1,25 @@
+#!/bin/sh
+
+cd {{ r15x_server_script_dir }}
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  trigger off;
+  del bus PnOProject AIR_SYSTEMS_CONFIDENTIAL -;
+  del bus PnOProject TUBE_ROLLS_CONFIDENTIAL -;
+  del bus PnOProject TEST -;
+  trigger on;
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  trigger off;
+  del bus PnOProject AIR_SYSTEMS_CONFIDENTIAL -;
+  del bus PnOProject TUBE_ROLLS_CONFIDENTIAL -;
+  del bus PnOProject TEST -;
+  trigger on;
+  quit;
+EOF
+fi

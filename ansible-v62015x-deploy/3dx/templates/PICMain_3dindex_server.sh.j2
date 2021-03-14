@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Source 15x_functions
+. {{ e3dx_function_dir }}/15x_functions
+
+CheckRunUser {{ plm_user }}
+
+# Start the 3dindex runtime service
+{{ e3dx_install_path }}/linux_a64/code/command/catstart -run PICMain -env {{ e3denv_name }} -direnv {{ e3dx_env_dir }} >> ${LOG_FILE} 2>&1 &

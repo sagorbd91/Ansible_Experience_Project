@@ -1,0 +1,20 @@
+#!/bin/bash
+OLDIFS=$IFS; IFS=$'\n';
+cat /dev/null > /tmp/mql_command.output
+while read eachCommand; do
+  echo $eachCommand >> /tmp/mql_command.output
+{{ mcs_server_dir }}/scripts/mql << EOF
+      set context person {{ mql_user }} pass {{ mql_password }};
+      $eachCommand
+      quit;
+EOF
+
+
+if [ $? -eq 0 ]; then
+    echo OK >> /tmp/mql_command.output
+else
+    echo FAIL >> /tmp/mql_command.output
+fi
+
+done <  /tmp/mql_command
+exit

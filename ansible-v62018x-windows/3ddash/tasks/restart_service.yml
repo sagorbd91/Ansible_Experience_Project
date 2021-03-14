@@ -1,0 +1,14 @@
+---
+
+- name: Stop 3DDash Service
+  win_service: name=3DDashboard_R2018x state=stopped
+  tags:
+     - stop-dash
+     - restart-dash
+
+- name: Start 3DDash servce
+  win_service: name=3DDashboard_R2018x state=started
+  tags:
+     - start-dash
+     - restart-dash
+

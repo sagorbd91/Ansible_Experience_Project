@@ -1,0 +1,19 @@
+# to be added in <VirtualHost _default_:443> section of httpd-ssl.conf
+
+<Location "/federated">
+
+RequestHeader set x-forwarded-proto "https"
+RequestHeader set x-forwarded-port "{{ fed_proxy_port }}"
+
+ProxyPass http://{{ fed_instance_server }}:{{ fed_instance_port }}/federated timeout=300
+ProxyPassReverse  http://{{ fed_instance_server }}:{{ fed_instance_port }}/federated
+
+# Cross-origin resource sharing (CORS)
+SetEnvIf Origin "https:\/\/(.+\.)?(valmet.com)(:\d{1,5})?$" origin_is=$0
+Header set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, HEAD, PUT, DELETE, PATCH"
+Header set Access-Control-Allow-Headers "accept,x-requested-method,origin,x-requested-with,x-request,cache-control,content-type"
+Header set Access-Control-Max-Age "600"
+</Location>
+

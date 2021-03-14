@@ -1,0 +1,153 @@
+---
+
+- name: Copy DSLS licese file
+  template: src="templates/DSLicSrv.txt.j2" dest="{{ license_file_location }}\DSLicSrv.txt"
+  tags: 
+     - DSLS_licese_file
+     - post-activity
+   
+- name: Update in STAGING emxSystem.properties
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\STAGING\ematrix\properties\emxSystem.properties'
+    state: present
+    regexp: 'emxFramework.External.Authentication = false'
+    line: 'emxFramework.External.Authentication = true'
+    backrefs: yes
+  tags:
+     - emxSystem_update
+     - post-activity
+     
+- name: Update in STAGING emxSystem.properties.sav
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\STAGING\ematrix\properties\emxSystem.properties.sav'
+    state: present
+    regexp: 'emxFramework.External.Authentication = false'
+    line: 'emxFramework.External.Authentication = true'
+  tags:
+     - emxSystem_update
+     - post-activity
+     
+- name: Update managed emxSystem.properties
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\managed\properties\emxSystem.properties'
+    state: present
+    regexp: 'emxFramework.External.Authentication = false'
+    line: 'emxFramework.External.Authentication = true'
+    backrefs: yes
+  tags:
+     - emxSystem_update
+     - post-activity
+     
+- name: Update managed emxSystem.properties.sav
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\managed\properties\emxSystem.properties.sav'
+    state: present
+    regexp: 'emxFramework.External.Authentication = false'
+    line: 'emxFramework.External.Authentication = true'
+  tags:
+     - emxSystem_update
+     - post-activity
+
+- name: Modify date format 1 managed emxSystem.properties
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\managed\properties\emxSystem.properties'
+    state: present
+    regexp: 'eServiceSuites.eMatrixDateFormat = MM/dd/yyyy hh:mm:ss a'
+    line: 'eServiceSuites.eMatrixDateFormat = MM/dd/yyyy hh:mm:ss a'  
+  tags:
+    - modify-date-format_no_need
+    - post-activity_no_need
+    
+- name: Modify date format 2 managed emxSystem.properties
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\managed\properties\emxSystem.properties'
+    state: present
+    regexp: 'eServiceSuites.eMatrixInputDateFormat = MM/dd/yyyy hh:mm:ss a'
+    line: 'eServiceSuites.eMatrixInputDateFormat = MM/dd/yyyy hh:mm:ss a'  
+  tags:
+    - modify-date-format_no_need
+    - post-activity_no_need
+
+- name: Modify date format 1 STAGING emxSystem.properties
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\STAGING\ematrix\properties\emxSystem.properties'
+    state: present
+    regexp: 'eServiceSuites.eMatrixDateFormat = MM/dd/yyyy hh:mm:ss a'
+    line: 'eServiceSuites.eMatrixDateFormat = MM/dd/yyyy hh:mm:ss a'  
+  tags:
+    - modify-date-format_no_need
+    - post-activity_no_need
+    
+- name: Modify date format 2 STAGING emxSystem.properties
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\STAGING\ematrix\properties\emxSystem.properties'
+    state: present
+    regexp: 'eServiceSuites.eMatrixInputDateFormat = MM/dd/yyyy hh:mm:ss a'
+    line: 'eServiceSuites.eMatrixInputDateFormat = MM/dd/yyyy hh:mm:ss a'  
+  tags:
+    - modify-date-format_no_need
+    - post-activity_no_need
+     
+
+- name: Modify enovia.ini
+  win_lineinfile:
+    path: '{{ mcs_server_dir }}\win_b64\code\bin\enovia.ini'
+    state: present
+    line: "{{ item.line }}"
+    insertafter: "{{ item.insertafter }}"
+  with_items:
+    - line: MX_NORMAL_DATETIME_FORMAT=moy/dom/yr4 h24:min:sec
+      insertafter: MXMRUN_OS=win_b64
+  tags:
+    - modify-date-format_no_need
+    - post-activity_no_need
+
+
+- name: Show Env name on the Top bar
+  win_lineinfile:
+    path: '{{ topbar_html_dir }}\TopBarView.html'
+    state: present
+    line: "{{ item.line }}"
+    insertafter: "{{ item.insertafter }}"
+  with_items:
+    - line: <div><span style="color:white;font-weight:bolder">{{ env_name }}</span></div>
+      insertafter: '^(.*)topbar-cmd fonticon fonticon-search search(.*)$'
+  tags:
+    - env-on-topbar
+
+
+   
+- name: Modify emxFrameworkStringResource_en.properties
+  win_lineinfile:
+    path: '{{ resource_properties_dir }}\emxFrameworkStringResource_en.properties'
+    state: present
+    regexp: '^(.*)emxFramework.Login.Title(.*)$'
+    line: emxFramework.Login.Title = 3DEXPERIENCE Platform {{ env_name }}
+    backrefs: yes
+    
+  tags:
+   - env-on-topbar
+   
+- name: Modify emxFrameworkStringResource_en.properties
+  win_lineinfile:
+    path: '{{ resource_properties_dir }}\emxFrameworkStringResource_en.properties'
+    state: present
+    regexp: '^(.*)emxFramework.Type.3DExperience(.*)$'
+    line: emxFramework.Type.3DExperience=3DEXPERIENCE {{ env_name }}
+    backrefs: yes
+    
+  tags:
+   - env-on-topbar
+   
+
+- name: Update timeout (Modify server.xml)
+  win_lineinfile:
+    path: '{{ conf_dir }}\server.xml'
+    state: present
+    regexp: '^(.*)connectionTimeout="20000" URIEncoding="UTF-8"(.*)$'
+    line: '               connectionTimeout="{{ time_out_limit }}" URIEncoding="UTF-8"'
+    backrefs: yes
+    
+  tags:
+   - update-timeout
+

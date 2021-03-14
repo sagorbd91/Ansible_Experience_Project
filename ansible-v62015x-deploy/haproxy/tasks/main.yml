@@ -1,0 +1,53 @@
+---
+- name: Download and install haproxy
+  remote_user: monitor
+  become: true
+  yum: name=ftp://195.220.108.108/linux/centos/6.8/os/x86_64/Packages/haproxy-1.5.4-3.el6.x86_64.rpm state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "6"
+  
+- name: Install haproxy
+  remote_user: monitor
+  become: true
+  yum: name=haproxy state=present
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == "7"
+  
+
+- name: Configure the haproxy cfg file for LB
+  remote_user: monitor
+  become: true
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+  when: is_fcsremote_lb == "false"
+  
+- name: Configure the haproxy cfg file for fcsremote LB
+  remote_user: monitor
+  become: true
+  template: src=haproxy.cfg.fcsremote.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+  when: is_fcsremote_lb == "true"
+
+- name: Start the haproxy service
+  remote_user: monitor
+  become: true
+  service: name=haproxy state=started enabled=yes
+
+- name: check iptables not running
+  remote_user: monitor
+  become: true
+  shell: service iptables status | grep not | awk '{ print $4 }'
+  register: iptables_stoped
+
+- name: Allow JMX ports ip in iptable rule
+  remote_user: monitor
+  become: true 
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ port_loadbalancer }} -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+
+- name: save iptables
+  remote_user: monitor
+  become: true 
+  command: iptables-save
+  when: "'not' not in iptables_stoped.stdout" 
+  
+- include: service_firewalld.yml
+

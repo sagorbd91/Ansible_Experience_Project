@@ -1,0 +1,30 @@
+---
+- name: copy mxEnv.sh in scripts
+  template: src="scripts.mxEnv.sh.j2" dest="{{ fcs_code_dir }}/scripts/mxEnv.sh"
+  tags: deploy-config
+- name: copy mxmrun.sh
+  template: src="scripts.mxmrun.sh.j2" dest="{{ fcs_code_dir }}/scripts/mxmrun.sh"
+  tags: deploy-config
+- name: copy bin mxEnv.sh
+  template: src="bin.mxEnv.sh.j2" dest="{{ fcs_code_dir }}/linux_a64/code/bin/mxEnv.sh"
+  tags: deploy-config
+- name: copy enovia.install into code
+  template: src="installData.enovia.install.j2" dest="{{ fcs_code_dir }}/enovia.install"
+  tags: deploy-config
+- name: copy InstallData.xml into code
+  template: src="installData.enovia.install.j2" dest="{{ fcs_code_dir }}/InstallData/InstallData.xml"
+  tags: deploy-config
+- name: copy web.xml into code
+  template: src="enoviafcs.web.xml.j2" dest="{{ fcs_code_dir }}/distrib/enoviafcs/WEB-INF/web.xml"
+  tags: deploy-config
+- name: copy command/war_setup.sh
+  template: src="command.war_setup.sh.j2" dest="{{ fcs_code_dir }}/linux_a64/code/command/war_setup.sh" 
+  tags: deploy-config
+- name: tomcat instance server.xml config
+  template: src="tomcat.server.xml.j2" dest="{{fcs_instance_path}}/{{ item.key }}/conf/server.xml"
+  with_dict: instances   
+  tags: deploy-config
+- name: tomcat instance setenv.sh config
+  template: src="tomcat.setenv.sh.j2" dest="{{fcs_instance_path}}/{{ item.key }}/bin/setenv.sh"
+  with_dict: instances
+  tags: deploy-config 

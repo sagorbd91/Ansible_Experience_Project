@@ -1,0 +1,38 @@
+#!/bin/bash
+MQLPASS={{ mql_password }}
+cd {{ mcs_server_dir }}/scripts
+
+if [ -z "$MQLPASS" ]
+then
+echo "Modifying fcs store ..."
+  ./mql << EOF
+  set context person {{ mql_user }};
+  modify store plmx path '{{fcs_central_path}}/plmx';
+  modify store 'Image Store' path '{{fcs_central_path}}/IMAGESTORE';
+  modify store STORE path '{{fcs_central_path}}/STORE';
+
+  modify store plmx fcs '{{fcs_central_url}}';
+  modify store 'Image Store' fcs '{{fcs_central_url}}';
+  modify store STORE fcs '{{fcs_central_url}}';
+  quit;
+EOF
+echo "Modify fcs store sucessfullly"
+else
+echo "Modifying fcs store [else] ..."
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  modify store plmx path '{{fcs_central_path}}/plmx';
+  modify store 'Image Store' path '{{fcs_central_path}}/IMAGESTORE';
+  modify store STORE path '{{fcs_central_path}}/STORE';
+
+  modify store plmx fcs '{{fcs_central_url}}';
+  modify store 'Image Store' fcs '{{fcs_central_url}}';
+  modify store STORE fcs '{{fcs_central_url}}';
+  quit;
+EOF
+echo "Modify fcs store sucessfullly [else]"
+fi
+
+
+
+

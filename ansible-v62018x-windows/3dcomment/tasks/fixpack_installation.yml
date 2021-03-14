@@ -1,0 +1,29 @@
+---
+
+- name: Stop 3DComment Service
+  win_service: name=3DComment_R2018x state=stopped
+  tags: 
+     - install-3dcomment-fp
+     
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_3dcomment_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3dcomment_fp.xml"
+  tags: install-3dcomment-fp
+ 
+- name: Copy 3dcomment-fp installer from NFS to local
+  win_copy:
+    src: '{{ Comment_installer_path_fp }}'
+    dest: '{{ windows_tmp_path }}\3dcomment'
+    remote_src: True
+  tags: install-3dcomment-fp
+
+- name: Executing platform FP installer
+  win_command: '{{ windows_tmp_path }}\3dcomment\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3dcomment_fp.xml --xmlreport {{ windows_tmp_path }}\Report_3dcomment_fp.xml'
+  tags: install-3dcomment-fp
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3dcomment_fp.xml" state=absent
+  tags: install-3dcomment-fp
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\3dcomment" state=absent
+  tags: install-3dcomment-fp

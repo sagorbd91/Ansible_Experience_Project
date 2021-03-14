@@ -1,0 +1,11 @@
+#!/bin/sh
+CurrentDir=`pwd`
+ulimit -d unlimited
+cd {{fts_bin_dir}}
+echo "Starting service..."
+chmod a+x cvinit.sh
+JAVA_HOME={{fts_java_home}}
+export JAVA_HOME
+./cvinit.sh start
+cd $CurrentDir
+echo "Started."

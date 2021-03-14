@@ -1,0 +1,85 @@
+---
+
+- name: copy 15x_functions.j2 in e3dx Function Directory
+  remote_user: "{{ plm_user }}"
+  template: src="15x_functions.j2" dest="{{ e3dx_function_dir }}/15x_functions"
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+  
+- name: copy PICMain_3dindex_server.sh.j2 in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="PICMain_3dindex_server.sh.j2" dest="{{ e3dx_bin_dir }}/PICMain_3dindex_server.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+
+- name: copy 3DXAdminHttpServer-launch.sh.j2 in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="3DXAdminHttpServer-launch.sh.j2" dest="{{ e3dx_bin_dir }}/3DXAdminHttpServer-launch.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+
+- name: copy BBDEnvEditor-launch.sh.j2 in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="BBDEnvEditor-launch.sh.j2" dest="{{ e3dx_bin_dir }}/BBDEnvEditor-launch.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+
+- name: copy BBDIndexAdmin-lauch.sh.j2 in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="BBDIndexAdmin-lauch.sh.j2" dest="{{ e3dx_bin_dir }}/BBDIndexAdmin-lauch.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+
+- name: copy indexation-launch.sh.j2 in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="indexation-launch.sh.j2" dest="{{ e3dx_bin_dir }}/indexation-launch.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+
+- name: copy killscript.sh in scripts
+  remote_user: "{{ plm_user }}"
+  copy: src="killscript.sh" dest="{{ e3dx_bin_dir }}/stop3dindexserver.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+#    - stop-3dx
+
+- name: copy checkrun.sh in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="checkrun.sh.j2" dest="{{ e3dx_bin_dir }}/checkrun.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+    
+- name: copy cron status check in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="cron_status_check.sh.j2" dest="{{ e3dx_bin_dir }}/cron_status_check.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+
+- name: copy 3d index check in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="3d_index_chk_script.sh.j2" dest="{{ e3dx_bin_dir }}/3d_index_chk_script.sh" mode=0755
+  tags: 
+    - deploy-script
+    - install-3dx-fp
+
+
+#- name: Entry script to run at startup
+#  remote_user: monitor
+#  become: true
+#  blockinfile:
+#    path: /etc/rc.local
+#    marker: "## {mark} ANSIBLE MANAGED BLOCK __ add 3dx start script to run at startup ##"
+#    content: |
+#      su - {{ plm_user }} -c "sh {{ e3dx_bin_dir }}/PICMain_3dindex_server.sh; sleep 5;"
+#  tags: 
+#   - 3dx-as-a-service
+#   - install-3dx-fp

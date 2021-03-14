@@ -1,0 +1,30 @@
+---
+
+- name: Stop FederatedSearch Service
+  win_service: name=federated_R2018x state=stopped
+  tags: install-federated-fp
+
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_federated_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_federated_fp.xml"
+  tags: install-federated-fp
+ 
+- name: Copy FederatedSearch installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_fed_fp }}'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: install-federated-fp  
+
+- name: Executing Fixpack installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_federated_fp.xml --xmlreport {{ windows_tmp_path }}\Report_federated_fp.xml'
+     elevated: yes
+  tags: install-federated-fp
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_federated_fp.xml" state=absent
+  tags: install-federated-fp
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags: install-federated-fp

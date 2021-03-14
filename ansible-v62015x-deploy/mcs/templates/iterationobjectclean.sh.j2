@@ -1,0 +1,10 @@
+#!/bin/bash
+# this script will clean iteration object
+
+#TIMESTAMP=`date +"%D-%H:%M:%S"`
+
+cd {{ mcs_server_dir }}/scripts
+nohup time ./VPLMBatchIteration.sh -user "{{user_clean_object}}" -password "{{password_clean_object}}" -serverURL "{{ mcs_server_enovia_url }}" -p 1 -q 1 -n 1 -v 2>&1  > {{mcs_orphan_dir}}/mql-iterationobjclean-`date +%Y%m%d-%H%M`.log & 
+
+
+

@@ -1,0 +1,29 @@
+---
+ 
+- name: Copy the Connector for SolidWorks Server Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_conn_solidworks.j2" dest="{{ mcs_apps_ga_installer }}/ConnectorforSolidWorksServer.Unix64/1/answer_conn_solidworks.txt" mode=2777
+  tags: 
+    - install-solidworks
+    - install-mcs
+
+- name: Executing the Connector for SolidWorks Server installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_conn_solidworks.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ConnectorforSolidWorksServer.Unix64/1
+  tags: 
+      - install-solidworks
+      - install-mcs
+   
+
+- name: Remove the Connector for SolidWorks Server Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ConnectorforSolidWorksServer.Unix64/1/answer_conn_solidworks.txt" state=absent
+  tags: 
+     - install-solidworks
+     - install-mcs
+
+

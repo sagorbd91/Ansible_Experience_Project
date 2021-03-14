@@ -1,0 +1,8 @@
+---
+
+- hosts: database_servers
+  vars_files:
+      - database/vars/main.yml
+      - database/vars/{{ env_name }}.yml
+  roles:
+    - database

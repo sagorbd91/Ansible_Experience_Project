@@ -1,0 +1,99 @@
+---
+
+- name: Install HTTPD and SSL
+  remote_user: monitor
+  become: true
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ httpd_pkgs }}"
+  tags: 
+    - install-3ddash-reverseproxy
+    - install-reverseproxy
+    
+
+- name: 3ddash secure(https) vhost deploy
+  remote_user: monitor
+  become: true
+  template: src="3ddash.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3ddash.conf"
+  tags:
+    - deploy-vhost
+    - install-3ddash-reverseproxy
+
+
+#======================== Deploy CA CRT ======================================================    
+- name: create the ssl dir or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ ssl_directory }}" state=directory owner=root group=root mode=2755
+  tags: 
+    - deploy-certs
+    - install-3ddash-reverseproxy
+
+- name: copy valmet-ca crt in ssl dir
+  remote_user: monitor
+  become: true
+  copy: src="valmet-ca.crt" dest="{{ ssl_directory }}/valmet-ca.crt" mode=0644
+  tags: 
+    - deploy-certs
+    - install-3ddash-reverseproxy
+
+
+#======================== Generate Self-signed CRT ======================================================
+
+#openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/httpd/ssl/apache-selfsigned.key -out /etc/httpd/ssl/apache-selfsigned.crt
+
+- name: Generate 3ddash Self sign certificate
+  remote_user: monitor
+  become: true
+  shell: openssl req -x509 -nodes -days {{ ssl_certs_days }} -newkey rsa:2048 -subj "{{ ssl_certs_fields }}" -keyout "{{ ssl_certs_privkey_path }}" -out "{{ ssl_certs_cert_path }}"
+  tags:
+    - generate-cert
+    - install-3ddash-reverseproxy
+    
+- name: RSA key file ownership
+  remote_user: monitor
+  become: true
+  file: path={{ ssl_certs_privkey_path }} owner={{ ssl_certs_path_owner }} group={{ ssl_certs_path_group }} mode={{ ssl_certs_mode }}
+  tags:
+    - generate-cert
+    - install-3ddash-reverseproxy
+        
+- name: Self-signed SSL certificate file ownership
+  remote_user: monitor
+  become: true
+  file: path={{ ssl_certs_cert_path }} owner={{ ssl_certs_path_owner }} group={{ ssl_certs_path_group }} mode={{ ssl_certs_mode }}
+  tags:
+    - generate-cert
+    - install-3ddash-reverseproxy
+
+
+- name: Restart HTTPD service
+  remote_user: monitor
+  become: true
+  service:
+    name: httpd
+    state: restarted
+  tags:
+    - restart-httpd-reverseproxy
+    - install-3ddash-reverseproxy
+
+
+#========================================= END ===============================================================    
+#- name: copy 3ddash crt in ssl dir
+#  remote_user: monitor
+#  become: true
+#  copy: src="{{ env_name }}-3ddash-self.crt" dest="{{ ssl_directory }}/{{3ddash_crt}}.crt" mode=0644
+#  tags: 
+#    - deploy-certs
+#    - install-3ddash-reverseproxy
+    
+#- name: copy 3ddash key in ssl dir
+#  remote_user: monitor
+#  become: true
+#  copy: src="{{ env_name }}-3ddash-self.key" dest="{{ ssl_directory }}/{{3ddash_crt}}.key" mode=0644
+#  tags: 
+#    - deploy-certs
+#    - install-3ddash-reverseproxy
+    
+

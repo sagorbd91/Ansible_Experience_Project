@@ -1,0 +1,62 @@
+env_name: 'DEV3'
+
+#Installation paths and params
+windows_tmp_path: 'C:\Temp'
+common_dir: 'D:\PLM\{{ env_name }}\common\'
+where_to_install: '{{ common_dir }}\soft\Apache24'
+server_name: 'v0641a.vstage.co'
+
+service_name: '3DEXPERIENCER2018xProxy'
+
+#Ports
+passport_proxy_port: '8280'
+comment_proxy_port: '8780'
+bashboard_proxy_port: '443'
+notification_proxy_port: '8880'
+mcs_proxy_port: '8180'
+swym_proxy_port: '8480'
+fcs_proxy_port: '8580'
+fed_proxy_port: '8980'
+
+#Common Names
+passport_server_common_name: '3dpassport-18xdev3-plm.valmet.com'
+comment_server_common_name: '3dcomment-18xdev3-plm.valmet.com'
+dashboard_server_common_name: '3ddashboard-18xdev3-plm.valmet.com'
+notifiacation_server_common_name: '3dnotification-18xdev3-plm.valmet.com'
+mcs_server_common_name: '3dspace-18xdev3-plm.valmet.com'
+swym_server_common_name: '3dswym-18xdev3-plm.valmet.com'
+fcs_server_common_name: 'fcscentral-18xdev3-plm.valmet.com'
+fed_server_common_name: 'federated-18xdev3-plm.valmet.com'
+
+#Vhosts and certs path
+vhost_path: 'conf\extra'
+ssl_directory: '{{ common_dir }}\conf\ssl'
+
+#Certificates
+certificate_Comment: '{{ env_name }}-3dcomment'
+certificate_fcs: '{{ env_name }}-fcscentral'
+certificate_fed: '{{ env_name }}-fedsearch'
+certificate_passport: '{{ env_name }}-3dpassport'
+certificate_mcs: '{{ env_name }}-3dspace'
+certificate_dash: '{{ env_name }}-3ddashboard'
+certificate_notification: '{{ env_name }}-3dnotification'
+certificate_3dswym: '{{ env_name }}-3dswym'
+
+#Code Directories
+Swym_dir: 'D:\PLM\{{ env_name }}\3DSwym\Code\'
+Comment_dir: 'D:\PLM\{{ env_name }}\3DComment\CODE'
+Dash_dir: 'D:\PLM\{{ env_name }}\3DDashboard\Code'
+Notif_dir: 'D:\PLM\{{ env_name }}\3DNotification\Code'
+Pass_dir: 'D:\PLM\{{ env_name }}\3DPassport\Code'
+Mcs_dir: 'D:\PLM\{{ env_name }}\3DSpace\Server'
+Fcs_dir: 'D:\PLM\{{ env_name }}\Fcscentral\Code'
+Fed_dir: 'D:\PLM\{{ env_name }}\FedSearch\Code'
+
+
+
+
+
+
+
+
+

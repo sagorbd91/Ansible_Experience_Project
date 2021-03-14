@@ -1,0 +1,14 @@
+---
+- name: Firewall Rule for testing
+  win_firewall_rule:
+    name: Test Firewall Role
+    action: allow
+    direction: in
+    remoteip: 192.168.0.1,192.168.0.2
+    protocol: tcp
+    service: 3DSpaceTomEE_tomee2_R2018x
+    state: present
+    enabled: no
+    
+  tags:
+    - add-role

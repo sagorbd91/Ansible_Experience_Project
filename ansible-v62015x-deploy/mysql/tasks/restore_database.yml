@@ -1,0 +1,8 @@
+---
+
+- name: Restore the database
+  remote_user: monitor
+  become: true
+  mysql_db: state=import name=all target={{ mysql_backup_dir }}/mysql_backup_{{ mysql_backup_file_timestamp }}.sql login_user=root login_password={{ mysql_root_db_pass }}
+  tags:
+     - restore-database

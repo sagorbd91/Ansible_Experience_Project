@@ -1,0 +1,11 @@
+---
+
+- name: Pre-Migration Verification and Launch MQL 
+  hosts: mcs_servers
+  remote_user: "{{ plm_user }}"
+  become: false
+  vars_files:
+      - mcs/vars/main.yml
+      - mcs/vars/{{env_name}}.yml
+  roles:
+      - { role: migration  }

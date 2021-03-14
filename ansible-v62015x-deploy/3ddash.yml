@@ -1,0 +1,68 @@
+---
+
+- name: pre task 
+  hosts: 3ddash_servers
+  remote_user: monitor 
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  become: true
+  tags: 
+     - install-dashboard
+     - install-dashboard-fp
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+#- name: Install MySQL-client
+#  hosts: 3ddash_servers
+#  tags: 
+#     - install-dashboard
+#     - install-mysql-client
+#  remote_user: "monitor"
+#  become: true
+#  vars_files:
+#      - /home/users/as_user/ansible/.sudo_pass
+#  yum: name=mysql state=installed
+
+- name: Create user
+  hosts: 3ddash_servers
+  tags: install-dashboard
+  remote_user: "monitor"
+  become: true
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  vars:
+    plm_user: "plmtads"
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }
+
+      
+- name: install 3ddashboard
+  hosts: 3ddash_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - 3ddash/vars/main.yml
+      - 3ddash/vars/{{env_name}}.yml
+  remote_user: "{{ plm_user }}"
+  become: false
+  roles:
+      - { role: 3ddash  }	
+
+      
+- name: post tasks
+  hosts: 3ddash_servers
+  remote_user: monitor
+  become: true
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  tags: 
+    - install-dashboard
+    - install-dashboard-fp
+  post_tasks:
+    - name: unmounting mounting NFS to local
+      mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=ro state=unmounted
+      

@@ -1,0 +1,60 @@
+---
+
+- name: create the bin directory under 3dspace
+  win_file: path="{{ bin_dir }}" state=directory
+  tags:
+   - create-tomee-instance
+   - create-bin-dir
+
+- name: Stop MCSCAS Service
+  win_service: name=3DSpaceTomEE_R2018x state=stopped
+  tags: 
+   - create-tomee-instance
+     
+   
+- name: Create TomEE Instance (Copy)
+  win_copy:
+    src: '{{instanance_dir}}\tomee\'
+    dest: '{{windows_tmp_path}}\{{ item.key }}'
+    force: no
+    remote_src: True
+    elevated: yes
+  with_dict: "{{ instances }}"
+  tags: 
+    - create-tomee-instance
+    - create-tomee-instance-test
+    
+
+- name: Deploy CreateTomcatService.bat.j2 bat file to target
+  template: src="templates/build_deploy/CreateTomcatService.bat.j2" dest="{{bin_dir}}\CreateTomcatService_Custom.bat"
+  tags: 
+    - create-tomee-instance
+    - execute-Deploy3DSpaceWar-CAS
+    - copy-create-service
+
+    
+- name: Deploy Deploy3DSpaceWar_CAS.bat.j2 bat file to target
+  template: src="templates/build_deploy/Deploy3DSpaceWar_CAS.bat.j2" dest="{{bin_dir}}\Deploy3DSpaceWar_CAS_{{ item.key }}.bat"
+  with_dict: "{{ instances }}"
+  tags: 
+    - create-tomee-instance
+
+
+- name: Executing Deploy3DSpaceWar_CAS.bat 
+  win_psexec:
+     command: '{{bin_dir}}\Deploy3DSpaceWar_CAS_{{ item.key }}.bat >> {{bin_dir}}\Deploy3DSpace_CAS_report.xml'
+     elevated: yes
+  with_dict: "{{ instances }}"
+  tags: 
+    - create-tomee-instance
+    - execute-Deploy3DSpaceWar-CAS
+    
+    
+- name: Start MCSCAS servce
+  win_service: name=3DSpaceTomEE_R2018x state=started
+  tags: 
+    - create-tomee-instance
+
+    
+
+

@@ -1,0 +1,27 @@
+#====================================
+# VirtualHost for 3DNotification
+#====================================
+Listen {{ notification_proxy_port }}
+
+SSLRandomSeed startup builtin
+SSLRandomSeed connect builtin
+SSLCryptoDevice builtin
+
+<VirtualHost *:{{ notification_proxy_port }}>
+ServerName {{ notifiacation_server_common_name }}
+ServerAlias {{ notifiacation_server_common_name }}
+
+ErrorLog    logs\3DNotification_error_log.txt
+TransferLog    logs\3DNotification_access_log.txt
+CustomLog    logs\3DNotification_ssl_request_log.txt "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b" 
+
+LogLevel warn
+
+SSLEngine on
+SSLProxyEngine on
+
+SSLCertificateFile    {{ ssl_directory }}\{{ certificate_notification }}.crt
+SSLCertificateKeyFile    {{ ssl_directory }}\{{ certificate_notification }}.key
+
+Include {{ Notif_dir }}\win_b64\templates\3DNotification_httpd_fragment.conf
+</VirtualHost>

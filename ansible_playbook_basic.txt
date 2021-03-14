@@ -1,0 +1,53 @@
+#!/bin/bash
+FILE="/home/users/as_user/ansible/ansible-windows/hosts"
+IFS=', ' read -r -a array <<< @option.Add_host@
+echo "[win_servers]" >$FILE
+for element in "${array[@]}"
+do
+    echo "$element" >>$FILE
+done
+
+
+
+#!/bin/bash
+
+cd /home/users/as_user/ansible/ansible-windows/
+
+#ansible-playbook -i hosts zabix_api.yml --sudo 
+
+ansible-playbook -i hosts copy_psexec.yml -t copy_psexec
+
+
+1. First i have to create an playbook where i could include a hosts and role
+ 
+		- hosts: win_servers
+
+		  vars_files:
+		      - zabbix/vars/main.yml
+		      - zabbix/vars/{{ env_name }}.yml  [if you add another vars in vars files then you have to include it]
+		  roles:
+    
+	            - zabbix-agent
+
+2. Now i have to make an hosts files where [win_servers] will be included
+	[win_servers]
+	v0672a.vstage.co
+
+	v0673a.vstage.co
+
+	v0674a.vstage.co
+
+3. Now you have to make role which role you included at primary playbook. Above we made role named 
+	zabbix-agent so we need to create a folder named as same
+
+4. In zabbix-agent folder I need to make 4 folders name (tasks, templates, files, vars)
+
+	In task folder you can create main.yml to describe your task or you can make another task
+	in different name and after that include that task to main.yml file
+
+5. If any hard files are need to copy to servers then you need to keep those files in that folder.
+
+6. In templates folder you can keep those files which is dynamic means in files you need to apply variables and you can change that variables at your will.
+
+7. Lastly, the vars files where you have to mention those vars which are assigned at your task. when you execute that task then the task will include that variables.
+

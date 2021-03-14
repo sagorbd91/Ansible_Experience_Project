@@ -1,0 +1,10 @@
+- name: deploy elt Log
+  hosts: mcs_servers
+  vars:
+   plm_user: "plmyma"
+   plm_group: "plm"
+  remote_user: "{{ plm_user }}"
+  sudo: false
+  roles:
+      - { role: deploy-elt-log  }	
+

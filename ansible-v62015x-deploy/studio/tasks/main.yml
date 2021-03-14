@@ -1,0 +1,20 @@
+---
+
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_shell_ksh.yml
+- include: install_studio.yml  
+- include: install_studio_fix.yml
+- include: generate_matrixR.yml
+- include: backup_code.yml
+#- include: uninstall_studio.yml
+
+- include: restore_code.yml
+
+
+
+
+
+
+
+

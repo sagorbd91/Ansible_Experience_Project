@@ -1,0 +1,9 @@
+---
+
+- name: Install 3DDashboard
+  hosts: 3ddash_servers
+  vars_files:
+      - 3ddash/vars/main.yml
+      - 3ddash/vars/{{env_name}}.yml
+  roles:
+      - 3ddash

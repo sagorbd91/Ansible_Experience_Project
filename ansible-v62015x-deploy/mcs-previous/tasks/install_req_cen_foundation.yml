@@ -1,0 +1,38 @@
+---
+ 
+- name: Copy the Requirements Central Foundation Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_req_cen_foundation.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIARequirementsCentralFoundation.Unix64/1/answer_req_cen_foundation.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-reqcentral
+    - install-mcs
+   
+- name: Copy the Requirements Central Foundation Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_req_cen_foundation_nudb.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIARequirementsCentralFoundation.Unix64/1/answer_req_cen_foundation.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-reqcentral
+     - install-mcs
+
+- name: Executing the Requirements Central Foundation installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_req_cen_foundation.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIARequirementsCentralFoundation.Unix64/1
+  tags: 
+     - install-reqcentral
+     - install-mcs
+   
+
+- name: Remove the Requirements Central Foundation Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIARequirementsCentralFoundation.Unix64/1/answer_req_cen_foundation.txt" state=absent
+  tags: 
+     - install-reqcentral
+     - install-mcs
+

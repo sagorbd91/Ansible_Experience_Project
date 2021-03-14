@@ -1,0 +1,560 @@
+# Copyright (c) 2000-2015, International TechneGroup Incorporated
+# Version 1.0.0  
+# Installs the ProE server schema.
+# 03/09/2017 : FB 23681 : Sumant: updated HF version to HF4
+# 01/25/2016 : FB 19519 : Mahashweta : updated sIntegration_HelpAbout_Version to HF3
+# 03/25/2015 Mahashweta : Modified to incorporate the utdbloadchanges
+# 03/30/2015 Ramesh : updated sIntegration_HelpAbout_Version to HF1
+#-------------------------------------
+
+tcl;
+
+proc isUserValid { sUserName } {
+	set bRet true
+
+	set adminRolesList {attribute type relationship format person role policy program property menu}
+	set businessRolesList {modify create}
+
+	set sMqlCmd {mql print person $sUserName select admin mask dump tcl}
+	set mqlRet [eval $sMqlCmd]
+
+	if [catch {set mqlRet [eval $sMqlCmd]} sErrorMessage] {
+		return -code error $sErrorMessage
+	} 
+
+	set userAccessInfoList [lindex $mqlRet 0]
+
+	set adminAccessInfoList1 [lindex $userAccessInfoList 0]
+	set businessAccessInfoList1 [lindex $userAccessInfoList 1]
+
+	set adminAccessInfoList [split [lindex $adminAccessInfoList1 0] ","]
+	set businessAccessInfoList [split [lindex $businessAccessInfoList1 0] ","]
+
+	set firstAdminAccess [lindex $adminAccessInfoList 0]
+	set firstBusinessAccess [lindex $businessAccessInfoList 0]
+
+	if {"none" == $firstAdminAccess} {
+		return false
+	} elseif {"all" != $firstAdminAccess} {
+		foreach adminRole $adminRolesList {
+			if {[lsearch $adminAccessInfoList $adminRole] < 0} {
+				return false
+			}
+		}
+	}
+
+	if {"none" == $firstBusinessAccess} {
+		return false
+	} elseif {"all" != $firstBusinessAccess} {
+		foreach businessRole $businessRolesList {
+			if {[lsearch $businessAccessInfoList $businessRole] < 0} {
+				return false
+			}
+		}
+	}
+
+	return $bRet
+}
+
+proc isVaultValid { sVaultName } {
+	set bRet false
+	
+	if {$sVaultName == "" || $sVaultName == "ADMINISTRATION"} {
+		set bRet false
+	} else {
+		set bRet true
+	}
+
+	return $bRet
+}
+
+proc readYESNOInput {} {
+
+	gets stdin userInput
+
+	while {1} {
+		if { $userInput == "" } {
+			return "YES"
+		} else {
+			if { "YES" != [string toupper $userInput]  && "NO" != [string toupper $userInput] } {
+				puts "Invalid option, Please enter a valid value either \"YES\" or \"NO\": YES >"
+				gets stdin userInput
+			} else {
+				return $userInput
+			}
+		}
+	}
+
+}
+
+	proc readServerPath {} {
+
+		gets stdin inputPath
+		while {1} {
+			if { $inputPath == "" } {
+				return "DEFAULT"
+			} else {
+				if {[file isdirectory $inputPath] == 1 } {
+					return $inputPath									
+				} else {
+					puts "Invalid option, Please enter enter the correct Enovia Live Collaboration (RMI) Server installation path. C:/enoviaV6R2015x/server >"
+					gets stdin inputPath
+				}
+			}
+		}	
+	}
+
+proc getUserDetails {} {
+
+	puts "Please enter the new user name"
+	gets stdin sUserName
+
+	puts "Please enter the password"
+	gets stdin sUserPassword
+	
+	set sErrorMessage ""
+
+	if {"" == $sUserName || [catch {mql set context user $sUserName pass $sUserPassword} sErrorMessage]} {
+		puts stdout $sErrorMessage
+
+		puts "Invaild User/Password specified. Do you want to re-enter the user/password? Enter \"NO\" quit the installation"
+		
+		set userInput [readYESNOInput]
+		
+		if {"NO" == [string toupper $userInput]} {
+			return -code error "Installation aborted"
+		}
+
+		set sUserName [getUserDetails]
+	} 	
+
+	return $sUserName
+	
+}
+
+proc getVaultDetails {} {
+
+	puts "Enter the vault name"
+	gets stdin sVaultName
+
+	if [catch {mql set context vault "$sVaultName"} sErrorMessage] {
+		puts stdout $sErrorMessage
+		
+		puts "Invalid vault. Enter \"YES\" to specify new vault. Enter \"NO\" to quit the installation: YES >"
+
+		set userInput [readYESNOInput]
+
+		if {"NO" == [string toupper $userInput] } {
+			return -code error "Installation aborted"
+		}
+
+		set sVaultName [getVaultDetails]
+	} 
+
+	return $sVaultName
+}
+
+proc validateUser {sUserName} {
+
+	if [catch {set isUserValid [isUserValid $sUserName]} sErrorMessage] {
+		puts stdout $sErrorMessage
+		return -code error $sErrorMessage
+	}
+
+	if {!$isUserValid} {
+		puts "User does not have minimum roles required to install. Enter \"YES\" to specify new user. Enter \"NO\" to quit the installation: YES >"
+		set userInput [readYESNOInput]
+
+		if {"NO" == [string toupper $userInput]} {
+			return -code error "Installation aborted"
+		}
+
+		set sUserName [getUserDetails]
+	
+		validateUser $sUserName
+	} 
+}
+
+proc validateVault {sVaultName} {
+
+	if [catch {set isVaultValid [isVaultValid $sVaultName]} sErrorMessage] {
+		puts stdout $sErrorMessage
+		return $sErrorMessage
+	}
+
+	if { !$isVaultValid } {
+		puts "Administration vault not allowed. Enter \"YES\" to specify different vault. Enter \"NO\" to quit the installation: YES >"
+
+		set userInput [readYESNOInput]
+		
+		if {"NO" == [string toupper $userInput]} {
+			return -code error "Installation aborted"
+		}
+
+		set sVaultName [getVaultDetails]
+
+		validateVault $sVaultName
+
+	} 
+}
+
+eval {
+##
+#Start main logic
+##
+puts "\nPlease ensure following settings are done before continue with the installation"
+puts "	1.Start the MQL from RMI server installation directory (<ENOVIA Install>/server/win_b64/code/bin/mql.exe)"
+puts "	2.Login user must be an Administrator user like creator"
+puts "	3.Vault should be set to other than ADMINISTRATION vault"
+
+set sContextInfo [mql print context]
+puts "\nCurrent context info: \"$sContextInfo\""
+
+#puts "Do u want to contune the installation with current context(YES/NO)? YES >"
+
+#set userInput [readYESNOInput]
+
+#if { "NO" == [string toupper $userInput]  } {
+#	puts "Enter \"YES\" to specify the new context. Enter \"NO\" to quit the installation: YES >"
+#	set userInput [readYESNOInput]
+
+#	if { "NO" == [string toupper $userInput]  } {
+#		puts "Installation aborted"
+#		return	
+#	}
+
+#	set sUserName [getUserDetails]
+#	validateUser $sUserName
+
+#	set sVaultName [getVaultDetails]
+#	validateVault $sVaultName
+
+#} else {
+
+	set sMqlCmd {mql print context select user vault dump tcl}
+	set mqlRet [eval $sMqlCmd]
+
+	set contextInfoList [lindex $mqlRet 0]
+
+	set userInfoList [lindex $contextInfoList 0]
+	set vaultInfoList [lindex $contextInfoList 1]
+
+	set sUserName [lindex $userInfoList 0]
+	set sVaultName [lindex $vaultInfoList 0]
+
+	validateUser $sUserName
+	validateVault $sVaultName
+#}
+
+	
+	# 03/25/2015 Mahashweta : Modified to incorporate the utdbloadchanges 
+	#eServiceSchemaVariableMapping.tcl requires a hardcoded path to installAppVersionsList.txt.  
+	# Rather than prompt the user for a directory that isn't really needed for the integration installation,
+	# a temporary directory structure is included with the distribution and hardcoded here in order to allow 
+	# OOTB ENOVIA registration to be used.
+	# 
+        
+		
+	mql set env MXAPPBUILD "./tmp/STAGING/ematrix/1/2/3"
+	
+
+	puts "Start installation of ProEngineer Integration Schema"
+	# 03/25/2015 Mahashweta : Modified to incorporate the utdbloadchanges	
+	#Create a dummy folder structure
+
+	file mkdir "./tmp/STAGING/ematrix/1/2/3"
+
+
+
+
+#------------------------------------------
+# Set all installation file / folder paths
+#------------------------------------------
+
+# NOTE : The following variable, install_home has the installation path
+set install_home "."
+
+# This is where all the util files are placed by the Installer program
+set utils_home $install_home/common
+
+# This is where all the util files are placed by the Installer program
+set scripts_home $install_home/CSE_Server
+
+# This is where all the util files are placed by the Installer program
+set jpos_home $install_home/JPOs
+
+
+#------------------------------------------
+# SOURCE the necessary util files.
+#------------------------------------------
+set sInstallUtilsPath $utils_home/MCADIntegInstallUtils.tcl
+
+if [catch {source $sInstallUtilsPath} sErrorMessage] {
+	puts "problems in sourcing... $sInstallUtilsPath"
+	puts stdout $sErrorMessage
+	return
+}
+
+#------------------------------------------------------------
+# SOURCE the include admin type names file.
+#------------------------------------------------------------
+set sInstallUtilsPath $utils_home/include.tcl
+
+if [catch {source $sInstallUtilsPath} sErrorMessage] {
+	puts "problems in sourcing... $sInstallUtilsPath"
+	puts stdout $sErrorMessage
+	return
+}
+
+#-----------------------------------------
+# SOURCE the File to get Actual Name from AEF registration
+#-----------------------------------------
+set sInstallUtilsPath $utils_home/getActualNamesOfAdminObjects.tcl
+
+if [catch {source $sInstallUtilsPath} sErrorMessage] {
+	puts "problems in sourcing file getting actual names"
+	puts stdout $sErrorMessage
+	return
+}
+
+#-----------------------------------------
+# SOURCE the File to register the integration with the AEF
+#-----------------------------------------
+#set sInstallUtilsPath $utils_home/RegisterMyApp.tcl
+#
+#if [catch {source $sInstallUtilsPath} sErrorMessage] {
+#	puts "problems in sourcing $sInstallUtilsPath"
+#	puts stdout $sErrorMessage
+#	return
+#}
+
+#--------------------------------------------------------------------------------
+# SOURCE ProE Schema Objects
+#--------------------------------------------------------------------------------
+set sInstallAdminUtilsPath $scripts_home/MCADIntegInstallProESchemaObjects.tcl
+global globalConfigValue
+set globalConfigValue "ProENewArch" 
+if [catch {source $sInstallAdminUtilsPath} sErrorMessage] {
+	puts "problems in sourcing MCADIntegInstallProESchemaObjects.tcl..."
+	puts stdout $sErrorMessage
+	return
+}
+
+#--------------------------------------------
+# Start of installer related property setting
+#--------------------------------------------
+
+global sApplication_Name
+set sApplication_Name		"DesignerCentral"
+global sIntegration_Version
+global sNightlyIntegration_Version
+global sIntegration_HelpAbout_Version
+##
+# NOTE : Change the value of this variable as per your Current install version
+##
+set sIntegration_Version	"V6R2015x"
+set sIntegration_HelpAbout_Version "3DEXPERIENCE R2015x.HF4"
+set sNightlyIntegration_Version ""
+global sInstalled_Date
+set sInstalled_Date 		[clock format [clock second]]
+
+global sIntegration_Name
+set sIntegration_Name "Connector for Creo and Pro/ENGINEER"
+
+#------------------------------------------
+# End of installer related property setting
+#------------------------------------------
+# 
+# Setting of Error/ Info log file
+# Use pFile everywhere from here on to log info/error messages...
+# NOTE : Change the name of this log file as per your CSE name
+#
+set sLogFileName "InstallProESchema${sIntegration_HelpAbout_Version}.log"
+set pFile [open $install_home/$sLogFileName a]
+set sInstalled_Date [clock format [clock second]]
+
+
+puts $pFile ""
+puts $pFile "------------------------------------------------------------------------------"
+puts $pFile "Start installation of ProE Integration Schema... \
+date:$sInstalled_Date"
+puts $pFile "------------------------------------------------------------------------------"
+# set verbose off - to avoid lots of unwanted message strings
+mql verbose off;
+
+
+#------------------------------------------
+# SOURCE the integration util file.
+#------------------------------------------
+set sInternalMCADIntegUtils $scripts_home/InternalMCADIntegUtils.tcl
+
+if [catch {source $sInternalMCADIntegUtils} sErrorMessage] {
+	puts "problems in sourcing... $sInstallUtilsPath"
+	puts stdout $sErrorMessage
+	return
+}
+
+
+# 03/25/2015 Mahashweta : Modified to incorporate the utdbloadchanges
+# Load the schema mapping program.
+#
+set sRegProgName "eServiceSchemaVariableMapping.tcl";
+eval [ utdbload $sRegProgName ];
+
+
+#set user_name [get_user_name]
+
+#set user_password [get_password]
+
+#set vault_name [get_mxpro_vault]
+
+#----------------------------------------------
+#Start the actual running of the various procs.
+#----------------------------------------------
+
+# Start change for JPO Name changes
+#-----------------------------
+# Update the names of JPOs if this is prior to 10.6.SP2 build.
+# We get JPO names from include.tcl file
+#-----------------------------
+
+
+puts stdout ""
+
+
+#*******************************************************************#
+# Start transaction
+#*******************************************************************#
+
+#puts "starting transaction"
+#mql start trans update;
+mql start transaction
+
+if [catch {set sRet [MCADInteg-modifyJPONamesForPre106SP2DSRelease]} sErrorMessage] {
+	#some problem, abort
+	set sFailureMsg "Aborting transaction, exception occured in updateJPONamesForPre106SP2DSRelease"
+	MCADInteg-EndWithFailure $sFailureMsg $sErrorMessage
+	exit
+} else {
+
+	#puts "Return value from function MCADInteg-modifyJPONamesForPre106SP2DSRelease is : \"$sRet\""
+}
+
+if {$sRet != "SUCCESS"} {
+    #some problem, abort
+    set sFailureMsg "Aborting transaction, error in updateJPONamesForPre106SP2DSRelease"
+    MCADInteg-EndWithFailure $sFailureMsg $sRet
+    exit
+}
+
+set sRet ""
+# Prior to 10.6.SP2 IEFRegisterIntegration was IEF-RegisterIntegration
+if [catch {set sRet [mql execute program $sIEFRegisterIntegration -method registerIntegrationToIEF "MxPRO" $sIntegration_HelpAbout_Version $sInstalled_Date "ProENewArch"]} sErrorMessage] {
+
+   set sFailureMsg "Aborting transaction, error in registration to DesignerCentral. \n
+   ***** It seems that the installation of the schema was not invoked from the RMI(server) install. Kindly open a command prompt, change the directory to the RMI install(/enoviaV6R2015x/server/win_b64/code/bin), start mql, and run the installation script again. *****\n"
+
+   MCADInteg-EndWithFailure $sFailureMsg $sRet
+   exit
+}
+
+#---------------------------------------------------------
+# Get Actual names and set them to global variables
+# These names are used while installing ProE Admin Objects
+#---------------------------------------------------------
+
+if [catch {set sRet [MCADInteg-getActualNameOfAdminObjects]} sErrorMessage] {
+  	#some problem, abort
+  	set sFailureMsg "Aborting transaction, exception occured in getActualNameOfAdminObjects"
+  	MCADInteg-EndWithFailure $sFailureMsg $sErrorMessage
+  	exit
+}
+  
+if {$sRet != "SUCCESS"} {
+  	#some problem, abort
+  	set sFailureMsg "Aborting transaction, error in getActualNameOfAdminObjects"
+  	MCADInteg-EndWithFailure $sFailureMsg $sRet
+  	exit
+}
+
+#-------------------------------------------------------------------------------
+# Install ProE Admin Objects
+#--------------------------------------------------------------------------------
+
+if [catch {set sRet [MCADInteg-InstallProEAdminObjects $scripts_home]} sErrorMessage] {
+  	#some problem, abort
+  	set sFailureMsg "Aborting transaction, exception occured in InstallProEAdminObjects"
+  	MCADInteg-EndWithFailure $sFailureMsg $sErrorMessage
+  	exit
+}
+
+if {$sRet != "SUCCESS"} {
+	#some problem, abort
+	set sFailureMsg "Aborting transaction, error in InstallProEAdminObjects"
+	MCADInteg-EndWithFailure $sFailureMsg $sRet
+	exit
+} 
+
+if { $sRet == "SUCCESS" } {
+  	# If we're successful to this point we need to register the integration with the AEF
+  	if [catch {set sReg [eServiceApplicationSetVersion "eServiceSystemInformation.tcl" $sIntegration_Name $sIntegration_HelpAbout_Version]} sErrorMessage] {
+  	    #some problem
+  	    set sFailureMsg "Error registering the integration $sIntegration_Name"
+  	    MCADInteg-EndWithFailure $sFailureMsg $sErrorMessage
+  	    exit
+    } 
+
+  	if {$sReg != 0} {
+  	    set sFailureMsg "ERROR: Failed to register the integration $sIntegration_Name"
+  	    MCADInteg-EndWithFailure $sFailureMsg $sReg
+  	    exit
+  	} else {
+  	     puts $pFile "Registered $sIntegration_Name version $sIntegration_HelpAbout_Version $sNightlyIntegration_Version"
+  	}
+
+  	##################################
+  	# Unicorn Schema updates for PRO.
+  	##################################
+   puts $pFile "\nInstalling ProENGINEER integration schema updates for Unicorn on Stack"  
+  	set sTypeName "ProE Part"
+  	set sCSEFileNameForUnicornSchema $scripts_home/UnicornMigrationSchema_ProE.tcl
+  	if [catch {set isTypeExists [MCADInteg-AdminTypeExists "type" "$sTypeName"]} sErrorMessage] {
+  
+  				puts "Error while checking existance of type $sTypeName: $sErrorMessage"
+  				puts $pFile "Error while checking existance of type $sTypeName: $sErrorMessage"
+  				return $sErrorMessage
+  	}
+  	if {$isTypeExists == 1} {
+  		puts $pFile "\n***Can not find ProE integration installed on Stack***"
+  	}
+  	if { $isTypeExists == 0 } {
+  		set mqlret [catch {mql run \"$sCSEFileNameForUnicornSchema\" } outStr ]
+  		if { $mqlret != 0 } {
+  		puts stdout "Error ($progname): $outStr"
+  		return 1
+  		}
+  		puts $pFile "\nInstalled ProENGINEER integration schema updates for Unicorn on Stack"
+  	}  	
+  	
+  	#All Done
+  	MCADInteg-EndWithSuccess
+}
+
+#
+#
+# Close the log file
+# 03/25/2015 Mahashweta : Modified to incorporate the utdbloadchanges
+# Delete the dummy folder structure 
+
+
+file delete -force ./tmp
+puts $pFile "------------------------------------------------------------------------------"
+puts $pFile "End installation of ProE Integration Schema"
+puts $pFile "------------------------------------------------------------------------------"
+puts $pFile ""
+
+close $pFile
+
+exit
+# end of eval...
+}

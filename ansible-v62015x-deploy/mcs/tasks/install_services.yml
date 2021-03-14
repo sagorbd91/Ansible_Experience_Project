@@ -1,0 +1,22 @@
+---
+
+- name: install the services
+  remote_user: monitor
+  become: true
+  template: src="service.j2" dest="{{ service_dir }}/{{item.key}}" owner=root group=root mode=0755  
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy_service
+    - mcs-service
+    - install-mcs
+    - post-task
+
+- name: start services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started enabled=yes
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy_service
+    - install-mcs
+

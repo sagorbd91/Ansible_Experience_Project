@@ -1,0 +1,14 @@
+#!/bin/bash
+jmx_status=$( netstat -nltpu | grep {{item.value.port_jmx}} )
+if [ "$jmx_status" != "" ]; then
+echo "jmx is running"
+else
+echo "jmx port shutdown success"
+fi
+
+tomhttp_status=$( netstat -nltpu | grep -w {{item.value.port_http}} )
+if [ "$tomhttp_status" != "" ]; then
+echo "Tomcat HTTP connector port is running"
+else
+echo "Tomcat HTTP connector port shutdown success"
+fi

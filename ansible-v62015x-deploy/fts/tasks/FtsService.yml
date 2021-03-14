@@ -1,0 +1,8 @@
+---
+- name: Copy the FTS script file
+  remote_user: monitor
+  become: true
+  cron: name="Start FTS at startup" special_time=reboot job="/plm/dev/ftsmaster/code/linux_a64/cv/data/bin/cvinit.sh start > /tmp/FTS_STARTUP 2>&1" user={{ plm_user }}
+  tags: 
+   - fts-as-a-service
+   - install-fts

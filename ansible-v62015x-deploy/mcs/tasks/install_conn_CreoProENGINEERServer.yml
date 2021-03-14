@@ -1,0 +1,52 @@
+---
+
+- name: Check if server installer path exists
+  stat: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/openapps/ConnectorforCreoandProENGINEERServer-V6R2015x.HF4.AllOS"
+  register: check_path
+  tags: 
+    - ConnectorforCreoandProENGINEERServer
+
+- name: CREO installer path doesn't exist
+  fail: msg="CREO installer path doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: 
+    - ConnectorforCreoandProENGINEERServer
+   
+- name: create the temporary dir /tmp/creo to copy creo installer
+  file: path="/tmp/creo" state=directory 
+  tags: 
+    - ConnectorforCreoandProENGINEERServer
+
+- name: Remove creo installer files if already copied to /tmp/creo
+  shell: rm -rf /tmp/creo/*
+  tags: 
+   - ConnectorforCreoandProENGINEERServer
+ 
+- name: Copy the CreoandProENGINEERServer installer to /tmp/creo
+  shell: cp -r {{ mcs_installer_path }}/{{ fix_pack_version }}/openapps/ConnectorforCreoandProENGINEERServer-V6R2015x.HF4.AllOS/* /tmp/creo/
+  tags: 
+   - ConnectorforCreoandProENGINEERServer
+
+#- name: Modify the creo installer File ProEIntegInstallSchemaMain.tcl 
+#  template: src="creo.ProEIntegInstallSchemaMain.tcl.j2" dest="/tmp/creo/ProEIntegInstallSchemaMain.tcl"
+#  tags: 
+#   - ConnectorforCreoandProENGINEERServer
+
+- name: Copy the creo installer script to mcs/bin dir
+  template: src="creo.script.install.j2" dest="{{ mcs_bin_dir }}/script_install_creo.sh" mode=2755
+  tags: 
+   - ConnectorforCreoandProENGINEERServer
+
+- name: Executing the creo installer script.
+  remote_user: "{{ plm_user }}"
+  shell: ./script_install_creo.sh > /tmp/creo/creo_installation.log
+  args:
+    chdir: /{{ mcs_bin_dir }}
+  tags: 
+    - ConnectorforCreoandProENGINEERServer
+
+- name: Find the installation log "/tmp/creo/InstallProESchema3DEXPERIENCE R2015x.HF4.log"
+  shell: echo "Installation log is available at /tmp/creo/creo_installation.log"
+  tags: 
+    - ConnectorforCreoandProENGINEERServer
+    

@@ -1,0 +1,20 @@
+---
+
+- name: Drop the database
+  remote_user: monitor
+  become: true
+  mysql_db: name={{ item.name }} state=absent login_user=root login_password={{ mysql_root_db_pass }}
+  with_items: mysql_db
+  when: mysql_db|lower() != 'none'
+  tags:
+     - drop-database
+
+- name: Drop the database users
+  remote_user: monitor
+  become: true
+  mysql_user: name={{ item.name }}  password={{ item.pass }}
+                priv={{ item.priv }} state=absent host={{ item.host | default("localhost") }} login_user=root login_password={{ mysql_root_db_pass }}
+  with_items: mysql_users
+  when: mysql_users|lower() != 'none'
+  tags:
+     - drop-database

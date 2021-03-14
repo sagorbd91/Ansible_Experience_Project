@@ -1,0 +1,63 @@
+---
+
+- name: Pre task 
+  hosts: mcs_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor 
+  sudo: true
+  tags: pre-task
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+- name: Create user
+  hosts: mcs_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  tags: pre-task
+  remote_user: "monitor"
+  sudo: true
+  vars:
+    plm_user: "plmppma"
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }	
+
+
+- name: Install mcscas
+  hosts: mcs_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - mcs/vars/main.yml
+      - mcs/vars/{{env_name}}.yml
+  vars:
+    mcs_with_cas: true
+    mcs_type: "mcscas"
+    instance_name: "was_mcscas_1"
+    instances:
+      was_mcscas_1:
+         app_name: was_mcscas_1
+         port_http: 8181
+         port_jmx: 8189
+         port_ajp: 8110
+         port_shutdown: 8106
+         port_redirect: 8744 
+  remote_user: "{{ plm_user }}"
+  sudo: false
+  roles:
+      - { role: mcs  }	
+
+- name: post tasks
+  hosts: mcs_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor 
+  sudo: true
+  post_tasks:
+    - name: unmounting NFS from local
+      mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=ro state=unmounted
+      

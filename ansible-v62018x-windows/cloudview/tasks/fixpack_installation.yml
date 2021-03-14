@@ -1,0 +1,32 @@
+---
+
+#- name: Stop coloudview Service
+#  win_service: name="Exalead CloudView - R2018x_3DSwym" state=stopped
+#  tags: install-cloudview-fp
+
+- name: Copy cloudview-fp UserIntention file to target
+  template: src="templates/UserIntentions_Cloud_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_Cloud_fp.xml"
+  tags: install-cloudview-fp
+ 
+- name: Copy cloudview-fp installer from NFS to local
+  win_copy:
+    src: '{{ cloudview_installer_path_fp }}'
+    dest: '{{ windows_tmp_path }}\cloudview-fp'
+    remote_src: True
+  when: fix_pack_version != "fp1838"
+  tags: install-cloudview-fp   
+  
+
+- name: Executing cloudview-fp installer
+  win_command: '{{ windows_tmp_path }}\cloudview-fp\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_Cloud_fp.xml --xmlreport {{ windows_tmp_path }}\report_cloudview_fp.xml'
+  tags: install-cloudview-fp
+  when: fix_pack_version != "fp1838"
+
+- name: Remove the user Intension file of cloudview-fp
+  win_file: path="{{windows_tmp_path}}\UserIntentions_Cloud_fp.xml" state=absent
+  tags: install-cloudview-fp
+
+- name: Remove the installer folder of cloudview-fp
+  win_file: path="{{windows_tmp_path}}\cloudview-fp" state=absent
+  tags: install-cloudview-fp
+

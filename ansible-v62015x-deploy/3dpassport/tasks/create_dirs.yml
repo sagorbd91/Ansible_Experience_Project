@@ -1,0 +1,109 @@
+---
+- name: create the base dir or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ system_apps_dir }}" state=directory owner=root group=root mode=2755
+  tags: 
+   - create_dirs
+   - install-passport
+    
+- name: create the base dir or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ eplm_server_base_path }}" state=directory owner=root group=root mode=2755
+  when: not has_plm_volume
+  tags: 
+   - create_dirs  
+   - install-passport
+
+- name: create symbolic link
+  remote_user: monitor
+  become: true
+  file: src="{{ eplm_server_base_path }}" dest="/plm" state=link owner=root group=root mode=2777
+  when: not has_plm_volume
+  tags: 
+  - create_dirs
+  - install-passport
+
+- name: create the apps env dir
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_install_path }}" state=directory owner=root group=root mode=2755
+  tags: 
+   - create_dirs
+   - install-passport
+
+- name: create the 3dpass dir
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_install_rel_path }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode=2755
+  tags: 
+   - create_dirs
+   - install-passport
+   
+   
+- name: create the code dir or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_code_dir }}" state=directory owner=root group=root mode=2755
+  tags: 
+   - create_dirs
+   - install-passport
+   
+- name: create the conf dir or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_conf_dir }}" state=directory owner=root group=root mode=2755
+  tags: 
+   - create_dirs
+   - install-passport
+  
+- name: create the tomcat instance dir
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_instance_path }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=rw"
+  tags: 
+    - create_dirs
+    - install-passport
+    
+- name: create the soft dir
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_soft_dir }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=rw"
+  tags: 
+    - create_dirs
+    - install-passport
+
+- name: create the 3DPassport dir
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_install_rel_path }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode=2755
+  tags: 
+   - create_dirs
+   - install-passport
+   
+- name: create the dir for 3DPassport logs
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_log_dir }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=r"
+  tags: 
+    - create_dirs
+    - install-passport
+
+- name: create the dir for instance logs
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_log_dir }}/{{ item.key }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=r"
+  with_dict: "{{ instances }}"
+  tags: 
+    - create_dirs
+    - install-passport
+    
+- name: change ownership of passport dir
+  remote_user: monitor
+  become: true
+  command: chown -R "{{plm_user}}":"{{plm_group}}" "{{passport_install_rel_path}}" 
+  tags: 
+   - create_dirs
+   - install-passport
+

@@ -1,0 +1,10 @@
+[lb_servers]
+jkls0326vm66a
+[mcs_servers]
+jkls0326vm7a
+[fcs_servers]
+jkls0326vm23a
+[3dx_servers]
+jkls0326vm19a
+[db_servers]
+jkls0326vm10a

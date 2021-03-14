@@ -1,0 +1,16 @@
+---
+
+- name: Copy "script.url.reg.passport.j2" in custom scripts
+  template: src="script.url.reg.passport.j2" dest="{{ mcs_bin_dir }}/mcs_url_reg_passport.sh" mode=0755
+  tags: 
+     - app-reg
+     - install-mcsfx
+     
+- name: Execute the "mcs_url_reg_passport.sh" script
+  remote_user: "{{ plm_user }}"
+  shell: ./mcs_url_reg_passport.sh > mcs_url_reg_passport.log 2>&1
+  args:
+    chdir: /{{ mcs_bin_dir }}/
+  tags: 
+    - app-reg
+    - install-mcsfx

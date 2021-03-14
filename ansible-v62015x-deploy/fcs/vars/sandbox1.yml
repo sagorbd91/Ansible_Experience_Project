@@ -1,0 +1,38 @@
+---
+
+env_name: "sandbox1"
+plm_user: "plmm4fa"
+plm_group: "plm"
+
+has_plm_volume: yes
+   
+system_apps_dir: "/plm"
+eplm_server_base_path: "/plm"
+fcs_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+fcs_install_rel_path: "{{fcs_install_path}}/{{fcs_type}}"
+fcs_instance_path: "{{fcs_install_rel_path}}/instances"
+fcs_code_dir: "{{fcs_install_rel_path}}/code"
+fcs_log_dir: "{{fcs_install_rel_path}}/logs"
+fcs_java_dir: "{{fcs_install_rel_path}}/softs"
+fcs_java_path: "{{fcs_java_dir}}/jdk-fcs"
+fcs_build_path: "{{ fcs_code_dir }}/distrib/enoviafcs.war"
+#fcs_file_store_dir: "/data/fcs-mount/apps-storage/{{ env_name }}/{{fcs_type}}"
+fcs_file_store_dir: "/plm/apps-storage/{{ env_name }}/{{fcs_type}}"
+ssl_keystore_path: "{{fcs_java_path}}/jre/lib/security"
+ssl_cert_pass: "changeit"
+
+fcs_installer_path: "{{ installer_path }}/3dspace/ga/platform/ENOVIAFileCollaborationServer.Linux64"
+fcs_fixpack_installer: "{{ installer_path }}/3dspace/{{ fix_pack_version }}/platform/ENOVIAFileCollaborationServer.Linux64"
+web_app_name: "enoviafcs"
+tomcat_user: "tomcat"
+tomcat_user_pass: "tomcat123#"
+
+fcscentral_file_store_dir: "/plm/apps-storage/{{ env_name }}/{{fcs_type}}"
+
+fcs_store_mount_dest: ""
+fcs_store_mount_source: ""
+
+nfs_mount_shared_dir: ""
+nfs_mount_shared_to: ""
+shared_mode: ""
+

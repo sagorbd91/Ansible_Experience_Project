@@ -1,0 +1,49 @@
+---
+
+- name: Check if DMC GA Apps installer path exists
+  win_stat: path="{{ apps_GA_installer_path }}"
+  register: check_apps_path
+  tags: 
+     - install-app-ga
+     - DMA-ga
+  
+- name: DMA GA Apps installer doesn't exist
+  fail: msg="Apps installer doesn't exist!!"
+  when: not check_apps_path.stat.exists
+  tags: 
+     - install-app-ga
+     - DMA-ga
+
+- name: Copy DMA GA UserIntention file to target
+  template: src="templates/user_intention_apps/ga/UserIntentions_DMA_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_DMA_ga.xml"
+  tags: 
+     - install-app-ga
+     - DMA-ga
+
+- name: Copy DMA GA apps installer from NFS to local
+  win_copy:
+    src: '{{ apps_GA_installer_path }}\DataModelCustomization\1'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: 
+     - install-app-ga
+     - DMA-ga
+  
+- name: Executing DMA GA installation on target
+  win_command: '{{windows_tmp_path}}\1\StartTUI.exe -installerPath {{ds_ga_installer_path}} --silent {{windows_tmp_path}}\UserIntentions_DMA_ga.xml --xmlreport {{windows_tmp_path}}\Report_DMA_ga.xml'
+  tags: 
+     - install-app-ga
+     - DMA-ga
+
+- name: Removing the user Intension file for DMA from traget
+  win_file: path="{{windows_tmp_path}}\UserIntentions_DMA_ga.xml" state=absent
+  tags: 
+     - install-app-ga
+     - DMA-ga
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags:  
+     - install-app-ga
+     - DMA-fp 
+

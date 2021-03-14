@@ -1,0 +1,20 @@
+---
+
+fcsremote_instance: "fcs_remote_sha"
+instance_name: "was_fcsremote_sha_1"
+fcs_type: "fcsremote2"
+instances:
+   was_fcsremote_sha_1:
+     app_name: fcs1-sha
+     port_http: 8683
+     port_jmx: 8693
+     port_ajp: 8612
+     port_shutdown: 8607
+     port_redirect: 9046
+   was_fcsremote_sha_2:
+     app_name: fcs2-sha
+     port_http: 8684
+     port_jmx: 8694
+     port_ajp: 8613
+     port_shutdown: 8608
+     port_redirect: 9047

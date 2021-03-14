@@ -1,0 +1,41 @@
+---
+
+- name: Check if 3dx installer path exists
+  remote_user: "{{ plm_user }}"
+  stat: path="{{ e3dx_installer_path }}"
+  register: check_path
+  tags: install-3dx
+
+
+- name: 3dx installer doesn't exist
+  remote_user: "{{ plm_user }}"
+  fail: msg="3dx installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: install-3dx   
+
+
+ 
+- name: copy answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer.j2" dest="{{ e3dx_rel_path }}/answer.txt" mode=2777
+  tags: 
+   - install-3dx
+   
+
+- name: Executing the installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh < {{ e3dx_rel_path }}/answer.txt
+  args:
+    chdir: /{{ e3dx_installer_path }}/1  
+  tags: 
+   - install-3dx
+   
+
+- name: remove the answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ e3dx_rel_path }}/answer.txt" state=absent
+  tags: 
+   - install-3dx
+

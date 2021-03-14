@@ -1,0 +1,14 @@
+echo "modify fcs store"
+set server={{ mcs_server_dir }}
+set os=win_b64
+set user=creator
+set password={{ creator_password }}
+
+if "%password%"=="" (
+  set context=set context user %user%
+) else (
+  set context=set context user %user% password %password%
+)
+
+ call %server%\%os%\code\bin\mql -t -c "%context% ; modify store plmx path '{{fcs_store_location_path}}\plmx'; modify store STORE path '{{fcs_store_location_path}}\STORE'; modify store 'Image Store' path '{{fcs_store_location_path}}\IMAGESTORE';  modify store plmx fcs '{{ fcsSrvURL }}'; modify store STORE fcs '{{ fcsSrvURL }}'; modify store 'Image Store' fcs '{{fcsSrvURL}}';
+ echo "modify fcs store done"

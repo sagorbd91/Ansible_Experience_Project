@@ -1,0 +1,10 @@
+---
+
+- name: Install 3dnotification
+  hosts: notification_servers
+  vars_files:
+      - notification/vars/main.yml
+      - notification/vars/{{env_name}}.yml
+  roles:
+    - notification
+

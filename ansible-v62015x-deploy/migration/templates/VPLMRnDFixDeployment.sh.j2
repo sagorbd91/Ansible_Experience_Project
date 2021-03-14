@@ -1,0 +1,40 @@
+#!/bin/sh
+
+cd {{ r15x_server_script_dir }}
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  print prog migration_SRonPath select code;       
+  del program migration_SRonPath; 
+  add program migration_SRonPath mql file {{nfs_migration_dir}}/migration/VplmDataMigration/script-from-vlad/migration_SRonPath.mql;
+  print prog migration_SRonPath select code; 
+  print prog CoexMapping_MigrationPolicy select code ;
+  del program CoexMapping_MigrationPolicy; 
+  add program CoexMapping_MigrationPolicy mql file {{nfs_migration_dir}}/migration/VplmDataMigration/script-from-vlad/R2015x_CoexMapping_MigratePolicy.mql ; 
+  print prog CoexMapping_MigrationPolicy select code ;
+  print prog VPLMDataMigration select code;
+  del program VPLMDataMigration; 
+  add program VPLMDataMigration mql file {{nfs_migration_dir}}/migration/VplmDataMigration/script-from-vlad/VPLMxDataMigration-Execution-Wrapper-R417.mql ;
+  print prog VPLMDataMigration select code;
+  
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context user creator pass creator.;
+  print prog migration_SRonPath select code;       
+  del program migration_SRonPath; 
+  add program migration_SRonPath mql file {{nfs_migration_dir}}/migration/VplmDataMigration/script-from-vlad/migration_SRonPath.mql;
+  print prog migration_SRonPath select code;
+  print prog CoexMapping_MigrationPolicy select code ;
+  del program CoexMapping_MigrationPolicy; 
+  add program CoexMapping_MigrationPolicy mql file {{nfs_migration_dir}}/migration/VplmDataMigration/script-from-vlad/R2015x_CoexMapping_MigratePolicy.mql ; 
+  print prog CoexMapping_MigrationPolicy select code ;
+  print prog VPLMDataMigration select code;
+  del program VPLMDataMigration; 
+  add program VPLMDataMigration mql file {{nfs_migration_dir}}/migration/VplmDataMigration/script-from-vlad/VPLMxDataMigration-Execution-Wrapper-R417.mql ;
+  print prog VPLMDataMigration select code;
+  quit;
+EOF
+fi

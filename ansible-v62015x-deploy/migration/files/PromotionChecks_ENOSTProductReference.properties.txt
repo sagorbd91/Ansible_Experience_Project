@@ -1,0 +1,5 @@
+NbrOfChecks=2
+Check1=RejectIfAnyOfTheCommonlyGovernedChildNotOnTargetState
+Transition1=FROZEN+RELEASED
+Check2=RejectIfAnyOfTheCommonlyGovernedChildNotOnTargetState
+Transition2=IN_WORK+RELEASED

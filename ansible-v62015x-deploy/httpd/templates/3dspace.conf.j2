@@ -1,0 +1,39 @@
+#====================================
+# VirtualHost for 3DSpace
+#====================================
+<VirtualHost *:{{ mcs_cas_proxy_port }}>
+ServerName {{ mcs_server_common_name }}
+ServerAlias {{ mcs_server_common_name }}
+ErrorLog logs/{{ env_name }}_3dspace_error_log
+TransferLog logs/{{ env_name }}_3dspace_access_log
+LogLevel warn
+SSLEngine on
+SSLProxyEngine On
+SSLProtocol all -SSLv2 -SSLv3
+SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+SSLCertificateFile {{ ssl_directory }}/{{ mcs_cas_crt }}.crt
+SSLCertificateKeyFile  {{ ssl_directory }}/{{ mcs_cas_crt }}.key
+<Files ~ "\.(cgi|shtml|phtml|php3?)$">
+    SSLOptions +StdEnvVars
+</Files>
+<Directory "/var/www/cgi-bin">
+    SSLOptions +StdEnvVars
+</Directory>
+SetEnvIf User-Agent ".*MSIE.*" \
+         nokeepalive ssl-unclean-shutdown \
+         downgrade-1.0 force-response-1.0
+CustomLog logs/ssl_request_log \
+          "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+<Location ~ \.eot$>
+      Header unset Cache-Control
+      Header unset Pragma
+</Location>
+RequestHeader set X-Forwarded-Proto "https"
+ProxyPass /3DSpace {{ mcs_cas_server }}
+ProxyPassReverse /3DSpace {{ mcs_cas_server }}
+Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "accept, x-requested-method, origin, x-requested-with, x-request"
+</VirtualHost>
+

@@ -1,0 +1,79 @@
+---
+
+- name: Create the Person List file by executing mql command
+  remote_user: "{{ plm_user }}"
+  shell: ./mql -c "set context user {{ mql_user }} password {{ mql_password }}; list person;" > /tmp/PO-list-person.txt
+  args:
+    chdir: /{{ mcs_server_dir }}/scripts
+  tags: 
+   - generate-person-list
+
+- name: Edit and remove unnecessary lines from 'PO-list-person.txt'
+  remote_user: "{{ plm_user }}"
+  shell: sed -i '1,5d' /tmp/PO-list-person.txt
+  tags: 
+   - generate-person-list
+  
+- name: Copy script 'modify_person_list.sh'
+  remote_user: monitor
+  become: true
+  template: src="modify_person_list.sh.j2" dest="/{{ mcs_server_dir }}/scripts/modify_person_list.sh" owner={{ plm_user }} group={{ plm_group }}  mode=0777
+  
+  tags: 
+   - de-assign-license
+
+   
+- name: Executing the script to Expurge the Person List to interactive user 
+  remote_user: monitor
+  become: true 
+  shell: ./modify_person_list.sh
+  args:
+    chdir: /{{ mcs_server_dir }}/scripts
+  tags: 
+   - de-assign-license
+  
+- name: Remove R13X product definition
+  shell: ./mql -c "set context user {{ mql_user }} password {{ mql_password }}; delete product LIV-MDEVPM; delete product LIV-MDEVNDVPM; delete product LIV-LVAMDEPICVNDVPM; delete product LIV-FPDLVAMDEPICVNDVPM; quit;" > /tmp/dlt_13xproduct.log
+  args:
+    chdir: /{{ mcs_server_dir }}/scripts
+  tags: 
+   - remove-13xproduct
+  
+
+- name: Copy 'RE-assign R15X licenses' script  
+  remote_user: monitor
+  become: true
+  template: src="re-assign_r15x_license.sh.j2" dest="/{{ mcs_server_dir }}/scripts/re-assign_r15x_license.sh" owner={{ plm_user }} group={{ plm_group }}  mode=0777
+  
+  tags: 
+   - re-assign-15xlicense
+
+   
+- name: Execute 'RE-assign R15X licenses' script to modify user
+  remote_user: monitor
+  become: true 
+  shell: ./re-assign_r15x_license.sh
+  args:
+    chdir: /{{ mcs_server_dir }}/scripts
+  tags: 
+   - re-assign-15xlicense 
+
+- name: Copy 'License verification' script  
+  remote_user: monitor
+  become: true
+  template: src="verify_r15x_license.sh.j2" dest="/{{ mcs_server_dir }}/scripts/verify_r15x_license.sh" owner={{ plm_user }} group={{ plm_group }}  mode=0777
+  tags: 
+   - verify-assign-15xlicense  
+   
+- name: Execute the 'R15x License verification' script 
+  remote_user: monitor
+  become: true
+  shell: ./verify_r15x_license.sh > R15x_License_Verification-user-list.txt
+  args:
+    chdir: /{{ mcs_server_dir }}/scripts
+  tags: 
+   - verify-assign-15xlicense 
+  
+  
+  
+  

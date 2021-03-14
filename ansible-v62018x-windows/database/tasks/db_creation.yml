@@ -1,0 +1,58 @@
+---
+
+- name: Create directory structure
+  win_file: path="{{ script_dump_location }}" state=directory
+  tags: db_creation
+
+- name: Create db directory structure
+  win_file: path="{{ space_db_directory }}" state=directory
+  when: create_database_for == "space"
+  tags: db_creation
+
+- name: Create directory structure
+  win_file: path="{{ script_dump_location }}\logs" state=directory
+  tags: db_creation  
+
+- name: Copy db creation bat template
+  template: src="templates/dbcreation.bat.j2" dest="{{ script_dump_location }}\{{ create_database_for }}dbcreation.bat" 
+  tags: db_creation
+ 
+- name: Copy sql script to target machine
+  template: src="templates/{{ item }}" dest="{{ script_dump_location }}\{{ item }}" 
+  with_items:
+    - 3Dashboard.sql
+    - 3DNotification.sql
+    - 3DPassport.sql
+    - 3DSwym.sql
+    - 3DComment.sql
+    - 3DSpace.sql     
+  tags: db_creation
+
+- name: Executing db creation script
+  win_psexec:
+     command: '{{  script_dump_location  }}\{{ create_database_for }}dbcreation.bat'
+     elevated: yes
+  tags: db_creation
+
+- name: Coping Script - Read Log File
+  template: src="templates/read_log_file.bat.j2" dest="{{ script_dump_location }}/read_log_file.bat"  force=yes
+  tags: db_creation
+  
+- name: Executing - Read Log File
+  win_psexec:
+     command: '{{ script_dump_location }}\read_log_file.bat > {{ script_dump_location }}\read_log_file.log'
+     elevated: yes
+  register: output
+  tags: db_creation
+  
+  
+- name: Collecting - Latest Log
+  raw: >
+      type {{ script_dump_location }}\read_log_file.log
+  register: output
+  tags: db_creation
+
+- name: Printing logs
+  debug:
+    msg: "{{ output.stdout.split('\n') }}"
+  tags: db_creation

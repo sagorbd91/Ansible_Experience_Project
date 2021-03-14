@@ -1,0 +1,73 @@
+---
+
+plm_user: "monitor"
+is_fcsremote_proxy:
+
+
+
+#mcs_cas_server: "http://i1-mcscas-{{ env_name }}-plm.valmet.com:8181/3DSpace"
+#mcs_cas_server_unsecured: "http://i1-mcscas-preprod-plm.valmet.com:8181/3DSpace"
+#mcs_no_cas_server: "http://i1-mcsnocas-{{ env_name }}-plm.valmet.com:8081/internal"
+#fcs_central_server: "http://i1-fcscentral-{{ env_name }}-plm.valmet.com:8581/enoviafcs"
+#passport_server: "http://i1-3dpassport-{{ env_name }}-plm.valmet.com:{{passport_tomcat_port}}/3DPassport/"
+
+
+mcs_cas_server: "http://lb-mcscas-{{ env_name }}-plm.valmet.com:18180/3DSpace"
+#mcs_cas_server_unsecured: "http://lb-unsecured-3dspace-{{ env_name }}-plm.valmet.com:8181/3DSpace"
+mcs_no_cas_server: "http://lb-unsecured-3dspace-{{ env_name }}-plm.valmet.com:18380/internal"
+fcs_central_server: "http://lb-fcscentral-{{ env_name }}-plm.valmet.com:18580/enoviafcs"
+fcs_remote_server1: "http://lb-fcsremote1-{{ env_name }}-plm.valmet.com:18680/enoviafcs"
+fcs_remote_server2: "http://lb-fcsremote2-{{ env_name }}-plm.valmet.com:18780/enoviafcs"
+passport_server: "http://i1-3dpassport-{{ env_name }}-plm.valmet.com:{{passport_tomcat_port}}/3DPassport/"
+
+
+passport_server_common_name: "3dpassport-{{ env_name }}-plm.valmet.com"
+mcs_server_common_name: "3dspace-{{ env_name }}-plm.valmet.com"
+mcs_unsecured_common_name: "unsecured-3dspace-{{ env_name }}-plm.valmet.com"
+mcs_untrusted_common_name: "untrusted-3dspace-{{ env_name }}-plm.valmet.com"
+fcs_server_common_name: "fcscentral-{{ env_name }}-plm.valmet.com"
+fcs_remote_common_name1: "fcsremote1-{{ env_name }}-plm.valmet.com"
+fcs_remote_common_name2: "fcsremote2-{{ env_name }}-plm.valmet.com"
+
+
+http_port: "80"
+http_ssl_port: "443"
+passport_proxy_port: "8280"
+passport_tomcat_port: "8281"
+mcs_cas_proxy_port: "8180"
+mcs_cas_http_port: "8080"
+mcs_no_cas_http_port: "8380"
+fcs_central_http_port: "8580"
+fcs_remote_http_port1: "8680"
+fcs_remote_http_port2: "8780"
+
+passport_crt: "{{env_name}}-3dpass"
+mcs_cas_crt: "{{env_name}}-3dspace"
+fcs_crt: "{{env_name}}-fcssecured"
+fcsremote_crt1: "{{env_name}}-fcsremote1"
+fcsremote_crt2: "{{env_name}}-fcsremote2"
+
+http_install_path: "/etc/httpd"
+vhost_path: "{{ http_install_path }}/vhost"
+ssl_directory: "{{ http_install_path }}/ssl"
+ssl_certs_mode: 755
+ssl_cert_pass: "changeit"
+ssl_certs_generate_self_signed: true
+ssl_certs_key_size: "2048"
+ssl_certs_country: "FI"
+ssl_certs_locality: "Helsinki"
+ssl_certs_organization: "3DPLM"
+ssl_certs_state: "Helsinki"
+ssl_certs_common_name: "secured-fcscentral-{{ env_name }}-plm.valmet.com"
+ssl_certs_days: "365"
+ssl_certs_fields: "/C={{ssl_certs_country}}/ST={{ssl_certs_state}}/L={{ssl_certs_locality}}/O={{ssl_certs_organization}}/CN={{ssl_certs_common_name}}"
+
+httpd_pkgs:
+      - httpd
+      - mod_ssl
+      - openssl
+      
+ssl_certs:
+      - "{{ fcs_crt }}"
+      
+      

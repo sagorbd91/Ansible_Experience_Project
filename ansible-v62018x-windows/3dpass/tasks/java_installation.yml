@@ -1,0 +1,30 @@
+---
+
+- name: Check if the java installed or not.
+  win_stat:
+    path: "{{ Java_Path }}"
+  register: java_check
+  tags:
+   - check-jdk
+   - install-jdk
+   - install-passport-ga
+
+- name: Check if the java contains.
+  win_stat:
+    path: "{{ java_installer_path }}"
+  register: file_check
+  when: not java_check.stat.exists
+  tags:
+   - check-jdk
+   - install-jdk
+   - install-passport-ga
+
+  
+- name: Install java
+  raw: "{{ java_installer_path }} /s  INSTALLDIR={{Java_Path}}" 
+  when:  
+     - not java_check.stat.exists
+     - file_check.stat.exists
+  tags:
+   - install-jdk
+   - install-passport-ga

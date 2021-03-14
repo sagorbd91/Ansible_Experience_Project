@@ -1,0 +1,46 @@
+---
+
+- name: Create directory
+  win_file: path="{{ fragment_dir }}" state=directory
+  tags:
+    - deploy-fragment
+    
+- name: 3dcomment fragment deploy
+  win_template: src="fragment/3DComment_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\3DComment_httpd_fragment.conf"
+  tags:
+    - deploy-fragment
+
+- name: 3ddashboard fragment deploy
+  template: src="fragment\3DDashboard_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\\3DDashboard_httpd_fragment.conf"
+  tags: 
+    - deploy-fragment
+    
+- name: 3dnotification fragment deploy
+  template: src="fragment\3DNotification_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\3DNotification_httpd_fragment.conf"
+  tags: 
+    - deploy-fragment
+  
+- name: 3dpassport fragment deploy
+  template: src="fragment\3DPassport_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\3DPassport_httpd_fragment.conf"
+  tags: 
+    - deploy-fragment
+ 
+- name: 3dspace fragment deploy
+  template: src="fragment\3DSpace_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\3DSpace_httpd_fragment.conf"
+  tags: 
+    - deploy-fragment
+
+- name: 3dswym fragment deploy
+  template: src="fragment\3DSwym_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\3DSpace_httpd_fragment.conf"
+  tags: 
+    - deploy-fragment
+
+- name: fcscentral fragment deploy
+  template: src="fragment\fcs_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\fcs_httpd_fragment.conf"
+  tags: 
+    - deploy-fragment
+
+- name: fedsearch fragment deploy
+  template: src="fragment/federated_httpd_fragment.conf.j2" dest="{{ fragment_dir }}\federated_httpd_fragment.conf"
+  tags: 
+    - deploy-fragment

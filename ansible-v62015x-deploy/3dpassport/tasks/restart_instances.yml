@@ -1,0 +1,55 @@
+---
+
+- name: Restart Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=restarted
+  with_dict: "{{ instances }}"
+  tags: 
+   - restart-services
+   - start-services
+   - disp_env_name_3dpass
+   
+- name: Stop Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=stopped
+  with_dict: "{{ instances }}"
+  tags: 
+   - stop-passport
+   - install-passport
+   - install-passport-fp
+   - restart-passport
+   - import-dash-crt
+  
+- name: Start Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started
+  with_dict: "{{ instances }}"
+  tags: 
+   - start-passport
+   - install-passport
+   - install-passport-fp
+   - restart-passport
+   - import-dash-crt
+   
+- name: wait for tomcat to start
+  remote_user: "{{ plm_user }}"
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port={{ item.value.port_http }}
+      delay=60
+      timeout=240
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-passport
+    - restart-services
+    - install-passport
+    - install-passport-fp
+    - disp_env_name_3dpass
+    - restart-passport
+    - import-dash-crt
+
+   

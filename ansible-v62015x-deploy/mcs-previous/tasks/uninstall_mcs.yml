@@ -1,0 +1,27 @@
+---
+
+- name: stop fcs services
+  remote_user: monitor
+  sudo: true
+  command: service {{ item.key }} stop
+  with_dict: instances
+  tags: 
+    - uninstall-mcs
+    - stop-mcs-instance
+
+- name: Remove the mcs dir
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_install_rel_path }}" state=absent owner={{ plm_user }} group={{ plm_group }} mode=2755
+  tags: uninstall-mcs
+  
+#- name: Connecty to DB as Admin user
+#  remote_user: "v6admin"
+#  command: db2 connect to "v6admin"
+#  tags: uninstall-mcs
+  
+
+- name: Drop DB2 Database
+  remote_user: "db2adm"
+  command: db2 drop database v6admin
+  tags: uninstall-mcs

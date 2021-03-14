@@ -1,0 +1,40 @@
+---
+        
+- name: Copy the Knowledge Standardization fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_know_stdfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAKnowledgeStandardization.Unix64/1/answer_know_stdfx.txt" mode=2777
+  when: update_database
+  tags: 
+     - install-knowstdfx
+     - install-mcsfx
+
+- name: Copy the Knowledge Standardization fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_know_stdfx_nudb.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAKnowledgeStandardization.Unix64/1/answer_know_stdfx.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-knowstdfx
+     - install-mcsfx
+
+- name: Executing the Knowledge Standardization fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_know_stdfx.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAKnowledgeStandardization.Unix64/1
+  tags: 
+     - install-knowstdfx
+     - install-mcsfx
+   
+
+- name: Remove the Knowledge Standardization fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAKnowledgeStandardization.Unix64/1/answer_know_stdfx.txt" state=absent
+  tags: 
+     - install-knowstdfx
+     - install-mcsfx
+
+
+

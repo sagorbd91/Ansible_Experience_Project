@@ -1,0 +1,40 @@
+---
+ 
+- name: Copy the Variant Configuration Central Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_variantconf_central.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAVariantConfigurationCentral.Unix64/1/answer_variantconf_central.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-variantconf
+    - install-mcs
+   
+   
+- name: Copy the Variant Configuration Central Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_variantconf_central_nudb.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAVariantConfigurationCentral.Unix64/1/answer_variantconf_central.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-variantconf
+     - install-mcs
+   
+
+- name: Executing the Variant Configuration Central installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_variantconf_central.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIAVariantConfigurationCentral.Unix64/1
+  tags: 
+     - install-variantconf
+     - install-mcs
+   
+
+- name: Remove the Variant Configuration Central Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIAVariantConfigurationCentral.Unix64/1/answer_variantconf_central.txt" state=absent
+  tags: 
+    - install-variantconf
+    - install-mcs
+    

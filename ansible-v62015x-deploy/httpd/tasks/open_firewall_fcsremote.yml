@@ -1,0 +1,35 @@
+---
+
+- name: Allow http ports in iptable rules of http on  Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ http_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+   
+- name: Allow http ports in iptable rules of SSL on  Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ http_ssl_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+   
+      
+- name: Allow http ports in iptable rules of fcs remote1 on  Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ fcs_remote_http_port1 }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+
+
+- name: Allow http ports in iptable rules of fcs remote2 on  Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ fcs_remote_http_port2 }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+
+   
+- name: Save iptables
+  command: service iptables save
+  tags:
+   - config-firewall
+   - install-reverseproxy
+

@@ -1,0 +1,17 @@
+---
+
+- name: Copy command to target machine
+  copy: src=/tmp/mql_command dest=/tmp/mql_command
+  tags: run_mql_command
+
+- name: Copy the script "fire_mql_command.sh"
+  template: src="fire_mql_command.sh.j2" dest="{{ mcs_bin_dir }}/fire_mql_command.sh" owner={{ plm_user }} mode=0755
+  tags: run_mql_command
+  
+- name: Run the script "fire_mql_command.sh"
+  remote_user: "{{ plm_user }}"
+  shell: "{{ mcs_bin_dir }}/fire_mql_command.sh > {{ mcs_bin_dir }}/fire_mql_command.log "
+  tags: run_mql_command
+
+
+  

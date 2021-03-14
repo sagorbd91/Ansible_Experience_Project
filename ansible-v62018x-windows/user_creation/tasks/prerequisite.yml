@@ -1,0 +1,10 @@
+---
+
+- name: Copy SetACL.exe to temp folder
+  win_copy: 
+      src: files/SetACL.exe
+      dest: "{{ windows_tmp_path }}/SetACL.exe"
+  tags: 
+    - prerequisite
+    - create-service-user
+  

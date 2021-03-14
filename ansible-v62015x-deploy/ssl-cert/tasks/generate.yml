@@ -1,0 +1,29 @@
+---
+
+- name: Generate RSA key
+  command: openssl genrsa -out {{ ssl_certs_privkey_path }} {{ ssl_certs_key_size }} creates={{ ssl_certs_privkey_path }}
+
+- name: Generate CSR
+  command: openssl req -new -subj "{{ ssl_certs_fields }}" -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_csr_path }} creates={{ ssl_certs_csr_path }}
+
+- name: Generate self-signed SSL certificate
+  command: openssl req -nodes -x509 -days {{ ssl_certs_days }} -in {{ ssl_certs_csr_path }} -key {{ ssl_certs_privkey_path }} -out {{ ssl_certs_cert_path }}
+  when: ssl_certs_generate_self_signed
+  
+- name: Generate Crt
+  command: openssl x509 -req -days 365 -in {{ ssl_certs_csr_path }} -signkey {{ ssl_certs_privkey_path }} -out {{ ssl_certs_crt_path }}
+  
+- name: Generate PKCS#12
+  command: openssl pkcs12 -export -in {{ssl_certs_crt_path}} -inkey {{ssl_certs_privkey_path}} -out {{ ssl_certs_p12_path }} -name {{ ssl_cert_alias }} -password pass:{{ ssl_cert_pass }}
+  
+- name: Generate .jks
+  command: keytool -importkeystore -srckeystore {{ssl_certs_p12_path}} -srcstoretype PKCS12 -srcstorepass {{ssl_cert_pass}} -destkeystore {{ssl_certs_keystore_path}} -deststorepass {{ ssl_cert_pass }} -alias {{ ssl_cert_alias }} 
+  
+- name: Generate .cer
+  command: keytool -export -alias {{ ssl_cert_alias }} -file {{ ssl_certs_cer_path }} -keystore {{ssl_certs_keystore_path}} -storepass {{ ssl_cert_pass }} -noprompt
+  
+- name: Generate .ts
+  command: keytool -import -trustcacerts -alias {{ ssl_cert_alias }} -file {{ ssl_certs_cer_path }} -keystore {{ ssl_certs_truststore_path }} -storepass {{ ssl_cert_pass }} -noprompt
+ 
+  
+  

@@ -1,0 +1,27 @@
+#====================================
+# VirtualHost for 3DDashboard
+#====================================
+Listen {{ bashboard_proxy_port }}
+
+SSLRandomSeed startup builtin
+SSLRandomSeed connect builtin
+SSLCryptoDevice builtin
+
+<VirtualHost *:{{ bashboard_proxy_port }}>
+ServerName {{ dashboard_server_common_name }}
+ServerAlias {{ dashboard_server_common_name }}
+
+ErrorLog    logs\dashboard_error_log.txt
+TransferLog    logs\dashboard_access_log.txt
+CustomLog    logs\dashboard_ssl_request_log.txt "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b" 
+
+LogLevel error
+
+SSLEngine on
+SSLProxyEngine on
+
+SSLCertificateFile    {{ ssl_directory }}\{{certificate_dash}}.crt
+SSLCertificateKeyFile    {{ ssl_directory }}\{{certificate_dash}}.key
+
+Include {{ Dash_dir }}\win_b64\templates\3DDashboard_httpd_fragment.conf
+</VirtualHost>

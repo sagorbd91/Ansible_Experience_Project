@@ -1,0 +1,40 @@
+---
+
+      
+- name: Copy the Enterprise AVL Management fixpack Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_ent_avl_mgtfx.j2" dest="{{ mcs_conf_dir }}/answer_ent_avl_mgt.txt" mode=2777
+  when: update_database
+  tags: 
+     - ENOVIAEnterpriseAVLManagement-FP
+     - install-apps-fp
+
+
+- name: Copy the  Enterprise AVL Management fixpack Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_ent_avl_mgt_nudbfx.j2" dest="{{ mcs_conf_dir }}/answer_ent_avl_mgt.txt" mode=2777
+  when: not update_database
+  tags: 
+    - ENOVIAEnterpriseAVLManagement-FP
+    - install-apps-fp
+
+- name: Executing the Enterprise AVL Management fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_fp_installer_path }} < {{ mcs_conf_dir }}/answer_ent_avl_mgt.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAEnterpriseAVLManagement.Unix64/1
+  tags: 
+     - ENOVIAEnterpriseAVLManagement-FP
+     - install-apps-fp
+
+   
+   
+- name: Remove the Enterprise AVL Management fixpack answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_conf_dir }}/answer_ent_avl_mgt.txt" state=absent
+  tags: 
+     - ENOVIAEnterpriseAVLManagement-FP
+     - install-apps-fp

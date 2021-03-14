@@ -1,0 +1,36 @@
+#! /bin/sh
+#
+#  -- Bourne shell script for running a partial search index
+#
+# Usage:- startPartialSearchIndex.sh user [ password [ role ] ]
+#
+# environment: none.
+# input:       userid, and optionally a password and a role, for login context.
+# output:      none.
+# returns:     100 return code if an error occurs.
+#
+# Copyright (c) 2008 Dassault Systemes, 1993 - 2007.
+# All Rights Reserved.
+# This program contains proprietary and trade secret information of
+# MatrixOne, Inc.  Copyright notice is precautionary only
+# and does not evidence any actual or intended publication of such program.
+#
+if [ $# = 0 ] ; then
+   echo "Pass in the user id, and optionally the password and role, under which to run the searchindex command."
+   exit 100
+fi
+if [ "$1" = "-h" ] ; then
+   echo "Pass in the user id, and optionally the password and role, under which to run the searchindex command."
+   exit 100
+fi
+if [ $# = 1 ] ; then
+  cmdSetContext="set context user $1"
+elif [ $# = 2 ] ; then
+  cmdSetContext="set context user $1 password $2"
+else
+  cmdSetContext="set context user $1 password $2 role $3"
+fi
+cmdSearchIndex="start searchindex vault * mode PARTIAL"
+Command="$cmdSetContext; $cmdSearchIndex"
+#echo "Command=$Command"
+./mql -c "$Command"

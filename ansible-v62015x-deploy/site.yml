@@ -1,0 +1,15 @@
+---
+
+- name: Deploy 15x Env
+  hosts: all
+  remote_user: monitor 
+  sudo: true
+  
+  roles:
+    - { role: create-user, when: action == "create" }
+    - { role: fts, when: action == "fts" }
+    - { role: fcs, when: action == "fcs" }
+    - { role: mcs, when: action == "mcs" }
+    - { role: 3dx, when: action == "3dx" }
+    - { role: haproxy, when: action == "haproxy" }
+    - { role: deploy-elt-log, when: action == "deploy-elt-log" }

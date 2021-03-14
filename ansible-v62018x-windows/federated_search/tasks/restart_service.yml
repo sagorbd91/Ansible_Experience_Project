@@ -1,0 +1,13 @@
+---
+
+- name: Stop FederatedSearch Service
+  win_service: name=federated_R2018x state=stopped
+  tags:
+     - stop-federated
+     - restart-federated
+
+- name: Start FederatedSearch service
+  win_service: name=federated_R2018x state=started
+  tags:
+     - start-federated
+     - restart-federated

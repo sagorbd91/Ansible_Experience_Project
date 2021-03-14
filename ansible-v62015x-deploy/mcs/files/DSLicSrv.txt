@@ -1,0 +1,3 @@
+#plm-licenses-test1.valmet.com:4085
+jkls0192.vstage.co:4085
+license-pool2.vstage.co:4085

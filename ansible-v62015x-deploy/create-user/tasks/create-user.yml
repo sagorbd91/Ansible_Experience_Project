@@ -1,0 +1,43 @@
+---
+
+- name: Creating Group
+  group: name={{ group_name }} state=present
+  when:  group_name is defined
+
+- fail: msg="no user_name is defined"
+  when: user_name is undefined
+
+- name: Generate passwords
+  shell: python -c 'import crypt; print crypt.crypt("{{ user_pass }}", "$6$random_salt")'
+  register: genpass
+
+#- name: create home direcoty
+#  file: path="{{ home_dir }}" state=directory owner=root group=root mode=755
+  
+#- name: create user home direcoty
+#  file: path="{{ home_dir }}/{{ user_name }}" state=directory owner=root group=root mode={{ access_mode }}
+  
+#- name: create user
+#  user: name={{ user_name }} password={{ genpass.stdout }} state=present group={{ group_name }} home={{ home_dir }}/{{ user_name }}
+#  when: user_name is defined and group_name is defined
+
+- name: create user
+  user: name={{ user_name }} password={{ genpass.stdout }} state=present group={{ group_name }}
+  when: user_name is defined and group_name is defined
+
+
+- name:  checking sudo access
+  shell: grep -q "{{ user_name }}" /etc/sudoers && echo "yes" || echo "no"
+  register: chk_sudo
+
+- name: delivery user public key
+  authorized_key: user="{{ user_name }}" key="{{ lookup('file', '{{ pub_key_store_path }}') }}" state=present
+  when: user_passlesskey
+
+  
+  
+#- name: Assigning User permission on Directory
+#  file: path={{ home_dir }}/{{ user_name }} state=directory owner={{ user_name }} group={{ group_name }} mode={{ access_mode }}
+  
+
+

@@ -1,0 +1,40 @@
+---
+
+- name: Copy Apache as zip to target 
+  win_copy: 
+      src: files/Apache24.zip
+      dest: '{{ windows_tmp_path }}\Apache24.zip'
+  tags: install_apache
+  
+- name: Copy unzip tool to target 
+  win_copy: 
+      src: files/unzip.exe
+      dest: '{{ windows_tmp_path }}\unzip.exe'
+  tags: install_apache
+  
+- name: Create Apache Directory
+  win_file: path={{ where_to_install }} state=directory
+  tags: install_apache
+  
+  
+- name: Unzip HTTPD to desired dir
+  win_command: '{{ windows_tmp_path }}\unzip.exe -n {{ windows_tmp_path }}\Apache24.zip -d {{ where_to_install }}'
+  tags: install_apache
+
+- name: Copy config file
+  template: src="templates/httpd.conf.j2" dest="{{ where_to_install }}\conf\httpd.conf" remote_src=true force=yes
+  tags: install_apache  
+
+- name: Set as a service
+  win_command: '{{ where_to_install }}\bin\httpd.exe -k install -n "{{ service_name }}"'
+  tags: install_apache
+
+- name: Stop httpd Service
+  win_service: name={{ service_name }} state=stopped
+  tags: 
+     - stop-httpd
+
+- name: Start httpd Service
+  win_service: name={{ service_name }} state=started
+  tags: 
+     - start-httpd

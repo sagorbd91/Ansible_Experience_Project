@@ -1,0 +1,38 @@
+---
+
+- name: Check if FTS fixpack installer path exists
+  remote_user: "{{ plm_user }}"
+  stat: path="{{ fts_fixpack_installer }}"
+  register: check_path
+  tags: install-fts-fp
+
+
+- name: FTS fixpack installer doesn't exist
+  remote_user: "{{ plm_user }}"
+  fail: msg="FTS fixpack installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: install-fts-fp
+
+  
+- name: Copy the FTS Fixpack Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_fixpack.j2" dest="{{ fts_conf_dir }}/answer.txt" mode=2777
+  tags: 
+   - install-fts-fp
+
+- name: Executing the FTS Fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh < {{ fts_conf_dir }}/answer.txt
+  args:
+    chdir: /{{ fts_fixpack_installer }}/1
+  tags: 
+   - install-fts-fp
+
+
+- name: Remove the FTS Fixpack Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ fts_conf_dir }}/answer.txt" state=absent
+  tags: 
+   - install-fts-fp

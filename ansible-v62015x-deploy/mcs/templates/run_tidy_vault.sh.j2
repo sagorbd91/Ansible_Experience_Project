@@ -1,0 +1,33 @@
+#!/bin/bash
+Log_Dir=/plm/{{env_name}}/mcsnocas/bin/DB_Maintenance/db2_RunTidy_vault.log
+echo -e "Script running time: $(date +'%Y-%m-%d %T') \n\n" >$Log_Dir
+cd {{ mcs_server_dir }}/scripts
+
+if [ ! {{ mql_password }} ]; then
+ echo -e "\n\n.....ADMINISTRATION" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }}; tidy vault 'ADMINISTRATION' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......eService Administration" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }}; tidy vault 'eService Administration' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......eService Production" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }}; tidy vault 'eService Production' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......vplm" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }}; tidy vault 'vplm' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......vplm_archive" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }}; tidy vault 'vplm_archive' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......SIXW" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }}; tidy vault 'SIXW' commit 100 ;" &>>$Log_Dir
+else
+ echo -e "\n\n.....ADMINISTRATION" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }} password {{ mql_password }}; tidy vault 'ADMINISTRATION' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......eService Administration" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }} password {{ mql_password }}; tidy vault 'eService Administration' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......eService Production" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }} password {{ mql_password }}; tidy vault 'eService Production' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......vplm" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }} password {{ mql_password }}; tidy vault 'vplm' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......vplm_archive" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }} password {{ mql_password }}; tidy vault 'vplm_archive' commit 100 ;" &>>$Log_Dir
+ echo -e "\n\n......SIXW" &>>$Log_Dir
+ ./mql -c "set context person {{ mql_user }} password {{ mql_password }}; tidy vault 'SIXW' commit 100 ;" &>>$Log_Dir
+fi
+

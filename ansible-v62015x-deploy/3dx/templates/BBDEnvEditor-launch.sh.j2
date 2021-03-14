@@ -1,0 +1,15 @@
+
+#!/bin/bash
+
+# Source 15x_functions
+. {{ e3dx_function_dir }}/15x_functions
+
+CheckRunUser {{ plm_user }}
+
+#if [ -z "${DISPLAY}" ]
+#then
+#  echo " Please export DISPLAY variable before continuing "
+#  exit 1
+#fi
+
+{{ e3dx_install_path }}/linux_a64/code/command/catstart -run BBDEnvEditor {{ e3dx_install_path }}/linux_a64/resources/multiproc/env/BBDEnv.xml

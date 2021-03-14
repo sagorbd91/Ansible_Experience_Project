@@ -1,0 +1,22 @@
+---
+
+- name: copy mcs license in conf
+  copy: src="DSLicSrv.txt" dest="{{ mcs_conf_dir }}/DSLicSrv.txt" mode=0777
+  tags: 
+    - copy-config
+    - install-mcs
+    - pre-task
+    
+    
+- name: copy MATRIX-R to conf dir
+  synchronize:
+      src: "{{ mcs_studio_dir }}/conf/MATRIX-R" 
+      dest: "{{ mcs_conf_dir }}"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+    - copy-config
+    - install-mcs
+    - pre-task

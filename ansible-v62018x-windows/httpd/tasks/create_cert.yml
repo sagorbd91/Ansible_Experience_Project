@@ -1,0 +1,18 @@
+- hosts: 127.0.0.1   
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Generate Certificate and Keys
+      command: "openssl req -x509 -nodes -days {{ days }} -newkey {{ pub_key_algth }}  -subj '/CN={{ CN }}/O={{ O }}/OU={{ OU }}/C={{ C }}/ST={{ ST }}/L={{ L }}/emailAddress={{ email }}'  -keyout /tmp/{{ key_file_name }} -out /tmp/{{ cert_file_name }}"
+      tags: ssl_cert_creation
+    
+    - name: Getting Information of created certificate
+      command: "openssl x509 -in /tmp/{{ cert_file_name }} -text "
+      register: output
+      tags: ssl_cert_creation
+      
+    - debug: msg="{{ output.stdout }}"
+      tags: ssl_cert_creation
+    - debug: msg="{{ output.stderr }}"
+      tags: ssl_cert_creation

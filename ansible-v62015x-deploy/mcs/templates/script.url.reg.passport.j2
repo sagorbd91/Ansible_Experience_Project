@@ -1,0 +1,19 @@
+#!/bin/bash
+MQLPASS={{ mql_password }}
+
+cd {{ mcs_server_dir }}/scripts
+
+if [ $MQLPASS =="" ]
+then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  exec prog MyAppsRegister3DPassport -u {{mcs_cas_http_url}}3DSpace/resources/AppsMngt/passport/user -p {{passport_http_url}}3DPassport/api/wsdl;
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  exec prog MyAppsRegister3DPassport -u {{mcs_cas_http_url}}3DSpace/resources/AppsMngt/passport/user -p {{passport_http_url}}3DPassport/api/wsdl;
+  quit;
+EOF
+fi

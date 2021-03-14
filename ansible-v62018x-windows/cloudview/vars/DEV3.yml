@@ -1,0 +1,9 @@
+env_name: 'DEV3'
+fix_pack_version: ''
+
+#Installer path details
+cloudview_installer_path_ga: '{{ installer_path }}\CloudView\ga\platform\Windows64\1'
+cloudview_installer_path_fp: '{{ installer_path }}\CloudView\{{ fix_pack_version }}\EXALEAD_CloudView.Windows64\1'
+
+#Installation path details
+cloudview_target_path: 'D:\PLM\{{ env_name }}\CloudView\Code'

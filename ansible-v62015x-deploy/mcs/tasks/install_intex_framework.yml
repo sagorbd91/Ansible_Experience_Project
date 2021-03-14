@@ -1,0 +1,49 @@
+---
+
+- name: create symbolic link for java 7
+  remote_user: monitor
+  become: true
+  file: src="{{ java7_version_dir }}" dest="{{ mcs_java_path }}" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags:
+    - ENOVIAIntegrationExchangeFramework
+  
+- name: Copy the Integration Exchange Framework Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_intex_framework.j2" dest="{{ mcs_conf_dir }}/answer_intex_framework.txt" mode=2777
+  when: update_database
+  tags: 
+    - ENOVIAIntegrationExchangeFramework
+    - install-mcs
+    - install-apps-ga
+   
+- name: Copy the Integration Exchange Framework Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_intex_framework_nudb.j2" dest="{{ mcs_conf_dir }}/answer_intex_framework.txt" mode=2777
+  when: not update_database
+  tags: 
+     - ENOVIAIntegrationExchangeFramework
+     - install-mcs
+     - install-apps-ga
+
+- name: Executing the Integration Exchange Framework installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < {{ mcs_conf_dir }}/answer_intex_framework.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIAIntegrationExchangeFramework.Unix64/1
+  tags: 
+     - ENOVIAIntegrationExchangeFramework
+     - install-mcs
+     - install-apps-ga
+   
+
+- name: Remove the Integration Exchange Framework Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_conf_dir }}/answer_prog_cen_foundation.txt" state=absent
+  tags: 
+     - ENOVIAIntegrationExchangeFramework
+     - install-mcs
+     - install-apps-ga
+

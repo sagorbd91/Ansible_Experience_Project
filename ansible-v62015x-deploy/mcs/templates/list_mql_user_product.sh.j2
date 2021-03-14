@@ -1,0 +1,23 @@
+#!/bin/bash
+IFS=$'\n'
+cat /dev/null > /tmp/mql_list_user_product
+
+{{ mcs_server_dir }}/scripts/mql << EOF
+      set context person {{ mql_user }} pass {{ mql_password }};
+      temp query bus Person * * select name dump | output /tmp/mql_user_list;
+      quit;
+EOF
+
+for userID in `cat /tmp/mql_user_list`
+do
+    username=`echo $userID | cut -d'|' -f2`
+    {{ mcs_server_dir }}/scripts/mql > /tmp/mql_product_list 2>&1 << EOF
+        set context person {{ mql_user }} pass {{ mql_password }};
+        print person '$username' select product;
+        quit;
+EOF
+    printf $username,  >> /tmp/mql_list_user_product
+    grep -qE "Error" /tmp/mql_product_list && printf " Error" >> /tmp/mql_list_user_product
+    echo `cat /tmp/mql_product_list  | grep product | cut -d'=' -f2` >> /tmp/mql_list_user_product
+done
+exit

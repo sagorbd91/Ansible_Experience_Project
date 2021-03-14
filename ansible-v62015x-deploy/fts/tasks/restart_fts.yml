@@ -1,0 +1,44 @@
+---
+   
+- name: Stop Advanced Search Server
+  remote_user: "{{ plm_user }}"
+  shell: ./cvinit.sh stop
+  args:
+    chdir: /plm/{{ env_name }}/{{ FTS_Type }}/code/linux_a64/cv/data/bin/
+  tags: 
+     - restart-fts
+     - stop-fts
+     - install-fts-fp
+
+- name: Start Advanced Search Server
+  remote_user: "{{ plm_user }}"
+  shell: ./cvinit.sh start
+  args:
+    chdir: /plm/{{ env_name }}/{{ FTS_Type }}/code/linux_a64/cv/data/bin/
+  tags: 
+    - restart-fts
+    - start-fts
+    - install-fts-fp
+
+
+- wait_for: timeout=30 delay=15
+  remote_user: "{{ plm_user }}"
+  tags:
+    - start-fts
+    - install-fts-fp
+
+- name: Execute the check_run.sh script for checking FTS service running or not
+  remote_user: "{{ plm_user }}"
+  shell: ./cvinit.sh status 
+  args:
+    chdir: /plm/{{ env_name }}/{{ FTS_Type }}/code/linux_a64/cv/data/bin/
+  register: checkrun
+  tags: 
+    - start-fts
+    - install-fts-fp
+    
+- debug: msg="{{checkrun.stdout_lines}}"
+  remote_user: "{{ plm_user }}"
+  tags: 
+    - start-fts
+    - install-fts-fp

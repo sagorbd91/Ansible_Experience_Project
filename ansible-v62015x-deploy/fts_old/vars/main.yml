@@ -1,0 +1,46 @@
+---
+
+plm3dx_user: "plmyma"
+e3denv_name: "Env"
+plm_group: "plm"
+
+eplm_server_base_path: "/data/apps/plm"
+e3dx_installer_path: "/data/sources/2013x/"
+e3dx_plugin_contact_hostname: "localhost"
+e3dx_1st_port_range: "58200"
+e3dx_start_instance_count: "5"
+enovia_v6_server_path: "{{ eplm_server_base_path }}/test/mcs/server"
+enovia_v6_server_name: "localhost"
+enovia_v6_server_port: "8181"
+enovia_v6_server_rootURI: "enovia"
+
+e3dx_server_user: "plmadm"
+e3dx_server_user_pass: "plmadm"
+e3dx_server_security_context: "VPLMAdmin.Company Name.Default"
+
+e3dx_install_path: "{{ eplm_server_base_path }}/v62015x/search/3dx/code"
+e3dx_index_dir: "{{ eplm_server_base_path }}/v62015x/appdata/3dindexes"
+e3dx_env_dir: "{{ e3dx_install_path }}/CATEnv"
+e3dx_function_dir: "{{eplm_server_base_path}}/mig1/3dx/bin"
+e3dx_custom_dir: "{{eplm_server_base_path}}/v62015x/custom"
+e3dx_logdir: "{{e3dx_custom_dir}}/logs"
+e3dx_index_name: "3DIndex_DefaultEnv"
+service_dir: /etc/rc.d/init.d
+
+fts_command_dir: "{{ eplm_server_base_path }}/v62015x/search/fts/linux_a64/code/command"
+fts_bin_dir: "{{ eplm_server_base_path }}/v62015x/search/fts/linux_a64/cv/data/bin"
+fts_java_home: "{{ eplm_server_base_path }}/v62015x/softs/jdk17/jre"
+
+
+instances:
+  xvfbd-0:
+   i_no: 0
+   screen_width: 1280
+   screen_height: 768
+   screen_depth: 24
+
+#  xvfbd-1:
+#   i_no: 1
+#   screen_width: 1280
+#   screen_height: 768
+#   screen_depth: 24

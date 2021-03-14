@@ -1,0 +1,9 @@
+---
+
+- name: Install mcscas
+  hosts: mcs_servers
+  vars_files:
+      - mcs/vars/main.yml
+      - mcs/vars/{{env_name}}.yml
+  roles:
+    - mcs

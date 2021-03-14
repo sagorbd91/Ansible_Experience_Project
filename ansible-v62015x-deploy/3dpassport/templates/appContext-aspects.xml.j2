@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+        <!-- Redirect -->
+        <bean name="redirectUserAspect"
+                class="com.dassault_systemes.dspassport.iamweb.features.RedirectUserAspect"
+                factory-method="aspectOf">
+                <property name="urlChecker" ref="whiteListUrlChecker" />
+                <property name="defaultUrl" value="${iam.frontend.root.url}" />
+        </bean>
+        <bean name="whiteListUrlChecker"
+                class="com.dassault_systemes.dspassport.core.utils.WhiteListUrlChecker">
+                <property name="whiteList">
+                        <list>
+                            <value>http(s)?://.*.vstage.co(:\d+)?((/.*)?|(\?.*))</value>
+                        </list>
+                </property>
+        </bean>
+
+        <!-- Rest calls -->
+        <bean name="restTemplateCallAspect"
+                class="com.dassault_systemes.dspassport.core.features.RestTemplateCallAspect"
+                factory-method="aspectOf">
+                <property name="perfLogger" ref="basicTimePerfLogger" />
+                <property name="httpLogger" ref="basicHttpTramesLogger" />
+        </bean>
+        <bean name="basicTimePerfLogger"
+                class="com.dassault_systemes.dspassport.core.features.impl.logging.TimePerfLogger">
+                <property name="template" value="{signature},{perf}" />
+                <property name="typesToExclude">
+                        <set>
+                                <value>org.springframework.ui.ModelMap</value>
+                                <value>com.dassault_systemes.dspassport.iamweb.web.po.HashMapCommand</value>
+                                <value>org.springframework.validation.BindingResult</value>
+                        </set>
+                </property>
+        </bean>
+        <bean name="basicHttpTramesLogger"
+                class="com.dassault_systemes.dspassport.core.features.impl.logging.TramesHttpLogger">
+                <property name="template" value="{identifier},{fnName},{args},{result}" />
+        </bean>
+
+
+        <!-- Time tracking -->
+        <bean name="timeMeasuringAspect"
+                class="com.dassault_systemes.dspassport.core.features.TimeMeasuringAspect"
+                factory-method="aspectOf">
+                <property name="perfLogger" ref="basicTimePerfLogger" />
+        </bean>
+
+        <!-- Asynchronous execution -->
+        <bean name="asynchronousCall"
+                class="com.dassault_systemes.dspassport.core.features.AsynchronousCall"
+                factory-method="aspectOf">
+                <property name="asyncManager" ref="asyncManager" />
+        </bean>
+
+        <bean name="asyncManager"
+                class="com.dassault_systemes.dspassport.core.async.impl.MethodNameBasedAsyncTaskManager">
+                <property name="configService" ref="configService" />
+                <property name="executorServiceFactory" ref="executorServiceFy" />
+                <property name="defaultConfiguration">
+                        <list>
+                                <bean
+                                        class="com.dassault_systemes.dspassport.core.to.MNBAsyncTmConfDescriptionTO">
+                                        <property name="methodName" value="#logWriting" />
+                                        <property name="priority" value="0" />
+                                        <property name="advancedProperties">
+                                                                <map>
+                                                                        <entry key="nbThreads" value="5" />
+                                                                </map>
+                                        </property>
+                                </bean>
+                                <bean
+                                        class="com.dassault_systemes.dspassport.core.to.MNBAsyncTmConfDescriptionTO">
+                                        <property name="methodName" value="doComputeProfile" />
+                                        <property name="priority" value="0" />
+                                        <property name="forceNotAsynchronous" value = "true" />
+                                        <property name="advancedProperties">
+                                                                <map>
+                                                                        <entry key="nbThreads" value="2" />
+                                                                </map>
+                                        </property>
+                                </bean>
+                                <bean
+                                        class="com.dassault_systemes.dspassport.core.to.MNBAsyncTmConfDescriptionTO">
+                                        <property name="methodName" value="#userUpdatePing" />
+                                        <property name="priority" value="0" />
+                                        <property name="advancedProperties">
+                                                                <map>
+                                                                        <entry key="nbThreads" value="3" />
+                                                                </map>
+                                        </property>
+                                </bean>
+                                <bean
+                                        class="com.dassault_systemes.dspassport.core.to.MNBAsyncTmConfDescriptionTO">
+                                        <!-- Default executor service -->
+                                        <property name="methodName" value=".*" />
+                                        <property name="priority" value="1" />
+                                        <property name="advancedProperties">
+                                                                <map>
+                                                                        <entry key="nbThreads" value="10" />
+                                                                </map>
+                                        </property>
+                                </bean>
+                        </list>
+                </property>
+        </bean>
+        <bean
+                class="com.dassault_systemes.dspassport.iamweb.features.ConditionnalAccessAspect"
+                factory-method="aspectOf">
+                <property name="panelProperties" ref="panelProperties" />
+        </bean>
+
+</beans>

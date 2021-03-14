@@ -1,0 +1,148 @@
+---
+
+- name: Restart Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=restarted
+  with_dict: "{{ instances }}"
+  tags: 
+   - restart-services
+   - install-mcs
+   - install-mcsfx
+   - start-service
+   - disp-env-name-mcsnocas
+   - disp-env-name-mcscas
+
+
+- name: stop MCS services
+  remote_user: monitor
+  become: true
+  shell: /etc/init.d/{{ item.key }} stop
+  with_dict: "{{ instances }}"
+  tags: 
+    - stop-mcs
+    - stop-test
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+
+- name: Copy script to Check MCS Stop Status 
+  remote_user: monitor
+  become: true
+  template: src="stop_mcs_check.j2" dest="/home/monitor/stop_mcs_check.sh" owner=monitor group=monitor  mode=0755
+  with_dict: "{{ instances }}"
+  tags: 
+    - stop-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+
+- name: Execute script to Check MCS Stop Status 
+  remote_user: monitor
+  become: true
+  shell: ./stop_mcs_check.sh > stop_mcs_status.log
+  args:
+    chdir: /home/monitor
+  tags: 
+    - stop-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+
+- name: Check if 'MCS Stop' success or not
+  remote_user: monitor
+  become: true
+  shell: cat stop_mcs_status.log
+  args:
+    chdir: /home/monitor
+  register: check_mcs
+  tags: 
+    - stop-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+
+- fail: msg="Filed to Stop {{ item.key }}"
+  when: check_mcs.stdout.find('running') != -1
+  with_dict: "{{ instances }}"
+  tags: 
+    - stop-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+        
+- name: start MCS services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+   
+- name: wait for tomcat to start
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port={{ item.value.port_http }}
+      delay=60
+      timeout=240
+  with_dict: "{{ instances }}"
+  tags: 
+     - start-mcs
+     - restart-services
+     - install-mcs
+     - install-mcsfx
+     - disp-env-name-mcsnocas
+     - disp-env-name-mcscas
+     - post-task
+     - import-dash-crt
+     - deploy-3ddashUrl-mxenv
+  
+- name: Copy script to Check MCS START Status 
+  remote_user: monitor
+  become: true
+  template: src="start_mcs_check.sh.j2" dest="/home/monitor/start_mcs_check.sh" owner=monitor group=monitor  mode=0755
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+
+- name: Execute script to Check MCS START Status 
+  remote_user: monitor
+  become: true
+  shell: ./start_mcs_check.sh > start_mcs_status.log
+  args:
+    chdir: /home/monitor
+  tags: 
+    - start-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+
+- name: Check if 'MCS START' success or not
+  remote_user: monitor
+  become: true
+  shell: cat start_mcs_status.log
+  args:
+    chdir: /home/monitor
+  register: check_mcs
+  tags: 
+    - start-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+
+- fail: msg="Filed to START {{ item.key }}"
+  when: check_mcs.stdout.find('failed') != -1
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-mcs
+    - post-task
+    - import-dash-crt
+    - deploy-3ddashUrl-mxenv
+

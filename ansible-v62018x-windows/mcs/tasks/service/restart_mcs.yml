@@ -1,0 +1,27 @@
+---
+
+- name: Stop MCSCAS Service
+  win_service: name=3DSpaceTomEE_R2018x state=stopped
+  tags: 
+     - stop-mcscas
+     - restart-mcacas
+  
+- name: Start MCSCAS servce
+  win_service: name=3DSpaceTomEE_R2018x state=started
+  tags: 
+     - start-mcscas
+     - restart-mcacas
+  
+  
+- name: Stop MCSNOCAS Service
+  win_service: name=3DSpaceTomEENoCAS_R2018x state=stopped
+  tags: 
+     - stop-mcsnocas
+     - restart-mcanocas
+  
+- name: Start MCSNOCAS servce
+  win_service: name=3DSpaceTomEENoCAS_R2018x state=started
+  tags: 
+     - start-mcsnocas
+     - restart-mcanocas
+  

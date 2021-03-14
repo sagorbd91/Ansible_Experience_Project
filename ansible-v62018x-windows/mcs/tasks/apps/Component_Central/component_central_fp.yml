@@ -1,0 +1,48 @@
+---
+
+- name: Check if EntAVLManagement FP Apps installer path exists
+  win_stat: path="{{apps_FP_installer_path}}"
+  register: check_apps_path
+  tags: 
+     - install-app-fp
+     - component-central-fp
+  
+- name: EntAVLManagement FP Apps installer doesn't exist
+  fail: msg="Apps installer doesn't exist!!"
+  when: not check_apps_path.stat.exists
+  tags: 
+     - install-app-fp
+     - component-central-fp
+
+- name: Copy EntAVLManagement FP UserIntention file to target
+  template: src="templates/user_intention_apps/fp/UserIntentions_Component_central_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_Component_central_fp.xml"
+  tags: 
+     - install-app-fp
+     - component-central-fp
+
+- name: Copy EntAVLManagement FP installer from NFS to local
+  win_copy:
+    src: '{{ apps_FP_installer_path }}\EnterpriseAVLManagement.Windows64\1'
+    dest: '{{ windows_tmp_path }}\EnterpriseAVLManagement.Windows64'
+    remote_src: True
+  tags: 
+     - install-app-fp
+     - component-central-fp
+  
+- name: Executing EntAVLManagement FP installation on target
+  win_command: '{{windows_tmp_path}}\EnterpriseAVLManagement.Windows64\1\StartTUI.exe -installerPath {{ds_fp_installer_path}} --silent {{windows_tmp_path}}\UserIntentions_Component_central_fp.xml --xmlreport {{windows_tmp_path}}\Report_comp_cen_FP.xml'
+  tags:  
+     - install-app-fp
+     - component-central-fp
+
+- name: Removing the user Intension file for EnterpriseAVLManagement from traget
+  win_file: path="{{windows_tmp_path}}\UserIntentions_Component_central_fp.xml" state=absent 
+  tags: 
+     - install-app-fp
+     - component-central-fp
+     
+- name: Remove the EntAVLManagement FP installer folder.
+  win_file: path="{{windows_tmp_path}}\EnterpriseAVLManagement.Windows64" state=absent
+  tags:  
+     - install-app-fp
+     - component-central-fp 

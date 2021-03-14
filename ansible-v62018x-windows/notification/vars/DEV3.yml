@@ -1,0 +1,31 @@
+env_name: DEV3
+fix_pack_version: ''
+
+# Installer path details
+
+notification_installer_path_fp: '{{ installer_path }}\3DNotification\{{ fix_pack_version }}\3DNotification.Windows64\1'
+notification_installer_path_ga: '{{ installer_path }}\3DNotification\ga\Windows64\1'
+
+#Installation details
+installation_path: 'D:\PLM\{{ env_name }}\3DNotification'
+installation_path_notification: '{{ installation_path }}\Code'
+notification_shared_storage_dir: '{{ installation_path }}\3DNotificationData'
+notification_log_dir: '{{ installation_path }}\3DNotificationLogs'
+notification_runtime_temp_dir: '{{ installation_path }}\3DNotificationTemp'
+Java_Path: 'D:\PLM\{{ env_name }}\common\soft\java\jdk'
+
+#notification database
+notification_database: 'x3dnotification'
+notification_database_host_port: 'v0641a\CATIASQLSERVER'
+notification_database_user_admin: 'x3dn_admin'
+notification_token_database_user_password: 'x3dn_admin#01'
+
+notification_database_user: 'x3dn'
+notification_database_user_password: 'x3dn#01'
+notification_databse_odbc_driver: 'SQL Server Native Client 11.0'
+
+nodejs_server_port: '9040'
+notification_db_type: 'mssql'
+
+
+

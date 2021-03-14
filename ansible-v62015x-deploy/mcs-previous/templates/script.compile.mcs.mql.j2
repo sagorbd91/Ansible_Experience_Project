@@ -1,0 +1,30 @@
+#!/bin/sh
+HOTFIX=$1
+
+if [ $HOTFIX ]; then
+    COMMAND="compile program * force";
+    echo "Executing mql command for fix pack ..."
+else
+    COMMAND="compile prog * force update";
+    echo "Executing mql command ..."
+fi
+
+cd {{ mcs_server_dir }}/scripts
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  $COMMAND
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  $COMMAND
+  quit;
+EOF
+fi
+
+
+
+

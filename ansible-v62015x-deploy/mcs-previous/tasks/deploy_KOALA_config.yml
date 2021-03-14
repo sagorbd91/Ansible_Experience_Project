@@ -1,0 +1,13 @@
+---
+
+- name: copy KOALA.properties in conf
+  template: src="KOALA.properties.j2" dest="{{ mcs_conf_dir }}/KOALA.properties" 
+  tags: 
+    - copy-koala
+    - install-mcs
+    
+- name: copy KOALAEnv.properties in conf
+  template: src="KOALAEnv.properties.j2" dest="{{ mcs_server_dir }}/managed/properties/KOALAEnv.properties" 
+  tags: 
+    - copy-koala
+    - install-mcs

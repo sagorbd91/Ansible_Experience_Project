@@ -1,0 +1,21 @@
+---
+
+- name: Update mxEnv.sh in server script for license
+  blockinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    marker: ""
+    block: |
+      #==============DSLS file access
+      MX_TRACE_FILE_PATH=/plm/{{env_name}}/mcsnocas/code/server/logs
+      export MX_TRACE_FILE_PATH
+      LOG_FILE_NAME=MQL-TRACE-`date +"%Y%m%d.%H%M%S.%3N"`.log
+      MX_SQL_TRACE=$LOG_FILE_NAME
+      export MX_SQL_TRACE
+      MX_MQL_TRACE=$LOG_FILE_NAME
+      export MX_MQL_TRACE
+      MX_JPO_TRACE=$LOG_FILE_NAME
+      export MX_JPO_TRACE
+  tags: 
+     - enable-mql-trace
+  

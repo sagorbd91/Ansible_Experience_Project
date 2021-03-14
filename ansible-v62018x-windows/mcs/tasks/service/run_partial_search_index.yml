@@ -1,0 +1,8 @@
+---
+    
+- name: run mcs partial search through mql
+  win_psexec:
+     command: 'C:\PLM\DEV2\3DSpace\Server\win_b64\code\command\FullTextSearch_partial_indexation.bat >> {{windows_tmp_path}}\Report_partial_search.xml'
+     elevated: yes
+  tags: 
+    - mcs-search-partial

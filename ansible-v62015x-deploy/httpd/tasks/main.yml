@@ -1,0 +1,32 @@
+---
+
+- include: install_httpd.yml
+
+- include: deploy_conf.yml
+  when: is_fcsremote_proxy == "false"
+  
+- include: deploy_vhost.yml
+  when: is_fcsremote_proxy == "false"
+  
+- include: deploy_certs.yml
+  when: is_fcsremote_proxy == "false"
+  
+- include: deploy_fcsremote_conf.yml
+  when: is_fcsremote_proxy == "true"
+  
+- include: deploy_fsremote_vhost.yml
+  when: is_fcsremote_proxy == "true"
+  
+- include: deploy_fcsremote_certs.yml
+  when: is_fcsremote_proxy == "true"
+  
+- include: service_restart.yml
+
+- include: open_firewall.yml
+  when: is_fcsremote_proxy == "false"
+  
+- include: open_firewall_fcsremote.yml
+  when: is_fcsremote_proxy == "true"
+
+#- include: service_firewalld.yml
+

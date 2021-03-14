@@ -1,0 +1,32 @@
+---
+
+env_name: "mig4"
+plm_user: "plmm4ma"
+plm_group: "plm"
+# R15x Migration server PromotionChecks properties path 
+
+nfs_migration_dir: "{{mount_dest_dir}}/backups/catia-v6/migration-3"
+nfs_promchecks_properties: "{{nfs_migration_dir}}/mcsnocas/race-config/server/STAGING/ematrix/properties"
+
+r15x_mcs_code_dir: "/plm/{{env_name}}/mcsnocas/code"
+r15x_server_dir: "{{r15x_mcs_code_dir}}/server"
+r15x_managed_properties_path: "{{r15x_server_dir}}/managed/properties"
+r15x_STAGING_properties_path: "{{r15x_server_dir}}/STAGING/ematrix/properties"
+
+tmp_migration_dir: "/tmp/migration"
+tmp_properties_path: "{{tmp_migration_dir}}/STAGING/ematrix/properties"
+
+r15x_vplm_environment_dir: "{{r15x_server_dir}}/STAGING/ematrix/WEB-INF/classes/vplm/environment"
+
+r15x_server_bin_dir: "/plm/{{env_name}}/mcsnocas/bin"
+r15x_server_script_dir: "{{r15x_mcs_code_dir}}/server/scripts"
+r15x_newtype_log_dir_all: "{{r15x_server_dir}}/logs/Migration-fp1616/All-Types"
+r15x_newtype_log_dir_notall: "{{r15x_server_dir}}/logs/Migration-fp1616/NotAll-Types"
+
+r15x_evp_mql_dir: "{{r15x_mcs_code_dir}}/evp/linux_a64/reffiles/MQLFamilies/mql"
+r15x_server_mql_dir: "{{r15x_mcs_code_dir}}/server/Apps/VPMMultiDiscipline/V6R2015x/mql"
+mig_mcscommon_conf_dir: "/plm/{{env_name}}/mcscommon/conf"
+r15x_conf_dir: "/plm/{{env_name}}/mcscommon/conf"
+mql_user: "creator"
+mql_password: "creator."
+db2_jdbc_url: "JdbcUrl=jdbc:db2://v0403a.vstage.co:25000/V6DB"

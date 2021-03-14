@@ -1,0 +1,12 @@
+env_name: 'DEV3'
+
+
+#Installer path details
+installer_path_3dspaceIndex_ga: '{{ windows_tmp_path }}\3DSpaceIndex\ga\Windows64\1'
+installer_path_3dspaceIndex_fp: '{{ windows_tmp_path }}\3DSpaceIndex\{{ fix_pack_version }}\3DSpaceIndex.Windows64\1'
+
+
+#Installation path
+TARGET_PATH_3dindex: 'D:\PLM\{{ env_name }}\3dSpaceIndex\Code'
+Java_Path: 'D:\PLM\{{ env_name }}\common\soft\java\jdk'
+FullCloud_AdminPassword: 'Ftsadm_dev3'

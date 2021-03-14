@@ -1,0 +1,50 @@
+---
+
+- name: Check if Apps installer path exists
+  win_stat: path="{{apps_FP_installer_path}}"
+  register: check_apps_path
+  tags: 
+     - install-app-fp
+     - ENOVIA_NCRF-fp
+  
+- name: Apps installer doesn't exist
+  fail: msg="Apps installer doesn't exist!!"
+  when: not check_apps_path.stat.exists
+  tags: 
+     - install-app-fp
+     - ENOVIA_NCRF-fp
+
+- name: Copy NRCF UserIntention file to target
+  template: src="templates/user_intention_apps/fp/UserIntentions_ncrf_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_ncrf_fp.xml"
+  tags: 
+     - install-app-fp
+     - ENOVIA_NCRF-fp
+
+- name: Copy NRCF installer from NFS to local
+  win_copy:
+    src: '{{apps_FP_installer_path}}\ComplaintsandNCRManagementFoundation.Windows64\1'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: 
+     - install-app-fp
+     - ENOVIA_NCRF-fp
+  
+- name: Executing NRCF installation on target
+  win_psexec: 
+      command: '{{windows_tmp_path}}\1\StartTUI.exe -installerPath {{ds_fp_installer_path}} --silent {{windows_tmp_path}}\UserIntentions_ncrf_fp.xml --xmlreport {{windows_tmp_path}}\Report_ncrf_fp.xml'
+      elevated: yes
+  tags: 
+     - install-app-fp
+     - ENOVIA_NCRF-fp
+
+- name: Removing the user Intension file for 3DLive from traget
+  win_file: path="{{windows_tmp_path}}\UserIntentions_ncrf_fp.xml" state=absent
+  tags: 
+     - install-app-fp
+     - ENOVIA_NCRF-fp
+     
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags:  
+     - install-app-fp
+     - ENOVIA_NCRF-fp

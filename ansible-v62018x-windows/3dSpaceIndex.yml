@@ -1,0 +1,9 @@
+---
+
+- name: Install 3DSpaceIndex
+  hosts: 3dspaceindex_servers
+  vars_files:
+      - 3dSpaceIndex/vars/main.yml
+      - 3dSpaceIndex/vars/{{env_name}}.yml
+  roles:
+    - 3dSpaceIndex

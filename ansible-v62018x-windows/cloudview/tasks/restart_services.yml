@@ -1,0 +1,13 @@
+---
+
+- name: Stop cloudview Service
+  win_service: name=Exalead CloudView - R2018x_3DSwym state=stopped
+  tags:
+     - stop-cloudview
+     - restart-pass
+
+- name: Start cloudview service
+  win_service: name=Exalead CloudView - R2018x_3DSwym state=started
+  tags:
+     - start-cloudview
+     - restart-pass

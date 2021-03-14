@@ -1,0 +1,65 @@
+---
+
+- name: pre task 
+  hosts: fcsremote_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor 
+  sudo: true
+  tags: install-fcs
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+
+- name: Create user
+  hosts: fcsremote_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: "monitor"
+  sudo: true
+  tags: install-fcs
+  vars:
+    plm_user: "plmppfa"
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }	
+
+
+
+- name: install fcs Remote
+  hosts: fcsremote_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - fcs/vars/main.yml
+      - fcs/vars/{{env_name}}.yml
+      - fcs/vars/{{fcsremote_instance}.yml
+  vars:
+   plm_user: "plmppfa"
+   plm_group: "plm"
+   fcs_type: "fcsremote1"
+   instance_name: "was_fcsremote_xian_1"
+   instances:
+       was_fcsremote_xian_1:
+         app_name: fcs3-jkl
+         port_http: 8681
+         port_jmx: 8690
+         port_ajp: 8610
+         port_shutdown: 8606
+         port_redirect: 9044
+       was_fcsremote_xian_2:
+         app_name: fcs4-jkl
+         port_http: 8682
+         port_jmx: 8691
+         port_ajp: 8611
+         port_shutdown: 8602
+         port_redirect: 9045
+  remote_user: "{{ plm_user }}"
+  sudo: false
+  roles:
+     - { role: fcs  }		
+
+

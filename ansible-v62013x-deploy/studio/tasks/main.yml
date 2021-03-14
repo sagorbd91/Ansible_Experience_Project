@@ -1,0 +1,16 @@
+---
+
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_studio.yml  
+- include: install_studio_fix.yml
+- include: generate_matrixR.yml
+#- include: uninstall_studio.yml
+
+
+
+
+
+
+
+

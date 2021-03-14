@@ -1,0 +1,32 @@
+---
+
+- name: Copy the MQLVPLMXPMainUpgrade-Execution-Wrapper script to Migration Server
+  remote_user: monitor
+  become: true
+  template: src="VPLMXPMainUpgrade_mql_script.sh.j2" dest="{{ r15x_server_bin_dir }}/MQL_VPLMXPMainUpgrade-Execution-Wrapper-R213.sh" mode=0777
+  tags: 
+    - copy-mql-script
+    - execute-premig-mql
+    
+- name: Execute the MQLVPLMXPMainUpgrade-Execution-Wrapper-R213.sh script
+  shell: ./MQL_VPLMXPMainUpgrade-Execution-Wrapper-R213.sh > MQL_VPLMXPMainUpgrade-Execution-Wrapper-R213.log 2>&1
+  args:
+    chdir: /{{ r15x_server_bin_dir }}
+  tags: 
+   - execute-premig-mql
+   
+- name: Copy the DeletePnO object script to Migration Server
+  remote_user: monitor
+  become: true
+  template: src="deletePnOObject.sh.j2" dest="{{ r15x_server_bin_dir }}/deletePnOObject.sh" mode=0777
+  tags: 
+    - copy-mql-script
+    - execute-deletePnO-mql
+    
+- name: Execute the MQLVPLMXPMainUpgrade-Execution-Wrapper-R213.sh script
+  shell: ./deletePnOObject.sh > deletePnOObject.sh.log 2>&1
+  args:
+    chdir: /{{ r15x_server_bin_dir }}
+  tags: 
+   - execute-deletePnO-mql
+  

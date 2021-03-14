@@ -1,0 +1,13 @@
+#! /bin/bash
+
+#ending with / is a must
+SearchDir={{ fcs_file_store_dir }}/
+
+FromDate={{ FromDate }}
+ToDate={{ ToDate }}
+ToDateFormatted=`date --date "$ToDate  1 days" +"%Y-%m-%d"`
+
+find $SearchDir -type f -newermt $FromDate ! -newermt $ToDateFormatted -exec ls -l --time-style=+"%Y-%m-%d %H:%M:%S" {} \; | cut -d' ' -f5- | column -t > /tmp/fcs_File_List
+
+
+#find /plm/mig4/fcscentral/stores -type f -newermt 2018-03-07 ! -newermt 2018-03-08 -exec ls -l --time-style=+"%Y-%m-%d %H:%M:%S:%N" {} \;

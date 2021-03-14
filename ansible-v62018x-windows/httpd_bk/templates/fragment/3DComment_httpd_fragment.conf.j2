@@ -1,0 +1,64 @@
+# Begin: Cache management
+<IfModule mod_cache.c>
+	CacheStorePrivate On
+	CacheIgnoreHeaders Set-Cookie X-SWYM X-DS-SWYM-CSRFTOKEN
+    <IfModule mod_cache_disk.c>
+        CacheRoot "{{ CacheRoot_comment_dir }}"
+        CacheEnable disk  /
+        CacheDirLevels 2
+        CacheDirLength 2
+    </IfModule>
+    <IfModule mod_disk_cache.c>
+# Apache 2.2 compatibility
+        CacheRoot "{{ CacheRoot_comment_dir }}"
+        CacheEnable disk  /
+        CacheDirLevels 2
+        CacheDirLength 2
+    </IfModule>
+</IfModule>
+# End: Cache management
+
+<Location ~ \.eot$>
+    Header unset Cache-Control
+    Header unset Pragma
+</Location>
+
+
+AddType application/x-font-ttf .ttf
+
+
+<LocationMatch "^/3dcomment/(?<controller>.*)" >
+# Common
+      RequestHeader set x-forwarded-port {{ comment_proxy_port }}
+      RequestHeader set x-forwarded-proto https
+
+      ProxyPreserveHost On
+      # CORS support is handled thru a Tomcat filter
+
+# 3DComment API
+      RequestHeader set x-forwarded-contextpath /3dcomment
+      ProxyPass http://{{ comment_server_common_name }}:{{ comment_instance_port }}
+      ProxyPassReverse http://{{ comment_server_common_name }}:{{ comment_instance_port }}
+      #ProxyPass http://3dcomment-18xdev2-plm.valmet.com:8781/social/
+      #ProxyPassReverse http://3dcomment-18xdev2-plm.valmet.com:8781/social/
+      #<IfModule mod_headers.c>
+      #    Header edit Set-Cookie "^(JSESSIONIDSOCIAL=.*; ?[Pp]ath=)/social(?:/|)(.*?)$" "$1/$2"
+      #</IfModule>
+
+# Common compression settings
+	AddOutputFilterByType DEFLATE text/plain
+	AddOutputFilterByType DEFLATE text/xml
+	AddOutputFilterByType DEFLATE text/html
+	AddOutputFilterByType DEFLATE text/css
+	AddOutputFilterByType DEFLATE application/xml
+	AddOutputFilterByType DEFLATE application/x-javascript
+	AddOutputFilterByType DEFLATE application/javascript
+	#AddOutputFilterByType DEFLATE application/x-httpd-php
+	AddOutputFilterByType DEFLATE image/svg+xml
+	AddOutputFilterByType DEFLATE application/json
+	AddOutputFilterByType DEFLATE text/javascript
+	AddOutputFilterByType DEFLATE application/xhtml+xml
+	AddOutputFilterByType DEFLATE application/rss+xml
+	AddOutputFilterByType DEFLATE application/atom_xml
+	AddOutputFilterByType DEFLATE application/x-font-ttf
+</LocationMatch>

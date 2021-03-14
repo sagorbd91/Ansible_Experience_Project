@@ -1,0 +1,48 @@
+---
+
+- name: create the mya dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_evp_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2755
+  tags: 
+    - install-multidiscol
+    - install-mcs
+
+ 
+- name: Copy the Multi Discipline Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_multidis_collplat.j2" dest="{{ mcs_ga_installer }}/ENOVIAMultiDisciplineCollaborationPlatform.Unix64/1/answer_multidis_collplat.txt" mode=2777
+  when: update_database
+  tags: 
+     - install-multidiscol
+     - install-mcs
+
+   
+- name: Copy the Multi Discipline  Answer file (database will not update)
+  remote_user: monitor
+  sudo: true
+  template: src="answer_multidis_collplat_nudb.j2" dest="{{ mcs_ga_installer }}/ENOVIAMultiDisciplineCollaborationPlatform.Unix64/1/answer_multidis_collplat.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-multidiscol
+     - install-mcs
+
+
+- name: Executing the Multi Discipline installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_multidis_collplat.txt
+  args:
+    chdir: /{{ mcs_ga_installer }}/ENOVIAMultiDisciplineCollaborationPlatform.Unix64/1
+  tags: 
+     - install-multidiscol
+     - install-mcs
+  
+
+- name: Remove the Multi Discipline Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_ga_installer }}/ENOVIAMultiDisciplineCollaborationPlatform.Unix64/1/answer_multidis_collplat.txt" state=absent
+  tags: 
+     - install-multidiscol
+     - install-mcs

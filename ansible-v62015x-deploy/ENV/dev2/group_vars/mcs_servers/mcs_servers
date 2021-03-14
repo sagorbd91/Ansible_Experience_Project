@@ -1,0 +1,28 @@
+
+mcs_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+mcs_install_rel_path: "/plm/{{env_name}}/mcs"
+mcs_instance_path: "{{mcs_install_rel_path}}/instances"
+mcs_code_dir: "{{mcs_install_rel_path}}/code"
+mcs_conf_dir: "{{mcs_install_rel_path}}/conf"
+mcs_log_dir: "{{mcs_install_rel_path}}/logs"
+mcs_java_dir: "{{mcs_install_rel_path}}/softs"
+build_dir: "{{mcs_server_dir}}/distrib"
+mcs_build_path: "server/distrib/enovia.war"
+mcs_server_dir: "{{mcs_code_dir}}/server"
+mcs_studio_dir: "{{mcs_code_dir}}/studio"
+mcs_mya_dir: "{{mcs_code_dir}}/mya"
+mcs_evp_dir: "{{mcs_code_dir}}/evp"
+mcs_csg_dir: "{{mcs_code_dir}}/csg"
+mcs_kwd_dir: "{{mcs_code_dir}}/kwd"
+mcs_atk_dir: "{{mcs_code_dir}}/atk"
+
+
+instances:
+  was_mcs_2:
+     app_name: was_mcs_2
+     port_http: 8989
+     port_https: 8888
+     port_jmx: 8088
+     port_ajp: 8610
+     port_shutdown: 6406
+     port_redirect: 6444 

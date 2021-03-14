@@ -1,0 +1,9 @@
+---
+# Handlers for Tomcat
+
+- name: restart tomcat
+  service: name={{ item }} state=restarted
+  with_items: "{{ instances }}"
+
+
+

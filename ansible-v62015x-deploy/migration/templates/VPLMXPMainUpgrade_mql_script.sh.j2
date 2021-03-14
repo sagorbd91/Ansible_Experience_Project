@@ -1,0 +1,25 @@
+#!/bin/sh
+
+cd {{ r15x_server_script_dir }}
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  set context user creator vault vplm;
+  set env TEXT_Previous_Path {{tmp_migration_dir}};
+  set env VPLMCentralAdminUser PLMADM;
+  set env VPLMCentralAdminPwd PLMADM;
+  run {{ r15x_mcs_code_dir }}/evp/linux_a64/reffiles/MQLFamilies/mql/VPLMXPMainUpgrade-Execution-Wrapper-R213.mql;
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  set context user creator vault vplm;
+  set env TEXT_Previous_Path {{tmp_migration_dir}};
+  set env VPLMCentralAdminUser PLMADM;
+  set env VPLMCentralAdminPwd PLMADM;
+  run {{ r15x_mcs_code_dir }}/evp/linux_a64/reffiles/MQLFamilies/mql/VPLMXPMainUpgrade-Execution-Wrapper-R213.mql;
+  quit;
+EOF
+fi

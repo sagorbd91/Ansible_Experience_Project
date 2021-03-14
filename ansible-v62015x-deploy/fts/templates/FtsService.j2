@@ -1,0 +1,81 @@
+#!/bin/bash
+
+. /etc/rc.d/init.d/functions
+. /etc/sysconfig/network
+[ "${NETWORKING}" = "no" ] && exit 0
+
+construtor(){
+fts_user={{ plm_user }}
+base_dir={{ fts_bin_dir }}
+app_name={{ fts_type }}
+startup="`printf $base_dir`/cvinit.sh start"
+stopfts="`printf $base_dir`/cvinit.sh stop"
+}
+
+start(){
+  printf "Starting ${app_name}"
+  su - $fts_user -c "$startup > /dev/null 2>&1"
+  sleep 3
+  for ((i=0;i=300;i++)); do
+    checkStatus=$({{ fts_bin_dir }}/cvinit.sh status exec 2>/dev/null | grep starting | awk '{print $2}' | wc -l)
+    if [ $checkStatus -lt 1 ]; then
+      status;
+      break;
+    fi
+    sleep 2;
+  done
+}
+
+stop(){
+  printf "Stopping ${app_name}"
+  su - $fts_user -c "$stopfts > /dev/null 2>&1"
+  sleep 1;
+  status
+}
+
+restart(){
+  stop
+  sleep 60
+  start
+}
+
+status(){
+  numofservice=$({{ fts_bin_dir }}/cvinit.sh status exec 2>/dev/null | grep started | awk '{print $2}' | wc -l)
+  count=8
+  echo -e "\n"
+  if [ $numofservice -lt 8 ]; then
+    echo -e "FTS \e[31m(INACTIVE)\e[0m\n"
+    {{ fts_bin_dir }}/cvinit.sh status
+  else
+    if [ $numofservice -eq $count ]; then
+      echo -e "FTS \e[92m(ACTIVE)\e[0m\n"
+      {{ fts_bin_dir }}/cvinit.sh status
+    fi
+  fi
+}
+
+
+# See how we were called.
+case "$1" in
+start)
+ construtor
+ start
+ ;;
+stop)
+ construtor
+ stop
+ ;;
+status)
+ construtor
+ status
+ ;;
+restart)
+ construtor
+ restart
+ ;;
+*)
+ echo $"Usage: $0 {start|stop|status|restart}"
+ exit 1
+esac
+
+exit 0

@@ -1,0 +1,10 @@
+- name: Firing -> Run test script for 3dcomment
+  win_command: '{{ TARGET_PATH }}\win_b64\code\command\run_test.bat'
+  register: outputListCommand
+  tags: 
+     - run_test
+- name: Printing -> Run test output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - run_test
+

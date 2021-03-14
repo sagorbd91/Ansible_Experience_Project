@@ -1,0 +1,13 @@
+---
+
+- name: Stop 3DSpaceIndex Service
+  win_service: name="3DEXPERIENCE R2018x 3DSpace Index" state=stopped
+  tags:
+     - stop-spaceindex
+     - restart-spaceindex
+
+- name: Start 3DExperience service
+  win_service: name="3DEXPERIENCE R2018x 3DSpace Index" state=started
+  tags:
+     - start-spaceindex
+     - restart-spaceindex

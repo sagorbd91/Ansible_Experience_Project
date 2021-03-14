@@ -1,0 +1,85 @@
+---
+
+- name: Copy CA Certificate file if not exist
+  remote_user: "{{ plm_user }}"
+  copy: src=valmet-ca.crt dest={{ fcs_java_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  tags: 
+     - import-ca-crt
+     - install-fcsfx
+     
+
+- name: Check if CA Certificate file exist or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{ fcs_java_dir }}/valmet-ca.crt"
+  register: check_CA_crt_file
+  tags: 
+     - import-ca-crt
+     - install-fcsfx
+     
+  
+- name: Delete CA Certificate from java
+  remote_user: "{{ plm_user }}"
+  shell: keytool -delete -storepass {{ ssl_cert_pass }} -keystore "{{ ssl_keystore_path }}/cacerts" -alias "Valmet Issuing CA 1 Class 1"
+  args:
+    chdir: /{{ fcs_java_dir }}
+  tags: 
+     #- delete-ca-crt
+     - install-fcsfx  
+     
+- name: Delete CA Certificate from java
+  remote_user: "{{ plm_user }}"
+  shell: keytool -delete -storepass {{ ssl_cert_pass }} -keystore "{{ ssl_keystore_path }}/cacerts" -alias "Valmet Root CA"
+  ignore_errors: yes
+  args:
+    chdir: /{{ fcs_java_dir }}
+  tags: 
+     #- delete-ca-crt
+     - install-fcsfx#   
+       
+
+  
+- name: Import CA Certificate to java
+  remote_user: "{{ plm_user }}"
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file valmet-ca.crt -alias "Valmet Issuing CA 1 Class 1"
+  when: check_CA_crt_file.stat.exists == true
+  args:
+    chdir: /{{ fcs_java_dir }}
+  tags: 
+     - import-ca-crt
+     - install-fcsfx
+
+  
+ 
+
+- name: Check if fcs Certificate file exist or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{ fcs_java_dir }}/{{env_name}}-fcssecured.crt"
+  register: check_fcs_crt_file
+  tags: import-ssl-crt
+  
+- name: Copy fcs Certificate file if not exist
+  remote_user: "{{ plm_user }}"
+  copy: src={{env_name}}-fcssecured.crt dest={{ fcs_java_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  when: check_fcs_crt_file.stat.exists == false
+  tags: import-ssl-crt
+  
+- name: Import fcs Certificate to the server
+  remote_user: "{{ plm_user }}"
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file {{env_name}}-fcssecured.crt -alias {{ ssl_fcs_cert_alias }} 
+  args:
+    chdir: /{{ fcs_java_dir }}
+  when: check_fcs_crt_file.stat.exists
+  tags: import-ssl-crt
+  
+- name: Check if fcs Certificate imported successfully or not
+  remote_user: "{{ plm_user }}"
+  shell: echo {{ ssl_cert_pass }} | keytool -list -v -keystore "{{ ssl_keystore_path }}/cacerts" -alias {{ ssl_fcs_cert_alias }}
+  register: check_fcs_crt_imp
+  tags: import-ssl-crt
+  
+- name: Check if fcs Certificate imported successfully or not
+  remote_user: "{{ plm_user }}"
+  debug: msg="fcs Certificate imported successfully"
+  when: check_fcs_crt_imp.stdout.find('Valid from') != -1
+  tags: import-ssl-crt  
+  

@@ -1,0 +1,50 @@
+---
+
+- name: Check if Apps installer path exists
+  win_stat: path="{{ apps_GA_installer_path }}"
+  register: check_apps_path
+  tags: 
+     - install-app-ga
+     - Microsoft-server-ga
+  
+- name: Apps installer doesn't exist
+  fail: msg="Apps installer doesn't exist!!"
+  when: not check_apps_path.stat.exists
+  tags: 
+     - install-app-ga
+     - Microsoft-server-ga
+
+- name: Copy integration UserIntention file to target
+  template: src="templates/user_intention_apps/ga/UserIntentions_integration_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_in_ga.xml"
+  tags: 
+     - install-app-ga
+     - Microsoft-server-ga
+
+- name: Copy integration installer from NFS to local
+  win_copy:
+    src: '{{ apps_GA_installer_path }}\CollaborationforMicrosoftServer\1'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: 
+     - install-app-ga
+     - Microsoft-server-ga
+  
+- name: Executing integration installation on target
+  win_psexec: 
+      command: '{{windows_tmp_path}}\1\StartTUI.exe -installerPath {{ds_ga_installer_path}} --silent {{windows_tmp_path}}\UserIntentions_in_ga.xml'
+      elevated: yes
+  tags: 
+     - install-app-ga
+     - Microsoft-server-ga
+
+- name: Removing the user Intension file for integration from traget
+  win_file: path="{{windows_tmp_path}}\UserIntentions_in_ga.xml" state=absent
+  tags: 
+     - install-app-ga
+     - Microsoft-server-ga
+     
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags:  
+     - install-app-ga
+     - Microsoft-server-ga

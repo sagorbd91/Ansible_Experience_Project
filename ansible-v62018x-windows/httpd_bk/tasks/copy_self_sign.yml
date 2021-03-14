@@ -1,0 +1,19 @@
+---
+
+- name: Create SSL Directory
+  win_file: path={{ dump_location }} state=directory
+  tags: ssl_cert_dump
+  
+- name: Copy the selfsign.crt 
+  win_copy: 
+      src: /tmp/{{ cert_file_name }}
+      dest: '{{ dump_location }}/{{ cert_file_name }}'
+  tags: 
+     - ssl_cert_dump
+
+- name: Copy the selfsign.key
+  win_copy: 
+      src: /tmp/{{ key_file_name }}
+      dest: '{{ dump_location }}/{{ key_file_name }}'
+  tags: 
+     - ssl_cert_dump

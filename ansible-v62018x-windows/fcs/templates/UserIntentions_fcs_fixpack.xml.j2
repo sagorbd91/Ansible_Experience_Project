@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Media mediaLevel="420.3" mediaName="CODE\win_b64\ENOVIA_FCS.media\media">
+	<SetVariable name="Java@jdk">
+		<SetJavaPath value="{{ Java_Path }}"/>
+	</SetVariable>
+	<SetVariable name="installEmbeddedServerJRE">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="install_Embedded_TomEE">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="TomEEConnectionPort">
+		<SetPort value="8581"/>
+	</SetVariable>
+	<SetVariable name="fcsSrvURL">
+		<SetText value="{{ fcsSrvURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DSpaceURL">
+		<SetText value="{{ X3DCSMA_3DSpaceURL }}"/>
+	</SetVariable>
+	<SetVariable name="TARGET_PATH">
+		<SetPath value="{{ TARGET_PATH }}"/>
+	</SetVariable>
+	<SetVariable name="FinishPanel"/>
+	<SetVariable name="DSYWelcomePanel">
+        <SetWelcome value="true"/>
+	</SetVariable>
+</Media>

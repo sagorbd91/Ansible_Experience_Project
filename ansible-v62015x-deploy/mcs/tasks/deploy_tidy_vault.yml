@@ -1,0 +1,46 @@
+---
+
+- name: Create Directory for DB-Maintenance
+  file: path=/{{mcs_bin_dir}}/DB_Maintenance state=directory owner={{ plm_user }} group={{ plm_group }} mode=0755
+  tags: 
+   - deploy-tidy-vault
+   - deploy-tidy-vault-cron
+
+- name: Copy File 'script_tidy_vault' to APP1 Server
+  template: src="run_tidy_vault.sh.j2" dest="/{{mcs_bin_dir}}/DB_Maintenance/run_tidy_vault.sh" owner={{ plm_user }} group={{ plm_group }} mode=0755
+  tags: 
+   - deploy-tidy-vault
+   - deploy-tidy-vault-cron
+
+- name: Execute Script 'run_tidy_vault.sh'
+  remote_user: "{{ plm_user }}"
+  become: false
+  shell: ./run_tidy_vault.sh
+  args:
+    chdir: /{{mcs_bin_dir}}/DB_Maintenance
+  tags: 
+   - deploy-tidy-vault
+
+- name: Check if 'Run Tidy_Vault' success or not
+  shell: cat db2_RunTidy_vault.log | grep -o "Error" | sort -u
+  args:
+    chdir: /{{mcs_bin_dir}}/DB_Maintenance
+  register: check_tidy
+  tags: 
+   - deploy-tidy-vault
+
+- fail: msg="Run Tidy_Vault FAILED"
+  when: "'Error'  in check_tidy.stdout"
+  tags: 
+   - deploy-tidy-vault
+   
+- name: Setup Tidy Vault Cron Job
+  cron: user={{ plm_user }} name="Execute run_tidy_vault.sh" minute="*/5" job="/bin/bash {{mcs_bin_dir}}/DB_Maintenance/run_tidy_vault.sh >> tidy_vault_cron.log 2>&1"
+  tags: 
+   - deploy-tidy-vault-cron
+   
+- name: Disable Tidy Vault Cron Job
+  cron: user={{ plm_user }} name="Execute script_tidy_vault.sh" minute="*/5" job="/bin/bash {{mcs_bin_dir}}/DB_Maintenance/run_tidy_vault.sh >> tidy_vault_cron.log 2>&1" state=present disabled={{ cron_enable }}
+  tags: 
+   - deploy-tidy-vault-cron
+   

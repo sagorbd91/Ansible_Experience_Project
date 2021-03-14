@@ -1,0 +1,13 @@
+---
+
+- name: Stop FCS Service
+  win_service: name={{ service_name }} state=stopped
+  tags:
+     - stop-fcs
+     - restart-fcs
+
+- name: Start FCS service
+  win_service: name={{ service_name }} state=started
+  tags:
+     - start-fcs
+     - restart-fcs

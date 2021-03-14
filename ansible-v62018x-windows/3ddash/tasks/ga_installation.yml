@@ -1,0 +1,26 @@
+---
+
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_3ddash_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3ddash_ga.xml"
+  tags: install-3ddash-ga
+ 
+- name: Copy 3dash installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_3dd_ga }}'
+    dest: '{{ windows_tmp_path }}\3ddash'
+    remote_src: True
+  tags: install-3ddash-ga  
+
+- name: Executing platform GA installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\3ddash\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3ddash_ga.xml --xmlreport {{ windows_tmp_path }}\Report_3ddash_ga.xml'
+     elevated: yes
+  tags: install-3ddash-ga
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3ddash_ga.xml" state=absent
+  tags: install-3ddash-ga
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\3ddash" state=absent
+  tags: install-3ddash-ga

@@ -1,0 +1,26 @@
+---
+   
+- name: Copy the 3DLiveExamine fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_3dlivefx.j2" dest="{{ mcs_apps_fp_installer }}/ENOVIA3DLiveExamine/1/answer_3dlivefx.txt" mode=2777
+  tags: 
+     - install-3dlivefx
+     - install-mcsfx
+
+- name: Executing the 3DLiveExamine fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_3dlivefx.txt
+  args:
+    chdir: /{{ mcs_apps_fp_installer }}/ENOVIA3DLiveExamine/1
+  tags: 
+     - install-3dlivefx
+     - install-mcsfx
+
+- name: Remove the 3DLiveExamine fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_fp_installer }}/ENOVIA3DLiveExamine/1/answer_3dlivefx.txt" state=absent
+  tags: 
+     - install-3dlivefx
+     - install-mcsfx

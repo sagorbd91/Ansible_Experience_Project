@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Source 15x_functions
+. {{ e3dx_function_dir }}/15x_functions
+
+CheckRunUser {{ plm_user }}
+
+#if [ -z "${DISPLAY}" ]
+#then
+#  echo " Please export DISPLAY variable before continuing "
+#  exit 1
+#fi
+
+# Start index admin
+{{ e3dx_install_path }}/linux_a64/code/command/catstart -run "BBDIndexAdmin" -env {{ e3denv_name }}  -direnv {{ e3dx_env_dir }}

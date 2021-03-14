@@ -1,0 +1,40 @@
+---
+    
+- name: Check if NFS installer path exists
+  remote_user: "{{ plm_user }}"
+  stat: path="{{installer_path}}/3ddash/{{ fix_pack_version }}/X3D_DASH.Linux64"
+  register: check_path
+  tags:
+    - install-dashboard-fp
+    
+- name: Installer doesn't exist
+  remote_user: "{{ plm_user }}"
+  fail: msg="3DDashboard FP installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags:
+    - install-dashboard-fp
+
+    
+ 
+- name: Copy the answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_fp.j2" dest="{{dash_conf_dir}}/answer_FP.txt" mode=2777
+  tags: 
+    - install-dashboard-fp
+
+- name: Executing the fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_fp_installer_path }} < {{dash_conf_dir}}/answer_FP.txt
+  args:
+    chdir: /{{dash_installer_path}}/{{fix_pack_version}}/X3D_DASH.Linux64/1
+  tags: 
+    - install-dashboard-fp
+
+- name: Remove the fixpack Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{dash_conf_dir}}/answer_FP.txt" state=absent
+  tags: 
+    - install-dashboard-fp
+  

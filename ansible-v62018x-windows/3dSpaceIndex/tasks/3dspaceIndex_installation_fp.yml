@@ -1,0 +1,28 @@
+---
+
+#- name: Stop 3DSpaceIndex Service
+#  win_service: name="3DEXPERIENCE R2018x 3DSpace Index" state=stopped
+#  tags: install-3DSpaceIndex-fp
+  
+- name: Copy 3DSpaceIndex UserIntention FP file to target
+  template: src="templates/UserIntentions_3dspaceIndex_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3dspaceIndex_fp.xml"
+  tags: install-3DSpaceIndex-fp
+   
+- name: Copy 3DSpaceIndex FP installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_3dspaceIndex_fp }}'
+    dest: '{{ windows_tmp_path }}\3DSpaceIndex_FP'
+    remote_src: True
+  tags: install-3DSpaceIndex-fp 
+
+- name: Executing 3DSpaceIndex FP installer
+  win_command: '{{ windows_tmp_path }}\3DSpaceIndex_FP\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3dspaceIndex_fp.xml --xmlreport {{ windows_tmp_path }}\Report_3DSpaceIndex_fp.xml'
+  tags: install-3DSpaceIndex-fp
+
+- name: Remove the 3DSpaceIndex FP user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3dspaceIndex_fp.xml" state=absent
+  tags: install-3DSpaceIndex-fp
+
+- name: Remove the 3DSpaceIndex FP installer folder.
+  win_file: path="{{windows_tmp_path}}\3DSpaceIndex_FP" state=absent
+  tags: install-3DSpaceIndex-fp

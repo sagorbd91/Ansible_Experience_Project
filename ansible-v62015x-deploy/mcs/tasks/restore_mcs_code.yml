@@ -1,0 +1,13 @@
+---
+
+   
+- name: Untar of mcsnocas code
+  remote_user: monitor
+  become: true
+  shell:  tar -zxvf {{ code_backup_filename }}.tar.gz -C {{ mcs_install_path }}/
+  args:
+    chdir: /{{ code_backup_dir }}
+  tags:
+    - code-restore
+    - install-mcs
+    

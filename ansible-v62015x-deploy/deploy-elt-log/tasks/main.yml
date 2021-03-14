@@ -1,0 +1,64 @@
+---
+
+- name: remove HTML as well as surrounding markers
+  blockinfile:
+    dest: "{{WEB_XML_PATH}}/web.xml"
+    insertbefore: "</web-app>"
+    content: |
+      <filter>
+        <filter-name>Tomcat Request Dumper Filter</filter-name>
+        <filter-class>com.matrixone.ps.tomcat.ExtensiveRequestDumperFilter</filter-class>
+        <init-param>
+          <param-name>aliveInterval</param-name>
+          <param-value>60000</param-value>
+        </init-param>
+        <init-param>
+          <param-name>timeOut</param-name>
+          <param-value>10000</param-value>
+        </init-param>
+        <init-param>
+        <param-name>maxTimeOut</param-name>
+        <param-value>3600000</param-value>
+        </init-param>
+        <init-param>
+          <param-name>debugLevel</param-name>
+          <param-value>0</param-value>
+        </init-param>
+        <init-param>
+         <param-name>ignoreStaticContent</param-name>
+         <param-value>false</param-value>
+        </init-param>
+      </filter>
+      <filter-mapping>
+        <filter-name>Tomcat Request Dumper Filter</filter-name>
+        <url-pattern>*.do</url-pattern>
+      </filter-mapping>
+      <filter-mapping>
+         <filter-name>Tomcat Request Dumper Filter</filter-name>
+         <url-pattern>*.jsp</url-pattern>
+      </filter-mapping>
+      <filter-mapping>
+       <filter-name>Tomcat Request Dumper Filter</filter-name>
+       <url-pattern>/servlet/*</url-pattern>
+      </filter-mapping>
+      
+
+- name: remove HTML as well as surrounding markers
+  blockinfile:
+    dest: "{{LOG4J_PATH}}/log4j.properties"
+    create: yes
+    marker: "### for ELT ###"
+    block: |
+      log4j.logger.com.matrixone.ps.tomcat=debug, REX
+      log4j.additivity.com.matrixone.ps.tomcat=false
+      log4j.appender.REX=org.apache.log4j.DailyRollingFileAppender
+      log4j.appender.REX.File={{ ELT_LOG_PATH }}/requests.log
+      log4j.appender.REX.DatePattern='.'yyyy-MM-dd-HH
+      log4j.appender.REX.layout=org.apache.log4j.PatternLayout
+      log4j.appender.REX.layout.ConversionPattern=%d{ISO8601}\t%p\t%m\n
+
+- name: Copy mxRequestDumper.jar
+  copy: src="mxRequestDumper.jar" dest="{{LIB_PATH}}/mxRequestDumper.jar" owner="{{plm_user}}" group="{{plm_group}}" mode=0664
+
+
+

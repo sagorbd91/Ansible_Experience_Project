@@ -1,0 +1,51 @@
+---
+
+# Create directory and instances
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_instances.yml
+- include: copy_config.yml
+- include: install_services.yml
+
+# Install MCS GA
+- include: install_studio.yml
+- include: install_live_collaboration.yml
+- include: install_business_process.yml
+- include: install_3dexapps_mgt.yml
+- include: install_multidis_collplat.yml
+- include: install_collspace_mgt.yml
+- include: install_variantconf_central.yml
+- include: install_eng_central.yml
+- include: install_req_cen_foundation.yml
+- include: install_caddes_foundation.yml
+- include: install_conn_solidworks.yml
+- include: install_knowledge_std.yml
+- include: install_conn_autocad.yml
+- include: install_studio_toolkit.yml
+- include: install_3dlive.yml
+- include: deploy_config_change.yml
+- include: deploy_war.yml
+- include: build_compile_code.yml
+
+# Install MCS Fixpack
+- include: install_studio_fix.yml
+- include: install_live_collaboration_fix.yml
+- include: install_business_process_fix.yml
+- include: install_3dexapps_mgt_fix.yml
+- include: install_multidis_collplat_fix.yml
+- include: install_collspace_mgt_fix.yml
+- include: install_variantconf_central_fix.yml
+- include: install_eng_central_fix.yml
+- include: install_req_cen_foundation_fix.yml
+- include: install_caddes_foundation_fix.yml
+- include: install_conn_solidworks_fix.yml
+- include: install_knowledge_std_fix.yml
+- include: install_conn_autocad_fix.yml
+- include: install_studio_toolkit_fix.yml
+- include: install_3dlive_fix.yml
+- include: deploy_war.yml
+- include: build_compile_code_fix.yml
+- include: restart_services.yml
+
+
+

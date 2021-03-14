@@ -1,0 +1,15 @@
+---
+
+- name: Copy Script 
+  remote_user: "{{ plm_user }}"
+  template: src="find_files.sh.j2" dest="{{ fcs_code_dir }}/scripts/find_files.sh" mode="u=rwx,g=rwx,o=r"
+  tags: find_files
+
+- name: Run the script 
+  remote_user: "{{ plm_user }}"
+  shell: "{{ fcs_code_dir }}/scripts/find_files.sh"
+  tags: find_files
+
+- name: Fetch file to Ansible  
+  fetch: src="/tmp/fcs_File_List" dest="/tmp/fcs_File_List" flat="yes"
+  tags: find_files

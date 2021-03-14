@@ -1,0 +1,19 @@
+#! /bin/sh
+#
+# mql -- Bourne shell script starting matrix query language interpreter.
+#
+# Usage:- mql [options]
+#
+# Copyright (c) 1993-2015 Dassault Systemes.
+#
+
+. {{mcs_server_dir}}/scripts/mxEnv.sh
+
+#LD_LIBRARY_PATH={{mcs_server_dir}}/linux_a64/code/bin:/usr/lib:/lib:{{mcs_server_dir}}/linux_a64/code/lib:/opt/ibm/db2/V10.5/lib64:/opt/ibm/db2/V10.5/lib:${TCL_LIBRARY}/../
+#export LD_LIBRARY_PATH
+MX_JAVA_OPTIONS="-Xss1024k -Xms960m -Xmx960m "
+export MX_JAVA_OPTIONS
+
+exec {{mcs_server_dir}}/linux_a64/code/bin/mql "${@-}"
+exit 0
+

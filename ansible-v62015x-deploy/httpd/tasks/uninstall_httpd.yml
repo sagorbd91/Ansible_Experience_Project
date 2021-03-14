@@ -1,0 +1,11 @@
+---
+
+- name: Stop httpd service 
+  service: name=httpd state=stopped   
+  tags:
+    - uninstall-reverseproxy
+    
+
+    
+
+

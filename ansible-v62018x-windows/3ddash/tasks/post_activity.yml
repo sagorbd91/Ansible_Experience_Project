@@ -1,0 +1,13 @@
+---
+
+- name: Update timeout (Modify server.xml)
+  win_lineinfile:
+    path: '{{ conf_dir }}\server.xml'
+    state: present
+    regexp: '^(.*)connectionTimeout="20000" URIEncoding="UTF-8"(.*)$'
+    line: '               connectionTimeout="{{ time_out_limit }}" URIEncoding="UTF-8"'
+    backrefs: yes
+    
+  tags:
+   - update-timeout
+   - post-activity

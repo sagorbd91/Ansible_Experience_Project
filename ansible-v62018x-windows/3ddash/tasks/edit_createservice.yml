@@ -1,0 +1,39 @@
+---
+
+- name: Update 'VENApacheTomEE_createService.bat' 
+  win_lineinfile:
+    path: '{{ dash_command_dir }}\VENApacheTomEE_createService.bat'
+    state: present
+    line: "{{ item.line }}"
+    insertafter: "{{ item.insertafter }}"
+  with_items:
+    - line: set JAVA_OPTIONS_PARAM=%JAVA_OPTIONS_PARAM%;-Dcom.sun.management.jmxremote=true
+      insertafter: set JAVA_OPTIONS_PARAM=-Dfile.encoding=UTF-8
+    - line: set JAVA_OPTIONS_PARAM=%JAVA_OPTIONS_PARAM%;-Dcom.sun.management.jmxremote.port={{ Jmx_port }}
+      insertafter: set JAVA_OPTIONS_PARAM=%JAVA_OPTIONS_PARAM%;-Dcom.sun.management.jmxremote=true
+    - line: set JAVA_OPTIONS_PARAM=%JAVA_OPTIONS_PARAM%;-Dcom.sun.management.jmxremote.authenticate=false
+      insertafter: set JAVA_OPTIONS_PARAM=%JAVA_OPTIONS_PARAM%;-Dcom.sun.management.jmxremote.port={{ Jmx_port }}
+    - line: set JAVA_OPTIONS_PARAM=%JAVA_OPTIONS_PARAM%;-Dcom.sun.management.jmxremote.ssl=false
+      insertafter: set JAVA_OPTIONS_PARAM=%JAVA_OPTIONS_PARAM%;-Dcom.sun.management.jmxremote.authenticate=false
+
+  tags: 
+    - assign-jmx
+    - install-3ddash-ga
+
+- name: Run 'VENApacheTomEE_createService.bat' 
+  win_command: '{{ dash_command_dir }}\VENApacheTomEE_createService.bat'
+  register: outputListCommand
+
+  tags: 
+     - assign-jmx
+     - run-bath
+
+- name: Printing output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - assign-jmx
+
+- name: Start Service
+  win_service: name={{ service_name }} state=started
+  tags: 
+     - assign-jmx

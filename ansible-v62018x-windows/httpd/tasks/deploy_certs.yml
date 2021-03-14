@@ -1,0 +1,41 @@
+---
+
+
+- name: create the ssl dir or make sure it exist
+  file: path="{{ ssl_directory }}" state=directory owner=root group=root mode=2755
+  when: ansible_os_family == "RedHat"
+  tags: 
+    - deploy-certs
+
+    
+- name: create the ssl dir or make sure it exist
+  win_file: path="{{ ssl_directory }}" state=directory
+  when: ansible_os_family == "Windows"
+  tags: 
+    - deploy-certs
+
+    
+- name: copy Intermediate.crt in ssl dir
+  copy: src="Intermediate.crt" dest="{{ where_to_install }}/ssl/Intermediate.crt" 
+  tags: 
+    - deploy-certs
+
+    
+- name: copy Root.crt in ssl dir
+  copy: src="Root.crt" dest="{{ where_to_install }}/ssl/Root.crt" 
+  tags: 
+    - deploy-certs
+
+    
+- name: copy ServerCertificate.crt in ssl dir
+  copy: src="ServerCertificate.crt" dest="{{ where_to_install }}/ssl/ServerCertificate.crt" 
+  tags: 
+    - deploy-certs
+
+    
+- name: copy ServerCertificate.key in ssl dir
+  copy: src="ServerCertificate.key" dest="{{ where_to_install }}/ssl/ServerCertificate.key" 
+  tags: 
+    - deploy-certs
+
+    

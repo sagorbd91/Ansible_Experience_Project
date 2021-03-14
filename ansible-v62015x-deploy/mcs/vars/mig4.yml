@@ -1,0 +1,126 @@
+---
+
+plm_user: "plmm4ma"
+plm_group: "plm"
+has_plm_volume: false
+
+# Installer Info
+mcs_installer_path: "{{ installer_path }}/3dspace"
+mcs_ga_installer: "{{ mcs_installer_path }}/ga/platform"
+mcs_apps_ga_installer: "{{ mcs_installer_path }}/ga/apps"
+mcs_fp_installer: "{{ mcs_installer_path }}/{{ fix_pack_version }}/platform"
+mcs_apps_fp_installer: "{{ mcs_installer_path }}/{{ fix_pack_version }}/apps"
+
+#code_backup_filename: BACK_AFTER_LIVECOLLABORATION_289160806
+#code_backup_dir: "/logs/code_backup"
+
+
+# Installation dir path
+mcs_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+mcs_install_rel_path: "/plm/{{env_name}}/{{mcs_type}}"
+mcs_common_dir: "/plm/{{env_name}}/mcscommon"
+mcs_instance_path: "{{mcs_install_rel_path}}/instances"
+mcs_code_dir: "{{mcs_install_rel_path}}/code"
+mcs_bin_dir: "{{mcs_install_rel_path}}/bin"
+mcs_log_dir: "{{mcs_install_rel_path}}/logs"
+mcs_conf_dir: "{{mcs_common_dir}}/conf"
+mcs_java_dir: "{{mcs_common_dir}}/softs"
+mcs_java_path: "{{mcs_java_dir}}/jdk-mcs"
+mcs_server_dir: "{{mcs_code_dir}}/server"
+mcs_studio_dir: "{{mcs_install_path}}/studio"
+mcs_mya_dir: "{{mcs_code_dir}}/mya"
+mcs_evp_dir: "{{mcs_code_dir}}/evp"
+mcs_csg_dir: "{{mcs_code_dir}}/csg"
+mcs_kwd_dir: "{{mcs_code_dir}}/kwd"
+mcs_atk_dir: "{{mcs_code_dir}}/atk"
+mcs_dma_dir: "{{mcs_code_dir}}/dma"
+build_dir: "{{mcs_server_dir}}/distrib"
+mcs_build_cas: "{{ build_dir }}/3DSpace.war"
+mcs_build_nocas: "{{ build_dir }}/internal.war"
+java7_version_dir: "{{mcs_java_dir}}/jdk1.7.0_67"
+java8_version_dir: "{{mcs_java_dir}}/jdk1.8.0_92"
+
+
+mcsnocas_tomcat_webinf_dir: "{{mcs_instance_path}}/was_mcsnocas_1/webapps/internal/WEB-INF"
+disp_env_emxproperty_file_nocas_dir: "{{mcsnocas_tomcat_webinf_dir}}/classes"
+mcscas_tomcat_webinf_dir: "{{mcs_instance_path}}/was_mcscas_1/webapps/3DSpace/WEB-INF"
+disp_env_emxproperty_file_cas_dir: "{{mcscas_tomcat_webinf_dir}}/classes"
+mcsnocas_tomcat_logs_dir: "{{mcs_instance_path}}/was_mcsnocas_1/logs"
+mcscas_tomcat_logs_dir: "{{mcs_instance_path}}/was_mcscas_1/logs"
+
+ssl_keystore_path_java7: "{{ java7_version_dir }}/jre/lib/security"
+ssl_keystore_path_java8: "{{ java8_version_dir }}/jre/lib/security"
+ssl_cert_pass: "changeit"
+ssl_pass_cert_alias: "3dpassport-{{env_name}}-plm.valmet.com"
+ssl_mcs_cert_alias: "3dspace-{{env_name}}-plm.valmet.com"
+
+# Installation infomation
+db_option_db2: "2"
+db2_product_dir: "/opt/ibm/db2/V10.5"
+db2_instance_name: "dsprod"
+db2_connection_user: "dsprod"
+db2_connection_user_pass: "dsprod#"
+db2_database_name: "dsprod"
+db2_data_tablespace: "MX_DATA"
+db2_index_tablespace: "MX_INDEX"
+mql_user: "creator"
+mql_password: "creator."
+business_data_tbl_spc: "LX_DATA"
+business_index_tbl_spc: "LX_INDEX"
+app_administrator_user: "PLMADM"
+#app_administrator_pass: "Xvf06211"
+app_administrator_pass: "Plmadmmig4"
+storage_data_tablespace: "VPM_DATA"
+storage_index_tablespace: "VPM_INDEX"
+vpm_repository_name: "My PLM Repository"
+vpm_store_path: "{{mcs_evp_dir}}/store/EVP"
+product_name: "LIV-MDEVPM"
+person_name: "PLMADM"
+
+
+# CAS info
+
+mcs_cas_http_url: "http://i1-mcscas-{{env_name}}-plm.valmet.com:8181/"
+passport_http_url: "http://i1-3dpassport-{{env_name}}-plm.valmet.com:8281/"
+mcs_server_url: "https://3dspace-{{env_name}}-plm.valmet.com:8184/"
+mcs_callback_url: "{{mcs_server_url}}3DSpace/proxyCallback"
+cas_server_url: "https://3dpassport-{{env_name}}-plm.valmet.com:8284/"
+cas_login_url: "{{cas_server_url}}login"
+cas_targetServiceId: "V6"
+#mcs_server_enovia_url: "http://i1-mcsnocas-{{env_name}}-plm.valmet.com:8081/internal/"
+mcs_server_enovia_url: "http://i1-mcscas-{{env_name}}-plm.valmet.com:8181/3DSpace/"
+mcs_cas_url: "{{mcs_cas_http_url}}3DSpace"
+
+# FTS info
+
+fts_base_port: "19000"
+fts_host: "3dftsearch-master-{{env_name}}-plm.valmet.com"
+fts_master_host: "3dftsearch-master-{{env_name}}-plm.valmet.com"
+fts_slave_host: "3dftsearch-slave-{{env_name}}-plm.valmet.com"
+mcs_config_xml: "{{ mcs_server_dir }}/Apps/BusinessProcessServices/V6R2015x/Modules/ENOFramework/AppInstall/Programs/config.xml"
+#fts_base_port: "19000"
+#fts_host: "v0403a.vstage.co"
+#fts_master_host: ""
+#fts_slave_host: ""
+
+
+# 3dx info
+e3dx_1st_port_range: "58000"
+e3dx_start_instance_count: "5"
+e3dx_server_name: "i1-3dxsearch-{{env_name}}-plm.valmet.com"
+
+
+# FCS info
+fcs_central_path: "/plm/{{env_name}}/fcscentral/stores"
+fcs_central_url: "https://fcscentral-mig4-plm.valmet.com:8584/enoviafcs"
+remote_location_1: "china-xian"
+remote_location_2: "china-sha"
+remote_location_path_1: ""
+remote_location_path_2: ""
+remote_fcs_host_1: ""
+remote_fcs_host_2: ""
+remote_fcs_url_1: ""
+remote_fcs_url_2: ""
+
+
+dashboard_service_url: ""

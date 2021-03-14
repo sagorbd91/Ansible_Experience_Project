@@ -1,0 +1,76 @@
+---
+
+- name: Enable Security Index
+  lineinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    insertafter: 'export PLATFORM_3DEXPERIENCE'
+    line: 'export MX_ENABLE_SECURITY_INDEX_SQL=FALSE'
+  tags:
+    - deploy-mxenv-config
+    - install-mcs
+    - post-task
+    - en_security_index  
+    
+- name: Update mxEnv.sh in server script for license
+  lineinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    insertafter: 'export MX_ENABLE_SECURITY_INDEX_SQL=FALSE'
+    line: 'export DSLS_CONFIG={{ mcs_conf_dir }}/DSLicSrv.txt'
+  tags:
+     - deploy-mxenv-config
+     - install-mcs
+     - post-task
+     - dsls_config
+    
+- name: Update mxEnv.sh in server script - mcsnocas
+  blockinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    marker: "### {mark} FOR MCS 1 services distribution###"
+    block: |
+      export MX_SERVICE_ADMIN={{mcs_server_enovia_url}}
+      export MX_SERVICE_PATH={{ mcs_instance_path }}/{{ item.key }}/webapps/internal/WEB-INF/classes
+      export MX_CLASSPATH=$MX_CLASSPATH:{{mcs_instance_path}}/{{item.key}}/webapps/internal/WEB-INF/classes:{{mcs_instance_path}}/{{item.key}}/webapps/internal/WEB-INF/lib:{{mcs_server_dir}}/STAGING/ematrix/WEB-INF/classes:{{mcs_server_dir}}/STAGING/ematrix/WEB-INF/lib
+  with_dict: "{{ instances }}"
+  when: not mcs_with_cas
+  tags:
+     - deploy-mxenv-config
+     - install-mcsfx
+     - post-task
+
+
+- name: Update mxEnv.sh in server script - mcscas
+  blockinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    marker: "### {mark} FOR MCS 1 services distribution###"
+    block: |
+      export MX_SERVICE_ADMIN={{mcs_cas_url}}
+      export MX_SERVICE_PATH={{ mcs_instance_path }}/{{ item.key }}/webapps/3DSpace/WEB-INF/classes
+      export MX_CLASSPATH=$MX_CLASSPATH:{{mcs_instance_path}}/{{item.key}}/webapps/3DSpace/WEB-INF/classes:{{mcs_instance_path}}/{{item.key}}/webapps/3DSpace/WEB-INF/lib:{{mcs_server_dir}}/STAGING/ematrix/WEB-INF/classes:{{mcs_server_dir}}/STAGING/ematrix/WEB-INF/lib
+  with_dict: "{{ instances }}"
+  when: mcs_with_cas
+  tags:
+     - deploy-mxenv-config
+     - install-mcsfx
+     - post-task
+
+  
+  
+- name: Update emxSystem.properties
+  lineinfile:
+    dest: "{{mcs_server_dir}}/STAGING/ematrix/properties/emxSystem.properties"
+    insertafter: "emxFramework.FullTextSearch.QueryType = Real Time"
+    line: "emxFramework.FullTextSearch.QueryType = Indexed"
+  tags:
+     - install-mcsfx
+     - post-task
+     - update-fts-settings
+     - deploy-mxenv-config
+
+
+
+
+

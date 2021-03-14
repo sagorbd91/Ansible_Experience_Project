@@ -1,0 +1,23 @@
+---
+
+- name: Deploy main configuration file
+  template:
+    src: httpd.conf.fcsremote.j2
+    dest: "{{ http_install_path }}/conf/httpd.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  tags: 
+    - deploy-httpd
+    - install-reverseproxy
+
+- name: Deploy mod_ssl configuration file
+  template:
+    src: ssl.conf.j2
+    dest: "{{ http_install_path }}/conf.d/ssl.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  tags: 
+    - deploy-httpd
+    - install-reverseproxy

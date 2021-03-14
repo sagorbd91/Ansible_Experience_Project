@@ -1,0 +1,10 @@
+---
+ 
+- name: run FTS Crond task
+  win_psexec:
+     command: '{{command_dir}}\registerCrontaskFullTextSearch.bat >> {{windows_tmp_path}}\Report_fts_crond.xml'
+     elevated: yes
+  tags: 
+    - post-activity
+    - fts-crond
+    

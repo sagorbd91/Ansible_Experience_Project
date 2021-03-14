@@ -1,0 +1,8 @@
+#!/bin/bash
+# thsi script will clean the orphan file
+#TIMESTAMP=`date +"%D-%H:%M:%S"`
+
+cd {{ mcs_server_dir }}/scripts
+nohup time ./mql -c "set context user creator password creator.;validate store plmx fcsorphanfiledelete;quit;" 2>&1 > {{mcs_orphan_dir}}/mql-fcsorphanfiledelete-`date +%Y%m%d-%H%M`.log & 
+
+

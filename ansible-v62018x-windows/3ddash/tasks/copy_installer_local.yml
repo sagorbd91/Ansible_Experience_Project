@@ -1,0 +1,17 @@
+---
+
+- name: Copy robocopy bat file to temp Directory
+  template: src="templates/installer_robocopy.bat.j2" dest="{{ windows_tmp_path }}\script_bashboard_robocopy.bat"
+  force: yes
+  tags: 
+     - copy-installer
+     - install-platform-ga
+  
+- name: Copy 3DDash installer from NFS to local
+  win_psexec:
+     command: '{{ windows_tmp_path }}\script_bashboard_robocopy.bat'
+     system: yes
+  elevated: yes
+  tags: 
+     - copy-installer
+     - install-platform-ga

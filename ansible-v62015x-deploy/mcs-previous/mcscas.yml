@@ -1,0 +1,47 @@
+---
+
+- name: pre task 
+  hosts: mcs_servers
+  remote_user: monitor 
+  sudo: true
+  tags: install-mcs
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+- name: Create user
+  hosts: mcs_servers
+  tags: install-mcs
+  remote_user: "monitor"
+  sudo: true
+  vars:
+    plm_user: "plmtama"
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }	
+
+
+- name: install mcs
+  hosts: mcs_servers
+  vars:
+    plm_user: "plmtama"
+    plm_group: "plm"
+    mcs_with_cas: true
+    update_database: true
+    mcs_type: "mcscas"
+    instance_name: "was_mcscas_1"
+    instances:
+      was_mcscas_1:
+         app_name: was_mcscas_1
+         port_http: 8181
+         port_jmx: 8189
+         port_ajp: 8110
+         port_shutdown: 8106
+         port_redirect: 8744 
+  remote_user: "{{ plm_user }}"
+  sudo: false
+  roles:
+      - { role: mcs  }	

@@ -1,0 +1,7 @@
+---
+
+- name: create the studio dir
+  remote_user: monitor
+  sudo: true
+  file: path="{{ studio_install_path }}" state=absent owner={{ plm_user }} group={{ plm_group }} mode=2755
+  tags:  uninstall-studio

@@ -1,0 +1,84 @@
+- name: Firing -> Run test script for 3dspace
+  win_command: '{{ mcs_server_dir }}\win_b64\code\command\run_test.bat'
+  register: outputListCommand
+  tags: 
+     - run_test
+     - post-activity
+     
+- name: Printing -> Run test output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - run_test
+     - post-activity
+
+
+
+
+     
+# - name: Firing -> Run test script
+  # win_command: '{{ application_root_path }}{{ application }}\Code\win_b64\code\command\run_test.bat'
+  # register: outputListCommandDEV3Other
+  # when: application != "3DSpace" and env_name == "DEV3"
+  # tags: 
+     # - run_test
+
+     
+
+     
+# - name: Printing -> Run test output
+  # debug: msg={{ outputListCommandDEV3Other  }} 
+  # when: application != "3DSpace"  and env_name == "DEV3"
+  # tags: 
+     # - run_test
+
+
+     
+# - name: Firing -> Run test script
+  # win_command: '{{ application_root_path }}{{ application }}\Server\win_b64\code\command\run_test.bat'
+  # when: application == "3DSpace" and env_name == "DEV2"
+  # register: outputListCommandDEV23DSpace
+  # tags: 
+     # - run_test
+
+     
+# - name: Printing -> Run test output
+  # debug: msg={{ outputListCommandDEV23DSpace  }}
+  # when: application == "3DSpace" and env_name == "DEV2"
+  # tags: 
+     # - run_test
+
+
+     
+     
+     
+     
+# - name: Firing -> Run test script
+  # win_command: '{{ application_root_path }}{{ application }}\Code\win_b64\code\command\run_test.bat'
+  # when: ( application == "3DComment" or application == "3DSwym" or application == "Fcscentral" or application == "3DNotification") and env_name == "DEV2"
+  # register: outputListCommandDEV2Other1
+  # tags: 
+     # - run_test
+
+     
+# - name: Printing -> Run test output
+  # debug: msg={{ outputListCommandDEV2Other1  }}
+  # when: ( application == "3DComment" or application == "3DSwym" or application == "Fcscentral" or application == "3DNotification") and env_name == "DEV2"
+  # tags: 
+     # - run_test     
+
+
+
+
+# - name: Firing -> Run test script
+  # win_command: '{{ application_root_path }}{{ application }}\win_b64\code\command\run_test.bat'
+  # when: ( application == "3DDashboard" or application == "3DPassport" or application == "3DSpaceIndex" or application == "FedSearch") and env_name == "DEV2"
+  # register: outputListCommandDEV2Other2
+  # tags: 
+     # - run_test
+
+     
+# - name: Printing -> Run test output
+  # debug: msg={{ outputListCommandDEV2Other2  }}
+  # when: ( application == "3DDashboard" or application == "3DPassport" or application == "3DSpaceIndex" or application == "FedSearch") and env_name == "DEV2"
+  # tags: 
+     # - run_test      

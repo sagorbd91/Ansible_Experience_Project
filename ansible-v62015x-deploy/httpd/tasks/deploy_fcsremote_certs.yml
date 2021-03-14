@@ -1,0 +1,32 @@
+---
+    
+- name: create the ssl dir or make sure it exist
+  file: path="{{ ssl_directory }}" state=directory owner=root group=root mode=2755
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy fcsremote1.crt in ssl dir
+  copy: src="{{ env_name }}-fcsremote1.crt" dest="{{ http_install_path }}/ssl/{{fcsremote_crt1}}.crt" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy fcsremote1.key in ssl dir
+  copy: src="{{ env_name }}-fcsremote1.key" dest="{{ http_install_path }}/ssl/{{fcsremote_crt1}}.key" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy fcsremote2.crt in ssl dir
+  copy: src="{{ env_name }}-fcsremote2.crt" dest="{{ http_install_path }}/ssl/{{fcsremote_crt2}}.crt" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    
+- name: copy fcsremote2.key in ssl dir
+  copy: src="{{ env_name }}-fcsremote2.key" dest="{{ http_install_path }}/ssl/{{fcsremote_crt2}}.key" mode=0644
+  tags: 
+    - deploy-certs
+    - install-reverseproxy
+    

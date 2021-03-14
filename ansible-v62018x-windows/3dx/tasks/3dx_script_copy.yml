@@ -1,0 +1,15 @@
+---
+
+- name: copy 3dx post script bat file to target
+  template: src="CATBBDHTTPServer.j2" dest="{{Post_script_path}}\CATBBDHTTPServer.bat"
+  tags: 
+    - post_script
+    - post-activity
+    
+- name: run 3dx post script
+  win_psexec:
+     command: '{{Post_script_path}}\CATBBDHTTPServer.bat >> {{windows_tmp_path}}\Report_CATBBDHTTPServer.xml'
+     elevated: yes
+  tags: 
+    - post_script
+    - post-activity

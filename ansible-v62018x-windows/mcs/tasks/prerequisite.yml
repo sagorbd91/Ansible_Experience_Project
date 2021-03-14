@@ -1,0 +1,25 @@
+---
+
+- name: Check that the psexec.exe exists or not.
+  win_stat: path="{{ system_path }}\PsExec.exe"
+  register: stat_result
+  tags: prerequisite
+  
+- name: Copy the file, if it doesnt exist already
+  win_copy: 
+      src: files/PsExec.exe
+      dest: '{{ system_path }}\PsExec.exe'
+  when: stat_result.stat.exists == False
+  tags: prerequisite
+  
+- name: Check that the psexec64.exe exists or not.
+  win_stat: path="{{ system_path }}\PsExec64.exe"
+  register: stat_result
+  tags: prerequisite
+  
+- name: Copy the file, if it doesnt exist already
+  win_copy: 
+      src: files/PsExec64.exe
+      dest: '{{ system_path }}\PsExec64.exe'
+  when: stat_result.stat.exists == False
+  tags: prerequisite

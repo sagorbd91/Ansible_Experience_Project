@@ -1,0 +1,46 @@
+---
+
+
+- name: create the apps file storage  
+  remote_user: monitor
+  sudo: true 
+  file: path="{{ apps_file_storage_dir }}" state=directory owner=root group=root mode="u=rwx,g=rx,o=rx"
+  tags:
+   - install_fcs 
+   - create_stores
+
+- name: create the fcs file storage  
+  remote_user: monitor
+  sudo: true 
+  file: path="{{ fcs_file_store_dir }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=rx,o=rx"
+  tags:
+   - install_fcs 
+   - create_stores
+  
+- name: create apps file store
+  remote_user: monitor
+  sudo: true 
+  file: path="{{ fcs_install_rel_path }}/stores" state=directory group={{ plm_group }} owner={{ plm_user }}  mode="u=rwx,g=rw" 
+  tags:
+   - install_fcs 
+   - create_stores
+
+- name: create symbolic link
+  remote_user: monitor
+  sudo: true
+  file: src="{{ fcs_file_store_dir }}" dest="{{ fcs_install_rel_path }}/stores" state=link owner="{{ plm_user }}" group="{{ plm_group }}" mode="u=rwx,g=rx" force=yes
+  tags:
+   - install_fcs 
+   - create_stores
+
+- name: creation stores
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_install_rel_path }}/stores/{{ item }}" state=directory owner="{{ plm_user }}" group="{{ plm_group }}" mode="u=rwx,g=rx"
+  with_items:
+       - STORE
+       - plmx
+       - ImageStore
+  tags:
+   - install_fcs 
+   - create_stores

@@ -1,0 +1,22 @@
+#!/bin/bash
+cd {{ mcs_server_dir }}/scripts
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }} vault 'eService Production';
+  tcl;
+  cd /tmp/creo
+  exit;
+  run ProEIntegInstallSchemaMain.tcl
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }} vault 'eService Production';
+  tcl;
+  cd /tmp/creo
+  exit;
+  run ProEIntegInstallSchemaMain.tcl
+  quit;
+EOF
+fi

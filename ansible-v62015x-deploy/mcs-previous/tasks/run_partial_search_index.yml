@@ -1,0 +1,11 @@
+---
+
+- name: Copy the script "run_partial_search_index.sh"
+  template: src="script.partial.search.j2" dest="{{ mcs_bin_dir }}/run_partial_search_index.sh" owner={{ plm_user }} mode=0755
+  tags: run-partial-index
+
+- name: Setup Cron Job
+  remote_user: monitor
+  sudo: true
+  cron: user={{ plm_user }} name="Execute partial search index" minute="*/5" job="/bin/bash {{mcs_bin_dir}}/run_partial_search_index.sh >> {{mcs_log_dir}}/cron-error.log 2>&1"
+  tags: run-partial-index

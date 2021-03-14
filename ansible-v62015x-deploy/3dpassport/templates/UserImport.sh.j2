@@ -1,0 +1,19 @@
+#!/bin/bash
+
+rm -rf {{ passport_install_rel_path }}/data/users_processed_to_import.txt
+rm -rf {{ passport_install_rel_path }}/data/import_v6_user.log
+
+for i in `ls {{ passport_install_rel_path }}/data/import-user-data/POexport-*` 
+do
+ONLY_FILE_NAME=`echo $i | grep -o 'POexport-.*' `
+get_uid=`echo $ONLY_FILE_NAME | cut -d- -f2 | cut -d. -f1 `
+uid_3dgt=`echo $get_uid | grep -o '...$' | tr '[:lower:]' '[:upper:]' `
+TODAY=$(date +"%d%m%y")
+gen_passwd=`echo Xvf$TODAY$uid_3dgt `
+get_email=` cat $i | grep -E -o "\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}\b" `
+echo "$get_uid" >> {{ passport_install_rel_path }}/data/users_processed_to_import.txt
+
+sed -i "/+ATTRIBUTE Middle Name;Unknown/a +ATTRIBUTE Password;$gen_passwd" $i
+#ONLY_FILE_NAME=`echo $i | cut -d/ -f6`
+./PassportUserImport.sh -file $i -url {{passport_url}} >> {{ passport_install_rel_path }}/data/import_v6_user.log
+done

@@ -1,0 +1,74 @@
+---
+
+- name: Create Enovia Admin user
+  win_user:
+        name: "{{ Enovia_User_Name }}"
+        password: "{{ Enovia_User_password }}"
+        password_never_expires: yes
+        groups:
+         - Administrators
+        state: present
+  tags:
+    - create-service-user
+    - create-user
+    
+- name: Give full permission to service directory
+  win_acl:
+    path: '{{ PLM_DIR_PATH }}'
+    user: '{{ Enovia_User_Name }}'
+    rights: FullControl
+    type: allow
+    state: present
+    inherit: ContainerInherit, ObjectInherit
+    propagation: 'None'
+    
+  tags:
+    - access_dir
+    - create-service-user
+    
+- name: Give start-stop privilege to {{ Enovia_User_Name }}
+  win_psexec:
+     command: '{{ windows_tmp_path }}\SetACL.exe -on "{{ item }}" -ot srv -actn ace -ace "n:\{{inventory_hostname_short}}\{{ Enovia_User_Name }};p:start_stop"'
+  with_items: "{{ service_names }}"
+  elevated: yes      
+  tags: 
+    - create-service-user
+    - set_acl
+    
+#- name: Give {{ Enovia_User_Name }} the service log on right
+#  win_psexec:
+#     command: '{{ windows_tmp_path }}\ntrights.exe +r SeServiceLogonRight -u "{{inventory_hostname_short}}\{{ Enovia_User_Name }}"'
+#  elevated: yes      
+#  tags: 
+#    - create-service-user
+    
+    
+- name: Give {{ Enovia_User_Name }} the service log on right
+  win_user_right:
+     name: SeServiceLogonRight
+     users:
+     - '{{ Enovia_User_Name }}'
+     action: add
+  tags: 
+    - create-service-user    
+    - log_on_user
+    
+    
+- name: Set the log on user to a domain account
+  win_service:
+    name: '{{ item }}'
+    username: '{{inventory_hostname_short}}\{{ Enovia_User_Name }}'
+    password: '{{ Enovia_User_password }}'
+  with_items: "{{ service_names }}"
+  elevated: yes  
+  tags: 
+    - create-service-user
+    
+- name: Restarted Servcies
+  win_service: name={{ item }} state=restarted
+  with_items: "{{ service_names }}"
+  remote_user: '{{Enovia_User_Name}}'
+  tags: 
+    - create-service-user
+    - restart-all-service
+

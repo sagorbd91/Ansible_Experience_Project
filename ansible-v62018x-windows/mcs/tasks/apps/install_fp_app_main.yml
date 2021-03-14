@@ -1,0 +1,41 @@
+#- include: apps/CollaborativeTask/collaborative_task_fp.yml
+#- include: apps/LibraryCentral/library_central_fp.yml
+- include: apps/EnterpriseChange/enterprise_change_fp.yml
+- include: apps/EngineeringCentral/Engineering_central_fp.yml
+- include: apps/CAD_Design/cad_design_fp.yml
+
+- include: apps/Catiav5Connector/Catiav5Connector_fp.yml
+  when: fix_pack_version != "fp1830" 
+  
+- include: apps/ConnectorforSolidWorks/ConnectorSolidWorks_fp.yml
+  when: fix_pack_version != "fp1838"  
+  
+- include: apps/ConnectorforAutoCAD/ConnectorAutoCAD_fp.yml
+  when: fix_pack_version != "fp1830" 
+  
+- include: apps/Integration/integration_fp.yml
+- include: apps/DMA/DMA_fp.yml
+- include: apps/QCC/quality_check_fp.yml
+- include: apps/Program_Central/program_central_fp.yml
+
+- include: apps/Component_experience/BOMAVLManagement_fp.yml
+  when: fix_pack_version != "fp1822" and  fix_pack_version != "fp1830" and  fix_pack_version != "fp1838"
+  
+- include: apps/Component_Central/component_central_fp.yml
+  when: fix_pack_version != "fp1822" and  fix_pack_version != "fp1830" and  fix_pack_version != "fp1838"
+  
+- include: apps/Requirements_Management/requirements_fp.yml
+- include: apps/Varient_management/variant_fp.yml
+- include: apps/XBOM/xbom_fp.yml
+- include: apps/3Dexplore/3Dexplore_fp.yml
+- include: apps/UnifiedCad/unifiedcad_fp.yml
+- include: apps/Delmia_Management/delmia_management_fp.yml
+- include: apps/Delmia_Process/delmia_process_fp.yml
+- include: apps/Delmia_wordbook/delmia_wordbook_fp.yml
+- include: apps/Simprocess/simprocess_fp.yml
+- include: apps/CAPA/CAPA_fp.yml
+- include: apps/NRCF/NRCF_fp.yml
+- include: apps/3DLiveExamine/3DLiveExamine_fp.yml
+- include: apps/3DLean/3DLean_fp.yml
+
+

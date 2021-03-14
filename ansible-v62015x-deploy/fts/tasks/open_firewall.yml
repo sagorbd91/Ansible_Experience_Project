@@ -1,0 +1,30 @@
+---
+
+- name: check iptables not running
+  remote_user: monitor
+  become: true
+  shell: service iptables status | grep not | awk '{ print $4 }'
+  register: iptables_stoped
+  tags:
+   - config-firewall
+   - install-fts
+
+   
+- name: Allow HTTP ports to FTS server
+  remote_user: monitor
+  become: true
+  command: iptables -A INPUT -p tcp --match multiport --dports 19000:19100 -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+  tags:
+   - config-firewall
+   - install-fts
+
+- name: save iptables
+  remote_user: monitor
+  become: true
+  command: service iptables save
+  when: "'not' not in iptables_stoped.stdout" 
+  tags:
+   - config-firewall
+   - install-fts
+  

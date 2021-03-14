@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<web-app id="WebApp_1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+   <!-- Monitoring agent thread launcher (oa1) -->
+   <listener>
+      <listener-class>
+            com.dassault_systemes.infra.monitoring.agent.ContextListener
+        </listener-class>
+   </listener>
+   <!--ENOVIA V6 FCS Servlet - web.xml fragment -->
+   <display-name>ENOVIA fcs</display-name>
+   <description>ENOVIA fcs - File Collaboration Server</description>
+   <!--SERVLET CONTEXT FILES-->
+   <context-param>
+      <param-name>properties</param-name>
+      <param-value>/plm/{{env_name}}/fcs/code/managed/properties/framework.properties</param-value>
+   </context-param>
+   <!--SERVLET-->
+   <servlet id="FCSServlet_1">
+      <servlet-name>fcs</servlet-name>
+      <servlet-class>com.matrixone.fcs.fcs.FcsServlet</servlet-class>
+   </servlet>
+   <!--URL MAPPING-->
+   <!--SERVLET MAPPING-->
+   <servlet-mapping id="FCSServletMapping_1">
+      <servlet-name>fcs</servlet-name>
+      <url-pattern>/servlet/fcs/*</url-pattern>
+   </servlet-mapping>
+   <filter>
+      <filter-name>StaticContentCachingFilter</filter-name>
+      <filter-class>com.matrixone.servlet.StaticContentCachingFilter</filter-class>
+      <init-param>
+         <param-name>ematrix.cache-control.ResourceLifetime</param-name>
+         <param-value>7d</param-value>
+      </init-param>
+   </filter>
+   <filter-mapping>
+      <filter-name>StaticContentCachingFilter</filter-name>
+      <url-pattern>*.html</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>StaticContentCachingFilter</filter-name>
+      <url-pattern>*.js</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>StaticContentCachingFilter</filter-name>
+      <url-pattern>*.css</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>StaticContentCachingFilter</filter-name>
+      <url-pattern>*.xsl</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>StaticContentCachingFilter</filter-name>
+      <url-pattern>*.gif</url-pattern>
+   </filter-mapping>
+   <filter-mapping>
+      <filter-name>StaticContentCachingFilter</filter-name>
+      <url-pattern>*.jpg</url-pattern>
+   </filter-mapping>
+   <!--
+    <listener>
+        <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class> 
+    </listener>
+    <servlet>
+        <servlet-name>jaxwsservlet</servlet-name> 
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class> 
+        <load-on-startup>1</load-on-startup> 
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>jaxwsservlet</servlet-name> 
+        <url-pattern>/jxws/*</url-pattern> 
+    </servlet-mapping>
+    -->
+</web-app>

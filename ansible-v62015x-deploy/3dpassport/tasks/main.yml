@@ -1,0 +1,38 @@
+---
+
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_instances.yml
+
+- name: install the services
+  remote_user: monitor
+  become: true
+  template: src="service.j2" dest="{{ service_dir }}/{{item.key}}" owner=root group=root mode="u=rwx,g=rx,o=rx"  
+  with_dict: "{{ instances }}"
+  tags: 
+    - install-services
+    - install-passport
+
+- name: start services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started enabled=yes
+  with_dict: "{{ instances }}"
+  tags: 
+     - install-services
+     - install-passport
+ 
+- include: show_env_name_to_login_window.yml
+    
+- include: open_firewall.yml
+- include: install_passport.yml
+#- include: restart_instances.yml
+- include: install_passport_fp.yml
+- include: post_installation.yml
+- include: import_ssl_cert.yml
+- include: restart_instances.yml
+
+- include: uninstall_passport.yml
+
+- include: import_v6_users.yml
+

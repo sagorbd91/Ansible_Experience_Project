@@ -1,0 +1,81 @@
+---
+
+- name: Check if instance path exists or not
+  stat: path="{{mcs_instance_path}}/{{ item.key }}"
+  register: check_path
+  with_dict: instances
+  tags: 
+    - install-instances
+    - install-mcs
+
+- name: unarchiving tomee 
+  remote_user: monitor
+  sudo: true
+  unarchive: src="{{tomee_installer}}" dest="{{ mcs_instance_path }}" owner={{ plm_user }} group={{ plm_group }} copy=no 
+  tags: 
+     - install-instances
+     - install-mcs
+  
+- name: create tomee instances
+  file: dest="{{mcs_instance_path}}/{{ item.key }}" state=directory 
+  with_dict: instances
+  tags: 
+    - install-instances
+    - install-mcs
+
+
+- name: copy tomcat content to instance
+  remote_user: monitor
+  sudo: true
+  synchronize:
+     src: "{{mcs_instance_path}}/{{ tomee_version }}/." 
+     dest: "{{mcs_instance_path}}/{{ item.key }}" 
+     checksum: yes 
+     recursive: yes
+     archive: no 
+  delegate_to: "{{inventory_hostname}}"
+  with_dict: instances
+  tags: 
+    - install-instances
+    - install-mcs
+
+- name: remove tomee version
+  remote_user: monitor
+  sudo: true
+  file: path="{{mcs_instance_path}}/{{ tomee_version }}" state=absent
+  tags: 
+    - install-instances
+    - install-mcs
+
+- name: chage ownership on instance dir
+  remote_user: monitor
+  sudo: true
+  command: chown -R "{{plm_user}}":"{{plm_group}}" "{{mcs_instance_path}}/{{ item.key }}" 
+  with_dict: instances
+  tags: 
+    - install-instances
+    - install-mcs
+  
+- name: create link for logs
+  remote_user: monitor
+  sudo: true 
+  file: src="{{ mcs_log_dir }}/{{ item.key }}" dest="{{ mcs_instance_path }}/{{ item.key }}/logs" owner={{ plm_user }} group={{ plm_group }} state=link force=yes 
+  with_dict: instances
+  tags: 
+    - install-instances
+    - install-mcs
+
+- name: tomee instance server.xml config
+  template: src="tomee.server.xml.j2" dest="{{mcs_instance_path}}/{{ item.key }}/conf/server.xml"
+  with_dict: instances   
+  tags: 
+    - install-instances
+    - install-mcs
+  
+- name: tomcat instance setenv.sh config
+  template: src="tomcat.setenv.sh.j2" dest="{{mcs_instance_path}}/{{ item.key }}/bin/setenv.sh"
+  with_dict: instances
+  tags: 
+    - install-instances
+    - install-mcs
+

@@ -1,0 +1,67 @@
+---
+
+- name: create symbolic link for java 7
+  remote_user: monitor
+  become: true
+  file: src="{{ java7_version_dir }}" dest="{{ mcs_java_path }}" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags:
+     - ENOVIALiveCollaborationServer
+  
+- name: Check if server installer path exists
+  stat: path="{{mcs_ga_installer}}/ENOVIALiveCollaborationServer.Linux64"
+  register: check_path
+  tags: 
+    - ENOVIALiveCollaborationServer
+    - install-mcs
+
+
+- name: Server installer doesn't exist
+  fail: msg="server installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: 
+    - ENOVIALiveCollaborationServer
+    - install-mcs
+  
+   
+- name: create the server dir or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_server_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2755
+  tags: 
+    - ENOVIALiveCollaborationServer
+    - install-mcs
+ 
+- name: Copy the Live Coll Server Answer file
+  remote_user: monitor
+  become: true
+  template: src="answer_server.j2" dest="{{ mcs_conf_dir }}/answer_server.txt" mode=2777
+  when: update_database
+  tags: 
+   - ENOVIALiveCollaborationServer
+   - install-mcs
+  
+- name: Copy the Live Coll Server Answer file(database will not update)
+  remote_user: monitor
+  become: true
+  template: src="answer_server_nudb.yml" dest="{{ mcs_conf_dir }}/answer_server.txt" mode=2777
+  when: not update_database
+  tags: 
+   - ENOVIALiveCollaborationServer
+   - install-mcs
+
+- name: Executing the Live Collaboration Server installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh < {{ mcs_conf_dir }}/answer_server.txt
+  args:
+    chdir: /{{ mcs_ga_installer }}/ENOVIALiveCollaborationServer.Linux64/1
+  tags: 
+    - ENOVIALiveCollaborationServer
+    - install-mcs
+
+- name: Remove the Live Collaboration Server Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_conf_dir }}/answer_server.txt" state=absent
+  tags: 
+    - ENOVIALiveCollaborationServer
+    - install-mcs

@@ -1,0 +1,10 @@
+---
+
+- name: Execute latest prod backup from Backup NFS server script to PRE-PROD db server successfully 
+  hosts: mysql_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - httpd/vars/main.yml
+      - httpd/vars/{{ env_name }}.yml
+  remote_user: "db2adm"
+  shell: ./db_timestamp.sh > /tmp/db_timestamp.log

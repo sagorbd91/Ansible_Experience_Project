@@ -1,0 +1,42 @@
+#!/bin/bash
+
+jmx_status=$( netstat -nltpu | grep {{ item.value.port_jmx }} )
+if [ "$jmx_status" != "" ]; then
+echo "jmx port is listening"
+else
+echo "jmx port failed"
+fi
+
+tomhttp_status=$( netstat -nltpu | grep {{ item.value.port_http }} )
+if [ "$tomhttp_status" != "" ]; then
+echo "Tomcat HTTP connector port is listening"
+else
+echo "Tomcat HTTP connector port failed"
+fi
+
+sleep 70
+#if [ "$mcs_type" == "mcscas" ]; then
+#catalina_file={{ mcscas_tomcat_logs_dir }}/catalina.out
+#else
+#catalina_file={{ mcsnocas_tomcat_logs_dir }}/catalina.out
+#fi
+
+#catalina_out=$(cat $catalina_file | grep "Server startup in" | tail -1)
+#if [[ $catalina_out == *"Server startup in"* ]]; then
+#echo "Tomcat start completed successfully"
+#else
+#echo "Tomcat start failed"
+#fi
+
+if [ "$mcs_type" == "mcscas" ]; then
+mcs_url={{ mcs_cas_url }}
+else
+mcs_url={{ mcs_server_enovia_url }}
+fi
+
+mcs_url_res=`curl -ILs $mcs_url | grep HTTP/1.1 | awk {'print $2'} | tail -1`
+if [ $mcs_url_res -ne 200 ]; then
+ echo "Error in Mcs url response($mcs_url_res): failed"
+else
+ echo "Mcs url response($mcs_url_res) is listening"
+fi

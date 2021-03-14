@@ -1,0 +1,9 @@
+- include: ga_installation.yml
+- include: fixpack_installation.yml
+- include: create_store.yml
+- include: restart_service.yml
+- include: run_test.yml
+- include: edit_createservice.yml
+- include: post_activity.yml
+- include: modify_firewall.yml
+- include: copy_installer_local.yml

@@ -1,0 +1,130 @@
+---
+
+- name: Check PassportAuthentication.web.xml.part.deactivated file exits or not
+  stat: path="{{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part.deactivated"
+  register: check_path
+  tags: 
+      - config-passport
+      - install-mcsfx
+
+
+- name:  Rename the file PassportAuthentication.web.xml.part.deactivated
+  command: mv {{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part.deactivated {{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part
+  when: check_path.stat.exists
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+  
+- name: update PassportAuthentication.web.xml.part for #CAS_serverName#
+  remote_user: monitor
+  sudo: true
+  replace:
+     dest="{{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part"
+     regexp='#CAS_serverName#'
+     replace='{{mcs_server_url}}'
+     backup=yes
+     owner={{ plm_user }} 
+     group={{ plm_group }}
+  when: check_path.stat.exists
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+- name: update PassportAuthentication.web.xml.part #CAS_serverName#
+  replace:
+     dest={{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part
+     regexp='#CAS_casServerURLPrefix#'
+     replace='{{cas_server_url}}'
+     backup=no
+  when: check_path.stat.exists
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+- name: update PassportAuthentication.web.xml.part #CAS_targetServiceId#
+  replace:
+     dest={{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part
+     regexp='#CAS_targetServiceId#'
+     replace='{{cas_targetServiceId}}'
+     backup=no
+  when: check_path.stat.exists
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+  
+- name: update PassportAuthentication.web.xml.part #CAS_casServerLoginURL#
+  replace:
+     dest={{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part
+     regexp='#CAS_casServerLoginURL#'
+     replace='{{cas_login_url}}'
+     backup=no
+  when: check_path.stat.exists
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+- name: update PassportAuthentication.web.xml.part #CAS_proxyCallbackUrl#
+  replace:
+     dest={{mcs_server_dir}}/linux_a64/resources/warutil/fragment/PassportAuthentication.web.xml.part
+     regexp='#CAS_proxyCallbackUrl#'
+     replace='{{mcs_callback_url}}'
+     backup=no
+  when: check_path.stat.exists
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+  
+- name: Update ENOLiveCollaborationServer.liveCollaborationServer.web.xml.part
+  template: src="ENOLiveCollaborationServer.xml.j2" dest="{{mcs_server_dir}}/linux_a64/resources/warutil/fragment/ENOLiveCollaborationServer.liveCollaborationServer.web.xml.part"
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+  
+- name: Check emxSystem.properties
+  shell: egrep "emxFramework.External.Authentication = false" {{mcs_server_dir}}/STAGING/ematrix/properties/emxSystem.properties
+  register: checkconf
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+    
+- name: Update emxSystem.properties 
+  lineinfile:
+    dest: "{{mcs_server_dir}}/STAGING/ematrix/properties/emxSystem.properties"
+    regexp: 'emxFramework.External.Authentication = false'
+    line: 'emxFramework.External.Authentication = true'
+  when: checkconf.rc == 0
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+  
+- name: Update mxEnv.sh in server script for passport
+  blockinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    marker: ""
+    block: |
+      MX_PAM_AUTHENTICATE_CLASS="com.dassault_systemes.plmsecurity.authentication.CASAuthenticationWithReauth"
+      export MX_PAM_AUTHENTICATE_CLASS
+      MX_PAM_AUTHENTICATE_ARG=remote_user
+      export MX_PAM_AUTHENTICATE_ARG
+      ENOVIA_URL="{{ mcs_server_url }}"
+      export ENOVIA_URL
+      MYAPPS_URL="{{ mcs_server_url }}"
+      export MYAPPS_URL
+      PASSPORT_URL="{{cas_server_url}}"
+      export PASSPORT_URL
+  tags: 
+     - config-passport
+     - install-mcsfx
+  
+
+  

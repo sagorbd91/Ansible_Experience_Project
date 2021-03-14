@@ -1,0 +1,15 @@
+---
+
+- name: copy store config bat file to target
+  template: src="script_modify_fcs_store.j2" dest="{{windows_tmp_path}}\script_modify_fcs_store.bat"
+  tags: 
+    - store-config
+    - post-activity
+    
+- name: run store config through mql
+  win_psexec:
+     command: '{{windows_tmp_path}}\script_modify_fcs_store.bat >> {{windows_tmp_path}}\Report_store_config.xml'
+     elevated: yes
+  tags: 
+    - store-config
+    - post-activity

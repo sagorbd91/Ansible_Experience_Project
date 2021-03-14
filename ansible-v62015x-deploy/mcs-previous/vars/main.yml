@@ -1,0 +1,79 @@
+---
+
+env_name: "mig3"
+update_database: true
+
+# Installer Info
+code_backup_filename: "mcs_backup_after_NTmigration"
+code_backup_dir: "/logs/code_backup"
+
+mcs_installer_path: "{{ installer_path }}/3dspace"
+mcs_ga_installer: "{{ mcs_installer_path }}/ga/platform"
+mcs_apps_ga_installer: "{{ mcs_installer_path }}/ga/apps"
+mcs_fp_installer: "{{ mcs_installer_path }}/{{ fix_pack_version }}/platform"
+mcs_apps_fp_installer: "{{ mcs_installer_path }}/{{ fix_pack_version }}/apps"
+
+
+# Installation dir path
+mcs_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+mcs_install_rel_path: "/plm/{{env_name}}/{{mcs_type}}"
+mcs_common_dir: "/plm/{{env_name}}/mcscommon"
+mcs_instance_path: "{{mcs_install_rel_path}}/instances"
+mcs_code_dir: "{{mcs_install_rel_path}}/code"
+mcs_bin_dir: "{{mcs_install_rel_path}}/bin"
+mcs_log_dir: "{{mcs_install_rel_path}}/logs"
+mcs_conf_dir: "{{mcs_common_dir}}/conf"
+mcs_java_dir: "{{mcs_common_dir}}/softs"
+mcs_java_path: "{{mcs_java_dir}}/jdk-mcs"
+mcs_server_dir: "{{mcs_code_dir}}/server"
+mcs_studio_dir: "{{mcs_install_path}}/studio"
+mcs_mya_dir: "{{mcs_code_dir}}/mya"
+mcs_evp_dir: "{{mcs_code_dir}}/evp"
+mcs_csg_dir: "{{mcs_code_dir}}/csg"
+mcs_kwd_dir: "{{mcs_code_dir}}/kwd"
+mcs_atk_dir: "{{mcs_code_dir}}/atk"
+build_dir: "{{mcs_server_dir}}/distrib"
+mcs_build: "{{ build_dir }}/enovia.war"
+
+
+# Installation infomation
+db_option_db2: "2"
+db2_product_dir: "/opt/ibm/db2/V10.5"
+db2_instance_name: "v6admin"
+db2_connection_user: "v6admin"
+db2_connection_user_pass: "v6admin"
+db2_database_name: "v6db"
+db2_data_tablespace: "MX_DATA"
+db2_index_tablespace: "MX_INDEX"
+mql_user: "creator"
+mql_password: "creator."
+business_data_tbl_spc: "LX_DATA"
+business_index_tbl_spc: "LX_INDEX"
+app_administrator_user: "admin_platform"
+app_administrator_pass: "Jklalrahab321"
+storage_data_tablespace: "VPM_DATA"
+storage_index_tablespace: "VPM_INDEX"
+vpm_repository_name: "My PLM Repository"
+vpm_store_path: "{{mcs_evp_dir}}/store/EVP"
+product_name: "LIV-MDEVPM"
+person_name: "admin_platform"
+
+
+# CAS info
+mcs_cas_http_url: "http://i1-mcscas-testa-plm.valmet.com:8181/"
+passport_http_url: "http://i1-passport-testa-plm.valmet.com:8281/"
+mcs_server_url: "https://3dspace-testa-plm.valmet.com:8180/"
+mcs_callback_url: "https://3dspace-testa-plm.valmet.com:8180/enovia/proxyCallback"
+cas_server_url: "https://3dpassport-testa-plm.valmet.com:8280/"
+cas_login_url: "https://3dpassport-testa-plm.valmet.com:8280/3DPassport/login"
+cas_targetServiceId: "V6"
+
+# FTS info
+fts_base_port: "19000"
+fts_host: "v50013a.vstage.co"
+mcs_config_xml: "{{ mcs_server_dir }}/Apps/BusinessProcessServices/V6R2015x/Modules/ENOFramework/AppInstall/Programs/config.xml"
+
+# 3dx info
+e3dx_1st_port_range: "58000"
+e3dx_start_instance_count: "5"
+e3dx_server_name: "v50013a.vstage.co"

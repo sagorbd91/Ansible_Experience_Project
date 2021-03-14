@@ -1,0 +1,47 @@
+---
+
+- name: Copy GA-Platform installer from NFS to local
+  win_psexec:
+     command: 'C:\temp\mcs_installer_robocopy.bat'
+     system: yes
+  elevated: yes
+  tags: install-platform-ga-
+  
+- name: Copy GA-Platform installer from NFS to local
+  win_psexec:
+     command: 'Robocopy \\v0667a\platform\Windows64\1 c:\temp\3dspace /MIR /LOG+:c:\temp\mcs_code_robocopy.log'
+     system: yes
+  elevated: yes
+  tags: install-platform-ga-
+  
+  
+- name: Copy platform GA UserIntention file to target
+  template: src="templates/user_intention_platform/UserIntentions_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_pf_GA.xml"
+  tags: install-platform-ga
+ 
+- name: Copy GA-Platform installer from NFS to local
+  win_copy:
+    src: '{{ platform_GA_installer_path }}'
+    dest: '{{ windows_tmp_path }}\3dspace'
+    remote_src: True
+    force: yes
+    directory_mode: yes
+  elevated: yes
+  tags: install-platform-gaa
+  
+  
+
+- name: Executing platform GA installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\3dspace\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_pf_GA.xml --xmlreport {{ windows_tmp_path }}\Report.xml'
+     elevated: yes
+  tags: install-platform-ga
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_pf_GA.xml" state=absent
+  tags: install-platform-ga
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\3dspace" state=absent
+  tags: install-platform-ga
+

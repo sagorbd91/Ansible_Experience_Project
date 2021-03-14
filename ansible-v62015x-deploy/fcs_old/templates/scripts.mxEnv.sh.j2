@@ -1,0 +1,129 @@
+#!/bin/sh
+#
+# Set up Matrix Environment Variables
+#
+# 
+#
+LANG=C
+export LANG
+NLS_LANG=_.AL32UTF8
+export NLS_LANG
+MX_CHARSET=UTF8
+export MX_CHARSET
+DB2CODEPAGE=1208
+export DB2CODEPAGE
+MATRIXHOME=/plm/{{ env_name }}/fcs/code
+export MATRIXHOME
+MATRIXINSTALL=/plm/{{ env_name }}/fcs/code
+export MATRIXINSTALL
+MX_FLASH_PATH=/plm/{{ env_name }}/fcs/code/mxcache
+export MX_FLASH_PATH
+MX_ARCH=linux_a64
+export MX_ARCH
+TNS_ADMIN=
+export TNS_ADMIN
+ODBCSYSINI=
+export ODBCSYSINI
+DB2DIR=
+export DB2DIR
+DB2INSTANCE=
+export DB2INSTANCE
+GALAXYHOME=/plm/{{ env_name }}/fcs/code/linux_a64/code/bin
+export GALAXYHOME
+COLORPATH=/plm/{{ env_name }}/fcs/code/linux_a64/code/lib
+export COLORPATH
+MX_BOS_ROOT=/plm/{{ env_name }}/fcs/code
+export MX_BOS_ROOT
+MX_BOS_WORKSPACE=workspace
+export MX_BOS_WORKSPACE
+MX_TRACE_FILE_PATH=/plm/{{ env_name }}/fcs/code/logs
+export MX_TRACE_FILE_PATH
+MX_BOS_LOG_DIRECTORY=/plm/{{ env_name }}/fcs/code/logs
+export MX_BOS_LOG_DIRECTORY
+TCL_LIBRARY=/plm/{{ env_name }}/fcs/code/linux_a64/tcl85/lib/tcl8.5
+export TCL_LIBRARY
+TK_LIBRARY=/plm/{{ env_name }}/fcs/code/linux_a64/tcl85/lib/tk8.5
+export TK_LIBRARY
+LD_LIBRARY_PATH=/plm/{{ env_name }}/fcs/code/linux_a64/code/bin:/usr/lib:/lib:/plm/{{ env_name }}/fcs/code/linux_a64/code/lib:${TCL_LIBRARY}/../
+export LD_LIBRARY_PATH
+
+# Set JDK specific variable only if caller does not provide any JDK (like WebSphere)
+if [ "$ENO_CALLERHASJDK" = "" ]
+then
+LD_LIBRARY_PATH=/plm/{{ env_name }}/fcs/softs/jdk-fcs/jre/lib/amd64:/plm/{{ env_name }}/fcs/softs/jdk-fcs/jre/lib/amd64/server:/plm/{{ env_name }}/fcs/code/linux_a64/code/bin:/usr/lib:/lib:/plm/{{ env_name }}/fcs/code/linux_a64/code/lib:${TCL_LIBRARY}/../
+export LD_LIBRARY_PATH
+MX_JAVA_PATH=/plm/{{ env_name }}/fcs/softs/jdk-fcs/lib:
+fi
+# JDK specific variable only if caller does not provide any JDK (like WebSphere) : FIN
+
+# MX_PAM_AUTHENTICATE_CLASS=\${CLASS:emxAICommonNTLMAuthenticationBase}
+# export MX_PAM_AUTHENTICATE_CLASS
+
+
+MX_CLASSPATH=${MX_JAVA_PATH}/plm/{{ env_name }}/fcs/code/managed/properties:/plm/{{ env_name }}/fcs/code/linux_a64/docs/javacommon:/plm/{{ env_name }}/fcs/code/linux_a64/docs/javaserver:/plm/{{ env_name }}/fcs/code/linux_a64/docs/custom
+export MX_CLASSPATH
+
+# ===== Critical Matrix options for kernel tuning ========
+#   MX_BOS_FIND_LIMIT=500
+#   export MX_BOS_FIND_LIMIT
+#   MX_BOS_EXPAND_LIMIT=500
+#   export MX_BOS_EXPAND_LIMIT
+MX_ABORT_DANGLING_TRANSACTION=true
+export MX_ABORT_DANGLING_TRANSACTION
+MX_MEMORY_SYSTEM_LIMIT=4096m
+export MX_MEMORY_SYSTEM_LIMIT
+MX_CONNECTION_POOL_SIZE=20
+export MX_CONNECTION_POOL_SIZE
+MX_SESSION_TIMEOUT=60
+export MX_SESSION_TIMEOUT
+MX_BOS_ALLOW_SHARED_CONTEXT=false
+export MX_BOS_ALLOW_SHARED_CONTEXT
+# =========================================================
+##### Recommended Matrix java options for Application Server JVM
+##### Verify that these options are supported for the java patch level in use.
+# =========== SMALL =======================================
+#
+#    MX_JAVA_OPTIONS="-Xss512k -Xms256m -Xmx256m -XX:NewSize=128m -XX:MaxNewSize=128m -XX:MaxPermSize=256m -XX:SurvivorRatio=3 "
+#
+# =========== Medium ======================================
+#
+#    MX_JAVA_OPTIONS="-Xss512k -Xms960m -Xmx960m -XX:NewSize=480m -XX:MaxNewSize=480m -XX:MaxPermSize=256m -XX:SurvivorRatio=3 "
+#
+# =========== LARGE ============
+#
+#    MX_JAVA_OPTIONS="-Xss512k -Xms2048m -Xmx2048m -XX:NewSize=1024m -XX:MaxNewSize=1024m -XX:MaxPermSize=256m -XX:SurvivorRatio=3 "
+#
+# =========================================================
+MX_JAVA_OPTIONS="-Xss512k -Xms960m -Xmx960m  "
+
+JAVA_OPTIONS="${MX_JAVA_OPTIONS}"
+export JAVA_OPTIONS
+JAVA_OPTS="${MX_JAVA_OPTIONS}"
+export JAVA_OPTS
+
+# Set JDK specific variable only if caller does not provide any JDK (like WebSphere)
+
+if [ "$ENO_CALLERHASJDK" = "" ]
+then
+TMPPATH=/plm/{{ env_name }}/fcs/softs/jdk-fcs/bin:
+# JDK specific variable only if caller does not provide any JDK (like WebSphere) : FIN
+else
+PATH=${PATH}
+fi
+
+PATH=${TMPPATH}/plm/{{ env_name }}/fcs/code/linux_a64/code/bin:$PATH
+export PATH
+
+# ADK Trace options (disabled by default)
+. /plm/{{ env_name }}/fcs/code/scripts/adkTrace.sh
+
+# Ensure HOME environment variable is defined
+if [ "$HOME" = "" ]
+
+then
+  echo ERROR: The \'HOME\' environment variable is not
+  echo set. You must define the \'HOME\' variable to be
+  echo your user login directory.
+  exit 0
+fi
+

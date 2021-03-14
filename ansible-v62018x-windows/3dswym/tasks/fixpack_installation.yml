@@ -1,0 +1,34 @@
+---
+- name: Stop 3DSwym Service
+  win_service: name=3DSwym_R2018x state=stopped
+  tags: install-3dswym-fp
+
+- name: Stop 3DSwym Converter Service
+  win_service: name="3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc" state=stopped
+  tags: install-3dswym-fp
+  
+  
+  
+
+- name: Copy 3dswym-ga UserIntention file to target
+  template: src="templates/UserIntentions_3dswym_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3dswym_fp.xml"
+  tags: install-3dswym-fp
+ 
+- name: Copy 3dswym-ga installer from NFS to local
+  win_copy:
+    src: '{{ installer_FP_path_3dsw }}'
+    dest: '{{ windows_tmp_path }}\3dswym-FP'
+    remote_src: True
+  tags: install-3dswym-fp 
+
+- name: Executing 3dswym-FP installer
+  win_command: '{{ windows_tmp_path }}\3dswym-FP\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3dswym_fp.xml --xmlreport {{ windows_tmp_path }}\report_3dswym_fp.xml'
+  tags: install-3dswym-fp
+
+- name: Remove the user Intension file of cloudview-ga
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3dswym_fp.xml" state=absent
+  tags: install-3dswym-fp
+
+- name: Remove the installer folder cloudview-ga
+  win_file: path="{{windows_tmp_path}}\3dswym-FP" state=absent
+  tags: install-3dswym-fp

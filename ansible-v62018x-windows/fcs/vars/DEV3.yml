@@ -1,0 +1,20 @@
+env_name: 'DEV3'
+fix_pack_version: ''
+
+#Installation path
+FCS_Installer_GA_Path: '{{installer_path}}\FCS\ga\FileCollaborationServer.Windows64\1'
+FCS_Installer_FP_Path: '{{installer_path}}\FCS\{{ fix_pack_version }}\FileCollaborationServer.Windows64\1'
+
+
+#Installer path
+fcscentral_file_dir: 'D:\PLM\{{ env_name }}\Fcscentral'
+fcscentral_file_store_dir: '{{ fcscentral_file_dir }}\stores'
+TARGET_PATH: '{{ fcscentral_file_dir }}\Code'
+instance_dir: '{{ TARGET_PATH }}\win_b64\code'
+#Edit create_service.bat
+fcs_command_dir: '{{ instance_dir }}\command'
+service_name: 'FileCollaborationServer_R2018x'
+Jmx_port: '8589'
+
+#Update Time Out
+conf-dir: '{{ instance_dir }}\tomee\conf'

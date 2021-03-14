@@ -1,0 +1,70 @@
+---
+
+- name: check iptables not running
+  remote_user: monitor
+  become: true
+  shell: service iptables status | grep not | awk '{ print $4 }'
+  register: iptables_stoped
+  tags:
+   - config-firewall
+   - install-dashboard
+
+- name: Allow JMX ports ip in iptable rule
+  remote_user: monitor
+  become: true
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ item.value.port_jmx }} -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+  with_dict: "{{ instances }}"
+  tags:
+   - config-firewall
+   - install-dashboard
+   
+- name: Allow HTTP ports to zabbix server for webcheck
+  remote_user: monitor
+  become: true
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ item.value.port_http }} -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+  with_dict: "{{ instances }}"
+  tags:
+   - config-firewall
+   - install-dashboard
+
+- name: Allow AJP ports to zabbix server for webcheck
+  remote_user: monitor
+  become: true
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ item.value.port_ajp }} -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+  with_dict: "{{ instances }}"
+  tags:
+   - config-firewall
+   - install-dashboard
+
+- name: Allow Tomcat Shutdown ports to zabbix server for webcheck
+  remote_user: monitor
+  become: true
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ item.value.port_shutdown }} -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+  with_dict: "{{ instances }}"
+  tags:
+   - config-firewall
+   - install-dashboard
+   
+- name: Allow Tomcat Redirect ports to zabbix server for webcheck
+  remote_user: monitor
+  become: true
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ item.value.port_redirect }} -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+  with_dict: "{{ instances }}"
+  tags:
+   - config-firewall
+   - install-dashboard
+   
+- name: save iptables
+  remote_user: monitor
+  become: true
+  command: service iptables save
+  when: "'not' not in iptables_stoped.stdout" 
+  tags:
+   - config-firewall 
+   - install-dashboard
+  

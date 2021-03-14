@@ -1,0 +1,78 @@
+env_name: 'DEV2'
+service_name: '3DEXPERIENCER2018xProxy'
+common_dir: 'C:\plm\{{ env_name }}\common'
+where_to_install: ' C:\middleware\R2018X\Apache24'
+windows_tmp_path: 'C:\Temp'
+test_dir: '{{ windows_tmp_path }}\Extra'
+server_name: 'v0626a.vstage.co'
+
+
+passport_proxy_port: '8280'
+comment_proxy_port: '8780'
+dashboard_proxy_port: '443'
+#notification_proxy_port: '8180'
+notification_proxy_port: '8880'
+mcs_proxy_port: '8180'
+swym_proxy_port: '8480'
+fcs_proxy_port: '8580'
+fed_proxy_port: '8980'
+
+passport_server_common_name: '3dpassport-18xdev2-plm.valmet.com'
+comment_server_common_name: '3dcomment-18xdev2-plm.valmet.com'
+dashboard_server_common_name: '3ddashboard-18xdev2-plm.valmet.com'
+notifiacation_server_common_name: '3dnotification-18xdev2-plm.valmet.com'
+mcs_server_common_name: '3dspace-18xdev2-plm.valmet.com'
+swym_server_common_name: '3dswym-18xdev2-plm.valmet.com'
+fcs_server_common_name: 'fcscentral-18xdev2-plm.valmet.com'
+fed_server_common_name: 'federated-18xdev2-plm.valmet.com'
+
+
+vhost_path: '{{ test_dir }}'
+#vhost_path: '{{ where_to_install }}\conf\extra'
+ssl_directory: '{{ where_to_install }}\conf\ssl'
+ssl_dir_dash: '{{ common_dir }}\cert\dash-cert'
+
+
+
+
+certificate_self: 'selfsign-18xdev2'
+certificate_fcs: 'fcscentral-18xdev2-plm.valmet.com'
+certificate_fed: 'selfsign-fedsearch'
+certificate_passport: '3dpassport-18xdev2-plm.valmet.com'
+certificate_mcs: '3dspace-18xdev2-plm.valmet.com'
+
+Swym_dir: 'C:\PLM\{{ env_name }}\3DSwym\Code\'
+Comment_dir: 'C:\PLM\{{ env_name }}\3DComment\CODE'
+Dash_dir: 'C:\PLM\{{ env_name }}\3DDashboard\Code'
+Notif_dir: 'C:\PLM\{{ env_name }}\3DNotification\Code'
+Pass_dir: 'C:\PLM\{{ env_name }}\3DPassport'
+Mcs_dir: 'C:\PLM\{{ env_name }}\3DSpace\Server'
+Fcs_dir: 'C:\PLM\{{ env_name }}\Fcscentral\Code'
+Fed_dir: 'C:\PLM\{{ env_name }}\FedSearch'
+
+
+#win_plm: 'C:\PLM'
+#win_templates: 'win_b64\templates'
+fragment_dir: '{{where_to_install}}\conf\extra\fragment'
+
+passport_instance_port: '8281'
+comment_instance_port: '8781'
+dashboard_instance_port: '8381'
+notification_instance_port: '9040'
+mcs_instance_port: '8181'
+swym_instance_port: '8481'
+fcs_instance_port: '8581'
+fed_instance_port: '8981'
+
+#Fragment variables
+CacheRoot_comment_dir: C:/PLM/DEV2/3DComment/Temp/cache/httpd
+CacheRoot_swym_dir: C:/PLM/DEV2/3DSwym/Temp/cache/httpd
+
+
+
+
+
+
+
+
+

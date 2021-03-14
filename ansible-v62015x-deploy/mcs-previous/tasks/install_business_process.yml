@@ -1,0 +1,55 @@
+---
+
+- name: Check if Business Process installer path exists
+  stat: path="{{mcs_ga_installer}}/ENOVIABusinessProcessServices.Unix64"
+  register: check_path
+  tags: 
+    - install-business
+    - install-mcs
+
+
+- name: Business Process installer doesn't exist
+  fail: msg="server installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: 
+    - install-business
+    - install-mcs
+  
+ 
+- name: Copy the Business Process Service Answer
+  remote_user: monitor
+  sudo: true
+  template: src="answer_business_process.j2" dest="{{ mcs_ga_installer }}/ENOVIABusinessProcessServices.Unix64/1/answer_business_process.txt" mode=2777
+  when: update_database
+  tags: 
+     - install-business
+     - install-mcs
+  
+  
+- name: Copy the Business Process  Answer file (database will not update)
+  remote_user: monitor
+  sudo: true
+  template: src="answer_business_process_nudb.j2" dest="{{ mcs_ga_installer }}/ENOVIABusinessProcessServices.Unix64/1/answer_business_process.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-business
+     - install-mcs
+
+
+- name: Executing the Business Process Service installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_business_process.txt
+  args:
+    chdir: /{{ mcs_ga_installer }}/ENOVIABusinessProcessServices.Unix64/1
+  tags: 
+   - install-business
+   - install-mcs
+
+
+- name: Remove the Business Process Service Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_ga_installer }}/ENOVIABusinessProcessServices.Unix64/1/answer_business_process.txt" state=absent
+  tags: 
+   - install-business
+   - install-mcs

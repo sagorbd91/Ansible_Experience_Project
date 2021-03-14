@@ -1,0 +1,7 @@
+---
+- include: install_notification.yml
+- include: install_notification_fp.yml
+- include: restart_service.yml
+- include: run_test.yml
+- include: copy_installer_local.yml
+

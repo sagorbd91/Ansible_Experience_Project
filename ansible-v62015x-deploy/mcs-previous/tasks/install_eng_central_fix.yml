@@ -1,0 +1,42 @@
+---
+
+      
+- name: Copy the Engineering Central fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_eng_centralfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAEngineeringCentral.Unix64/1/answer_eng_centralfx.txt" mode=2777
+  when: update_database
+  tags: 
+     - install-engcentralfx
+     - install-mcsfx
+     - install-apps-fp
+
+- name: Copy the Engineering Central fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_eng_centralfx_nudb.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAEngineeringCentral.Unix64/1/answer_eng_centralfx.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-engcentralfx
+     - install-mcsfx
+     - install-apps-fp
+
+- name: Executing the Engineering Central fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_eng_centralfx.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAEngineeringCentral.Unix64/1
+  tags: 
+     - install-engcentralfx
+     - install-mcsfx
+     - install-apps-fp
+   
+   
+- name: Remove the Engineering Central fixpack answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAEngineeringCentral.Unix64/1/answer_eng_centralfx.txt" state=absent
+  tags: 
+     - install-engcentralfx
+     - install-mcsfx
+     - install-apps-fp

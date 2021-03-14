@@ -1,0 +1,24 @@
+---
+
+- name: Copy 3DSpaceIndex UserIntention file to target
+  template: src="templates/UserIntentions_3dspaceIndex_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3dspaceIndex_ga.xml"
+  tags: install-3DSpaceIndex-ga
+ 
+- name: Copy 3DSpaceIndex installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_3dspaceIndex_ga }}'
+    dest: '{{ windows_tmp_path }}\3DSpaceIndex'
+    remote_src: True
+  tags: install-3DSpaceIndex-ga  
+
+- name: Executing 3DSpaceIndex GA installer
+  win_command: '{{ windows_tmp_path }}\3DSpaceIndex\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3dspaceIndex_ga.xml --xmlreport {{ windows_tmp_path }}\Report_3DSpaceIndex_ga.xml'
+  tags: install-3DSpaceIndex-ga
+
+- name: Remove the 3DSpaceIndex user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3dspaceIndex_ga.xml" state=absent
+  tags: install-3DSpaceIndex-ga
+
+- name: Remove the 3DSpaceIndex installer folder.
+  win_file: path="{{windows_tmp_path}}\3DSpaceIndex" state=absent
+  tags: install-3DSpaceIndex-ga

@@ -1,0 +1,25 @@
+#!/bin/bash
+MQLPASS={{ mql_password }}
+COMMAND=modify product {{ product_name }} add person {{ person_name }};
+
+
+cd {{ mcs_server_dir }}/scripts
+
+if [ $MQLPASS =="" ]
+then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  $COMMAND
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  $COMMAND
+  quit;
+EOF
+fi
+
+
+
+

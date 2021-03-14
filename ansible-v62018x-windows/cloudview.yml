@@ -1,0 +1,10 @@
+---
+
+- name: Install cloud view
+  hosts: cloudview_servers
+  vars_files:
+      - cloudview/vars/main.yml
+      - cloudview/vars/{{env_name}}.yml
+  roles:
+    - cloudview
+

@@ -1,0 +1,23 @@
+env_name: 'DEV3'
+fixpack_version: ''
+
+
+#Installer path
+installer_path_fed: '{{ installer_path }}\FederatedSearch\ga\Windows64\1'
+installer_path_fed_fp: '{{ installer_path }}\FederatedSearch\{{ fix_pack_version }}\FederatedSearch\1'
+
+#Installation path and parameters
+TARGET_PATH: 'D:\PLM\{{ env_name }}\FedSearch\Code'
+TomEEConnectionPort: '8060'
+
+
+Java_Path: 'D:\PLM\DEV3\common\soft\java\jdk'
+instance_dir: '{{ TARGET_PATH }}\win_b64\code'
+#Edit create_service.bat
+fed_command_dir: '{{ instance_dir }}\command'
+service_name: 'federated_R2018x'
+Jmx_port: '8789'
+
+
+#Update Time Out
+conf-dir: '{{ instance_dir }}\tomee\conf'

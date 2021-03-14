@@ -1,0 +1,29 @@
+---
+ 
+     
+- name: Copy the Connector for AutoCAD Server fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_conn_autocadfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ConnectorforAutoCADServer.Unix64/1/answer_conn_autocadfx.txt" mode=2777
+  tags: 
+     - install-autocadsrvfx
+     - install-mcsfx
+
+- name: Executing the Connector for AutoCAD Server fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_conn_autocadfx.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ConnectorforAutoCADServer.Unix64/1
+  register: cat
+  tags: 
+     - install-autocadsrvfx
+     - install-mcsfx
+   
+
+- name: Remove the Connector for AutoCAD Server fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ConnectorforAutoCADServer.Unix64/1/answer_conn_autocadfx.txt" state=absent
+  tags: 
+     - install-autocadsrvfx
+     - install-mcsfx

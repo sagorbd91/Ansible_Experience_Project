@@ -1,0 +1,23 @@
+---
+
+
+- name: Allow MySQL ports in iptable rules of DB server
+  command: iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport {{ mysql_port }} -j REJECT
+  tags:
+   - config-firewall
+   - install-mysql
+   
+   
+- name: Allow MySQL ports in iptable rules of DB server
+  command: iptables -I INPUT -p tcp -s {{mysql_allow_host}} -m state --state NEW -m tcp --dport {{ mysql_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-mysql
+   
+   
+- name: Save iptables
+  command: service iptables save
+  tags:
+   - config-firewall
+   - install-mysql 
+   

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#De-assign R13X licenses for user
+
+rm -rf /tmp/PO-remove-product.log
+for user in `cat /tmp/PO-list-person.txt`; 
+do 
+./mql -c "set context user {{ mql_user }} password {{ mql_password }}; 
+ mod product CPF remove person $user;" 
+done
+
+./mql -c "set context user {{ mql_user }} password {{ mql_password }};
+ quit;"
+
+for user in `cat /tmp/PO-list-person.txt`; 
+do 
+./mql -c "set context user {{ mql_user }} password {{ mql_password }}; 
+ print person $user select product;" > /tmp/PO-list-product.txt
+ ./mql -c "set context user {{ mql_user }} password {{ mql_password }};
+ quit;"
+ u_product=(` cat /tmp/PO-list-product.txt | grep product | cut -d= -f2 `)
+ 
+for (( k = 0 ; k < ${#u_product[@]} ; k++ )) 
+do 
+ ./mql -c "set context user {{ mql_user }} password {{ mql_password }};
+mod product ${u_product[$k]} remove person $user;" >> /tmp/PO-remove-product.log
+done
+
+done
+
+#"mod product ASA remove person $user; mod product ASP remove person $user; mod product MSI remove person $user; mod product PTD remove person $user; mod product STA
+# remove person $user mod product LIV-MDEVPM remove person $user; mod product LIV-MDEVNDVPM remove person $user; mod product LIV-LVAMDEPICVNDVPM remove person $user; 
+# mod product LIV-FPDLVAMDEPICVNDVPM remove person $user"; 

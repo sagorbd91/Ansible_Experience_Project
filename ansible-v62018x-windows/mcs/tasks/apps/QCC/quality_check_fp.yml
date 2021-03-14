@@ -1,0 +1,48 @@
+---
+
+- name: Check if Apps installer path exists
+  win_stat: path="{{apps_FP_installer_path}}"
+  register: check_apps_path
+  tags: 
+     - install-app-fp
+     - quality-fp
+  
+- name: Apps installer doesn't exist
+  fail: msg="Apps installer doesn't exist!!"
+  when: not check_apps_path.stat.exists
+  tags: 
+     - install-app-fp
+     - quality-fp
+
+- name: Copy qcc UserIntention file to target
+  template: src="templates/user_intention_apps/fp/UserIntentions_quality_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_quality_fp.xml"
+  tags: 
+     - install-app-fp
+     - quality-fp
+
+- name: Copy qccinstaller from NFS to local
+  win_copy:
+    src: '{{apps_FP_installer_path}}\QualityCheckerConfiguration.Windows64\1'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: 
+     - install-app-fp
+     - quality-fp
+  
+- name: Executing qcc installation on target
+  win_command: '{{windows_tmp_path}}\1\StartTUI.exe -installerPath {{ds_fp_installer_path}} --silent {{windows_tmp_path}}\UserIntentions_quality_fp.xml --xmlreport {{windows_tmp_path}}\Report_quality_fp.xml'
+  tags: 
+     - install-app-fp
+     - quality-fp
+
+- name: Removing the user Intension file for qcc from traget
+  win_file: path="{{windows_tmp_path}}\UserIntentions_quality_fp.xml" state=absent
+  tags: 
+     - install-app-fp
+     - quality-fp
+     
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags:  
+     - install-app-fp
+     - quality-fp

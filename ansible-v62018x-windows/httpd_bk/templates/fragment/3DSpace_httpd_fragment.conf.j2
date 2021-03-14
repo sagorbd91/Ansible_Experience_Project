@@ -1,0 +1,32 @@
+<Location /3dspace>
+RequestHeader set X-Forwarded-Proto "https"
+RequestHeader set X-Forwarded-Port "{{ mcs_proxy_port }}"
+
+ProxyPass http://{{ mcs_server_common_name }}:{{ mcscas_instance_port }}/3dspace
+ProxyPassReverse http://{{ mcs_server_common_name }}:{{ mcscas_instance_port }}/3dspace
+
+# Cross-origin resource sharing (CORS)
+SetEnvIf Origin "^http(s):\/\/(.+\.)?(valmet.com|vstage.co)(:\d{1,5})?$" origin_is=$0
+Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, HEAD, PUT, DELETE, PATCH"
+Header set Access-Control-Allow-Headers "accept,x-requested-method,origin,x-requested-with,x-request,cache-control,content-type,last-modified,x-utc-offset,SecurityContext,X-DS-CSRFTOKEN,keep-alive,DS-API-Version,DS-Client-Step-Name,DS-Request-ID,ENO_CSRF_TOKEN,SecurityToken,DS-Change-Authoring-Context"
+Header set Access-Control-Expose-Headers "DS-Request-ID,X-DS-CSRFTOKEN"
+Header set Access-Control-Max-Age "600"
+</Location>
+
+
+<Location /internal>
+ProxyPass http://{{ mcs_server_common_name }}:{{ mcsnocas_instance_port }}/internal
+ProxyPassReverse http://{{ mcs_server_common_name }}:{{ mcsnocas_instance_port }}/internal
+
+# Cross-origin resource sharing (CORS)
+SetEnvIf Origin "^http(s):\/\/(.+\.)?(valmet.com|vstage.co)(:\d{1,5})?$" origin_is=$0
+Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS, HEAD, PUT, DELETE, PATCH"
+Header set Access-Control-Allow-Headers "accept,x-requested-method,origin,x-requested-with,x-request,cache-control,content-type,last-modified,x-utc-offset,SecurityContext,X-DS-CSRFTOKEN,keep-alive,DS-API-Version,DS-Client-Step-Name,DS-Request-ID,ENO_CSRF_TOKEN,SecurityToken,DS-Change-Authoring-Context"
+Header set Access-Control-Expose-Headers "DS-Request-ID,X-DS-CSRFTOKEN"
+Header set Access-Control-Max-Age "600"
+</Location>
+

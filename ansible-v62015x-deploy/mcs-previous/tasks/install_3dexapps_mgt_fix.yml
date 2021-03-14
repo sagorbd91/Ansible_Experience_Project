@@ -1,0 +1,37 @@
+---
+
+- name: Copy the 3DExperience Apps Management Fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_3dexappsfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/3DEXPERIENCEAppsManagement.Unix64/1/answer_3dexapps.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-3dexappsfx
+    - install-mcsfx
+  
+- name: Copy the 3DExperience Apps Management Fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_3dexappsfx_nudb.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/3DEXPERIENCEAppsManagement.Unix64/1/answer_3dexapps.txt" mode=2777
+  when: not update_database
+  tags: 
+    - install-3dexappsfx
+    - install-mcsfx
+
+- name: Executing the 3DExperience Apps Management Fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_3dexapps.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/3DEXPERIENCEAppsManagement.Unix64/1
+  tags: 
+     - install-3dexappsfx
+     - install-mcsfx
+   
+
+- name: Remove the 3DExperience Apps Management Fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/3DEXPERIENCEAppsManagement.Unix64/1/answer_3dexapps.txt" state=absent
+  tags: 
+     - install-3dexappsfx
+     - install-mcsfx

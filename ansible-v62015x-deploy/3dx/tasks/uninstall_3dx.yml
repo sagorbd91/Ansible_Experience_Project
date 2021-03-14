@@ -1,0 +1,19 @@
+---
+
+- name: Execute the killscript.sh script
+  remote_user: "{{ plm_user }}"
+  shell: ./killscript.sh > killscript.log 2>&1
+  args:
+    chdir: /{{ e3dx_bin_dir }}
+  ignore_errors: yes
+  tags: 
+    - uninstall-3dx
+    - killscript-3dx
+  
+
+- name: Remove the 3dx Directory or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ e3dx_rel_path }}" state=absent owner={{plm3dx_user}}  group={{plm_group}} mode=2755
+  tags: uninstall-3dx
+     

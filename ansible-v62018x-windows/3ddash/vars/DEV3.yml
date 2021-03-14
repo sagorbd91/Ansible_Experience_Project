@@ -1,0 +1,32 @@
+env_name: 'DEV3'
+fixpack_version: ''
+
+#Installer Path
+installer_path_3dd: '{{ installer_path }}\3DDashboard\ga\Windows64\1'
+installer_path_3dd_fp: '{{ installer_path }}\3DDashboard\{{ fix_pack_version }}\3DDashboard.Windows64\1'
+
+
+# Instalation path and paremeters
+dsi_domain_untrusted: 'untrusted.3ddashboard-18xdev3-plm.valmet.com'
+installation_path: 'D:\PLM\{{ env_name }}\3DDashboard'
+TARGET_PATH: '{{ installation_path }}\Code'
+dsi_shared_dir: '{{ installation_path }}\Data'
+Java_Path: 'D:\PLM\DEV3\common\soft\java\jdk'
+TomEEConnectionPort : '8050'
+
+instance_dir: '{{ TARGET_PATH }}\Code\win_b64\code'
+dash_command_dir: '{{ instance_dir }}\command'
+service_name: '3DDashboard_R2018x'
+Jmx_port: '8689'
+
+
+#Database Info
+uwp_sql_server: 'V0641A\CATIASQLSERVER'
+uwp_sqlserver_database_name: 'dashdb'
+uwp_sqlserver_setup_database_user: 'x3ddashadmin'
+uwp_sqlserver_setup_database_password : 'x3ddashadmin#01'
+uwp_sqlserver_database_user: 'x3ddash'
+uwp_sqlserver_database_password: 'x3ddash#01'
+
+#Update time out
+conf-dir: '{{ instance_dir }}\tomee\conf'

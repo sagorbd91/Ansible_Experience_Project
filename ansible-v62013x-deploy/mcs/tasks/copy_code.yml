@@ -1,0 +1,36 @@
+---
+- name: copy the code
+  remote_user: monitor
+  sudo: true
+  synchronize:
+      src: "{{ mount_dest_dir }}/backups/catia-v6/old-platforms/sb1/mcs/code" 
+      dest: "{{ mcs_install_rel_path }}"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+  - install-mcs
+  - copy-code
+
+- name: copy the conf
+  remote_user: monitor
+  sudo: true
+  synchronize:
+      src: "{{ mount_dest_dir }}/backups/catia-v6/old-platforms/sb1/mcs/conf" 
+      dest: "{{ mcs_install_rel_path }}"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+  - install-mcs
+  - copy-conf
+
+- name: change ownership
+  remote_user: monitor
+  sudo: true
+  command: chown -R "{{plm_user}}":"{{plm_group}}" "{{mcs_install_rel_path}}" 
+  tags: 
+   - install-mcs
+   - copy-code

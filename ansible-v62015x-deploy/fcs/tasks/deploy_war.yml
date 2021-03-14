@@ -1,0 +1,82 @@
+---
+
+- name: Stop Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=stopped
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy-code
+    - install-fcs
+    - install-fcsfx
+
+# Remove temp and tomcat cache
+
+- name: Removing FCS's Temp..
+  remote_user: "{{ plm_user }}"
+  shell: rm -rf {{ fcs_instance_path }}/{{ item }}/temp/*
+  with_items: "{{ instances }}"
+  tags: 
+    - deploy-code
+    - install-fcs
+    - install-fcsfx
+
+- name: Removing FCS's Cache
+  remote_user: "{{ plm_user }}"
+  shell: rm -rf {{ fcs_instance_path }}/{{ item }}/work/*
+  with_items: "{{ instances }}"
+  tags: 
+    - deploy-code
+    - install-fcs
+    - install-fcsfx
+     
+- name: Removing Old war file
+  remote_user: "{{ plm_user }}"
+  shell: rm -rf {{ fcs_instance_path }}/{{ item }}/webapps/enoviafcs*
+  with_items: "{{ instances }}"
+  tags: 
+    - deploy-code
+    - install-fcs
+    - install-fcsfx
+
+  
+# Deploy The War
+     
+- name: deploy the enoviafcs war
+  remote_user: "{{ plm_user }}"
+  shell: cp "{{ fcs_build_path }}" "{{ fcs_instance_path }}/{{ item.key }}/webapps"  
+  delegate_to: "{{ inventory_hostname }}"
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy-code
+    - install-fcs
+    - install-fcsfx
+  
+   
+- name: Start Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy-code
+    - install-fcs
+    - install-fcsfx
+  
+   
+- name: wait for tomcat to start
+  remote_user: "{{ plm_user }}"
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port={{ item.value.port_http }}
+      delay=60
+      timeout=240
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy-code
+    - install-fcs
+    - install-fcsfx
+    
+
+

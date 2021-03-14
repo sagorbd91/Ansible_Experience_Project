@@ -1,0 +1,25 @@
+
+- include: prerequisite.yml
+- include: copy_installer_local.yml
+
+#Installation
+- include: platform/platform_ga_install.yml
+- include: platform/platform_fp_install.yml
+- include: apps/install_ga_app_main.yml
+- include: apps/install_fp_app_main.yml
+
+#POST Activity
+
+- include: post_activity.yml
+- include: service/deploy_war.yml
+- include: service/built_and_deploy_war.yml
+- include: service/compile_code.yml
+- include: service/restart_mcs.yml
+- include: service/search_config.yml
+- include: service/fcs_store_config.yml
+- include: service/fcs_store_location_config.yml
+- include: service/run_mcs_search_index.yml
+- include: service/run_partial_search_index.yml
+- include: service/test_run.yml
+- include: service/create_mult_instance.yml
+- include: service/fts_crond.yml

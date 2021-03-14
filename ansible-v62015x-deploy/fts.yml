@@ -1,0 +1,41 @@
+---
+
+- name: pre task 
+  hosts: fts_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor 
+  sudo: true
+  tags: install-fts
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+
+- name: Create user
+  hosts: fts_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: "monitor"
+  sudo: true
+  tags: install-fts
+  vars:
+    plm_user: "plmm3tm"
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }
+      
+      
+- name: Install FTS
+  hosts: fts_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - fts/vars/main.yml
+      - fts/vars/{{env_name}}.yml
+  remote_user: "{{ plm_user }}"
+  become: false
+  roles:
+      - { role: fts  }

@@ -1,0 +1,54 @@
+---
+
+env_name: "dev3"
+plm_user: "plmd1xa"
+plm_group: "plm"
+
+has_plm_volume: yes
+
+# Installer Info
+e3dx_installer_path: "{{ installer_path }}/3dsearch/fp1517/ENOVIA3DIndexingServer.Full.Linux64"
+e3dx_fixpack_installer: "{{ installer_path }}/3dsearch/{{ fix_pack_version }}/ENOVIA3DIndexingServer.Linux64"
+
+# MCS server info
+enovia_v6_server_name: "unsecured-3dspace-dev1-plm.valmet.com"
+enovia_v6_server_port: "8380"
+enovia_v6_server_rootURI: "internal"
+
+# Installation Info
+e3denv_name: "Env"
+e3dx_1st_port_range: "58000"
+e3dx_start_instance_count: "5"
+e3dx_server_name: "localhost"
+e3dx_server_user: "3DIndexAdminUser"
+e3dx_server_user_pass: "PLMADM2016"
+e3dx_server_security_context: "VPLMAdmin.Company Name.Default"
+
+system_apps_dir: "/plm"
+eplm_server_base_path: "/plm"
+e3dx_rel_path: "{{ eplm_server_base_path }}/{{ env_name }}/3dx"
+e3dx_install_path: "{{ e3dx_rel_path }}/code"
+e3dx_plugin_dir: "{{ e3dx_rel_path }}/plug-in"
+e3dx_index_dir: "{{ e3dx_rel_path }}/data/indexes"
+e3dx_env_dir: "{{ e3dx_install_path }}/CATEnv"
+e3dx_bin_dir: "{{e3dx_rel_path}}/bin"
+e3dx_function_dir: "{{ e3dx_bin_dir }}"
+e3dx_logdir: "{{e3dx_rel_path}}/logs"
+e3dx_index_name: "3DIndex_DefaultEnv"
+service_dir: /etc/rc.d/init.d
+
+tem_os_linux: "Template OS Linux"
+3dindex_Template: "V6 3DIndex Monitor"
+host_group: "CATIA V6 15x {{ env_name }} "
+
+pre_pkgs:
+    - libxml2
+    - libxcb
+
+instances:
+  xvfbd-0:
+   i_no: 0
+   screen_width: 1280
+   screen_height: 768
+   screen_depth: 24
+

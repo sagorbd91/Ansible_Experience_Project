@@ -1,0 +1,42 @@
+---
+ 
+- name: Copy the CAPA and Audit Foundation Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_cap_audit_foundation.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIACAPAandAuditFoundation.Unix64/1/answer_cap_audit_foundation.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-capaudit
+    - install-mcs
+    - install-apps-ga
+   
+- name: Copy the CAPA and Audit Foundation Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_cap_audit_foundation_nudb.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIACAPAandAuditFoundation.Unix64/1/answer_cap_audit_foundation.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-capaudit
+     - install-mcs
+     - install-apps-ga
+
+- name: Executing the CAPA and Audit Foundation installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_cap_audit_foundation.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIACAPAandAuditFoundation.Unix64/1
+  tags: 
+     - install-capaudit
+     - install-mcs
+     - install-apps-ga
+   
+
+- name: Remove the CAPA and Audit Foundation Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIACAPAandAuditFoundation.Unix64/1/answer_cap_audit_foundation.txt" state=absent
+  tags: 
+     - install-capaudit
+     - install-mcs
+     - install-apps-ga
+

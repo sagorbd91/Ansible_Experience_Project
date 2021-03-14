@@ -1,0 +1,75 @@
+#! /bin/sh
+#
+# /usr/bin/file -- Bourne shell script for ENOVIA Platform Server Registry
+#
+# Usage:- rmireg.sh
+#
+# environment: none.
+# input:       none.
+# output:      none.
+# returns:     nothing.
+#
+# Copyright (c) 1993-2011 Dassault Systemes.
+#
+
+################################################################################
+
+#
+# Set up Matrix Environment Variables
+#
+#
+# Set up the matrix environment
+#
+. /plm/{{ env_name }}/mcs/code/scripts/mxEnv.sh
+
+##### Recommended Matrix rmid options
+##### Verify that these options are supported for the java patch level in use.
+# =========== SMALL ============
+#
+#    RMID_JAVA_OPTIONS=" -C-Xss512k -C-Xms256m -C-Xmx256m -C-XX:NewSize=128m -C-XX:MaxNewSize=128m -C-XX:MaxPermSize=256m -C-XX:SurvivorRatio=3"
+#
+# =========== Medium ============
+#
+#    RMID_JAVA_OPTIONS=" -C-Xss512k -C-Xms960m -C-Xmx960m -C-XX:NewSize=480m -C-XX:MaxNewSize=480m -C-XX:MaxPermSize=256m -C-XX:SurvivorRatio=3"
+#
+# =========== LARGE ============
+#
+#    RMID_JAVA_OPTIONS=" -C-Xss512k -C-Xms2048m -C-Xmx2048m -C-XX:NewSize=1024m -C-XX:MaxNewSize=1024m -C-XX:MaxPermSize=256m -C-XX:SurvivorRatio=3"
+RMID_JAVA_OPTIONS=" -C-Xss512k -C-Xms256m -C-Xmx256m "
+
+MX_ARCH=linux_a64
+JAVA_OPTIONS="${RMID_JAVA_OPTIONS}"
+JAVA_LIB=-C-Djava.library.path=/plm/{{ env_name }}/mcs/code/linux_a64/code/bin:/plm/{{ env_name }}/mcs/code/linux_a64/code/lib
+JAVA_SECURITY=-Djava.security.policy=/plm/{{ env_name }}/mcs/code/linux_a64/docs/security/rmid.policy
+JAVA_PATH=/plm/{{ env_name }}/mcs/softs/jdk-mcs/bin
+
+export MX_ARCH JAVA_OPTIONS JAVA_PATH JAVA_LIB JAVA_SECURITY
+CODEBASE=/plm/{{ env_name }}/mcs/code/linux_a64/docs/javaserver/eMatrixServletRMI.jar
+export CODEBASE
+
+echo "Setting CLASSPATH"
+${JAVA_PATH}/java  -classpath /plm/{{ env_name }}/mcs/code/linux_a64/docs/javaserver/eMatrixServletRMI.jar:/plm/{{ env_name }}/mcs/code/linux_a64/docs/javaserver/enoviaKernel.jar matrix.util.ComputedClassPath -unix -file classPathTmpFile$$.sh -var CLASSPATH
+
+chmod 755 classPathTmpFile$$.sh
+. ./classPathTmpFile$$.sh
+rm classPathTmpFile$$.sh
+
+if [ "$1" = "" ]
+then
+echo "Starting RMI Daemons"
+else
+echo "Stopping RMI Daemons"
+fi
+if [ "$1" = "" ]
+then
+rm -f /plm/{{ env_name }}/mcs/code/logs/RMI1099/Log*
+rm -f /plm/{{ env_name }}/mcs/code/logs/RMI1099/Snap*
+rm -f /plm/{{ env_name }}/mcs/code/logs/RMI1099/Version*
+fi
+${JAVA_PATH}/rmid $1 $JAVA_OPTIONS $JAVA_LIB -C-Djava.rmi.server.codebase=file:$CODEBASE -C-Djava.rmi.server.useCodebaseOnly=true  -J$JAVA_SECURITY -port 1099 -log /plm/{{ env_name }}/mcs/code/logs/RMI1099 &
+if [ "$1" = "" ]
+then
+echo "Starting RMI Server"
+${JAVA_PATH}/java  $JAVA_SECURITY -Djava.rmi.server.codebase=file:$CODEBASE -Djava.rmi.activation.port=1099 com.matrixone.jdl.eMatrix -log $MX_TRACE_FILE_PATH/mxAudit.log //localhost:1099 &
+fi
+# MatrixOne

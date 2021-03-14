@@ -1,0 +1,139 @@
+---
+
+- name: Restart Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=restarted
+  with_dict: "{{ instances }}"
+  tags: 
+    - restart-3ddash
+   
+- name: stop 3ddash services
+  remote_user: monitor
+  become: true
+  shell: /etc/init.d/{{ item.key }} stop
+  with_dict: "{{ instances }}"
+  tags: 
+    - stop-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+
+- name: Copy script to Check 3ddash Stop Status 
+  remote_user: monitor
+  become: true
+  template: src="stop_3ddash_check.j2" dest="/home/monitor/stop_3ddash_check.sh" owner=monitor group=monitor  mode=0755
+  with_dict: "{{ instances }}"
+  tags: 
+    - stop-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+    
+- name: Execute script to Check 3ddash Stop Status 
+  remote_user: monitor
+  become: true
+  shell: ./stop_3ddash_check.sh > stop_3ddash_status.log
+  args:
+    chdir: /home/monitor
+  tags: 
+    - stop-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+    
+- name: Check if '3ddash Stop' success or not
+  remote_user: monitor
+  become: true
+  shell: cat stop_3ddash_status.log
+  args:
+    chdir: /home/monitor
+  register: check_3ddash
+  tags: 
+    - stop-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+    
+- fail: msg="Filed to Stop {{ item.key }}"
+  when: check_3ddash.stdout.find('running') != -1
+  with_dict: "{{ instances }}"
+  tags: 
+    - stop-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+  
+- name: start 3ddash services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+    
+- name: wait for tomcat to start
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port={{ item.value.port_http }}
+      delay=60
+      timeout=240
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+     
+- name: Copy script to Check 3ddash START Status 
+  remote_user: monitor
+  become: true
+  template: src="start_3ddash_check.j2" dest="/home/monitor/start_3ddash_check.sh" owner=monitor group=monitor  mode=0755
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+    
+- name: Execute script to Check 3ddash START Status 
+  remote_user: monitor
+  become: true
+  shell: ./start_3ddash_check.sh > start_3ddash_status.log
+  args:
+    chdir: /home/monitor
+  tags: 
+    - start-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+    
+- name: Check if '3ddash START' success or not
+  remote_user: monitor
+  become: true
+  shell: cat start_3ddash_status.log
+  args:
+    chdir: /home/monitor
+  register: check_3ddash
+  tags: 
+    - start-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+    
+- fail: msg="Filed to START {{ item.key }}"
+  when: check_3ddash.stdout.find('failed') != -1
+  with_dict: "{{ instances }}"
+  tags: 
+    - start-3ddash
+    - install-dashboard
+    - install-dashboard-fp
+    - dash-post-task
+ 
+ 
+
+ 

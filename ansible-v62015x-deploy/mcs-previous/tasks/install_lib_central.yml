@@ -1,0 +1,41 @@
+---
+
+- name: Copy the Library Central Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_lib_central.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIALibraryCentral.Unix64/1/answer_lib_central.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-libcentral
+    - install-mcs
+    - install-apps-ga
+   
+- name: Copy the Library Central Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_lib_central_nudb.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIALibraryCentral.Unix64/1/answer_lib_central.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-libcentral
+     - install-mcs
+     - install-apps-ga
+
+- name: Executing the Library Central installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_lib_central.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIALibraryCentral.Unix64/1
+  tags: 
+     - install-libcentral
+     - install-mcs
+     - install-apps-ga
+   
+
+- name: Remove the Library Central answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIALibraryCentral.Unix64/1/answer_lib_central.txt" state=absent
+  tags: 
+     - install-libcentral
+     - install-mcs
+     - install-apps-ga

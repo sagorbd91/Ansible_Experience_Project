@@ -1,0 +1,7 @@
+---
+
+- name: Restart 18x services sequentially
+  hosts: mcs_servers
+  roles:
+    - srvrestart18X
+

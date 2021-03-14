@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# RE-assign R15X licenses to user
+
+for user in `cat /tmp/PO-list-person.txt`; 
+do 
+echo ===================$user====================;
+./mql -c "set context user {{ mql_user }} password {{ mql_password }}; 
+mod product IFW add person $user; mod product CSV add person $user; mod product CNV add person $user; mod product MDG add person $user;"; 
+done

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+numofservice=$({{ fts_bin_dir }}/./cvinit.sh status | grep started | awk '{print $2}' | wc -l)
+count=8
+if [ $numofservice -eq 0 ] 
+        then
+                echo "FTS CVINIT down"
+				
+else
+
+        if [ $numofservice -eq $count ] 
+                then
+                echo "FTS Service is Running"
+				
+		else
+
+             if [ $numberofport -lt $count ]
+                then
+                echo "problem"
+            fi
+        fi
+fi

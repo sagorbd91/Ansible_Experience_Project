@@ -1,0 +1,26 @@
+#!/bin/bash
+
+current_time=$(date +'%Y%m%d%H%M')
+echo "Indexation lunch time=$current_time"
+
+# Source 15x_functions
+. {{ e3dx_function_dir }}/15x_functions
+
+CheckRunUser {{ plm_user }}
+
+# Start index builder
+vDate=`date "+%Y%m%d"`
+v3DXInstallDir={{ e3dx_rel_path }}
+v3DXCodeDir={{ e3dx_install_path }}
+v3DXLogDir={{ e3dx_logdir }}
+v3DXIndexDir={{ e3dx_index_dir }}
+
+if [ -f $v3DXIndexDir/lock/lock* ]
+then
+    echo `date`"==> A lock file exists ==> NO INDEXATION"
+    echo `date`"==> A lock file exists ==> NO INDEXATION" >> $v3DXLogDir/3DINDEXATION-launch-report_$vDate.log
+else
+    echo `date`"==> NO lock file ==> INDEXATION START"
+    echo `date`"==> NO lock file ==> INDEXATION START" >> $v3DXLogDir/3DINDEXATION-launch-report_$vDate.log
+    $v3DXCodeDir/linux_a64/code/command/catstart -run  "BBDAdminPlayer -EnvName {{e3dx_index_name}}" -env Env -direnv $v3DXCodeDir/CATEnv >> /dev/null 2>&1 &
+fi

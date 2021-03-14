@@ -1,0 +1,18 @@
+---
+fcsremote_instance: "fcs_remote_xian"
+fcs_type: "fcsremote1"
+instances:
+   was_fcsremote_xian_1:
+     app_name: fcs1-xian
+     port_http: 8681
+     port_jmx: 8690
+     port_ajp: 8610
+     port_shutdown: 8606
+     port_redirect: 9044
+   was_fcsremote_xian_2:
+     app_name: fcs2-xian
+     port_http: 8684
+     port_jmx: 8693
+     port_ajp: 8613
+     port_shutdown: 8608
+     port_redirect: 9047

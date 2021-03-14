@@ -1,0 +1,11 @@
+---
+
+- name: Deploy xvfbd-0 to /etc/init.d Directory
+  remote_user: monitor
+  become: true
+  template: src="xvfbd-0.sh.j2" dest="{{ service_dir }}/{{ item.key }}" owner=root group=root mode=0755 
+  with_dict: "{{ instances }}"
+  tags: 
+     - deploy-xvfb
+     - install-3dx
+

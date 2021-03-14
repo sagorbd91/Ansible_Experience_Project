@@ -1,0 +1,34 @@
+---
+
+- name: Check if java path exists or not
+  stat: path="{{mcs_java_path}}"
+  register: check_path
+  tags: 
+    - install-java
+    - install-mcs
+
+- name: untar jdk inside instance
+  remote_user: monitor
+  sudo: true
+  unarchive: src="{{java_installer}}" dest="{{ mcs_java_dir }}" owner={{ plm_user }} group={{ plm_group }} copy=no mode="u=rwx,g=rw"
+  when: not check_path.stat.exists
+  tags: 
+     - install-java
+     - install-mcs
+   
+#- name: get java path
+#  shell: ls {{ mcs_java_dir }}
+#  register: dir_content
+#  when: not check_path.stat.exists
+#  tags: 
+#    - install-java
+#    - install-mcs  
+   
+- name: create symbolic link for the java path
+  remote_user: monitor
+  sudo: true
+  file: src="{{ java7_version_dir }}" dest="{{ mcs_java_path }}" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  when: not check_path.stat.exists
+  tags: 
+    - install-java
+    - install-mcs

@@ -1,0 +1,118 @@
+---
+
+
+  
+- name: Update instance startup.sh script
+  tags: 
+    - change-startup
+    - install-mcs
+  lineinfile:
+    dest: "{{ mcs_instance_path }}/{{instance_name}}/bin/startup.sh"
+    regexp: '. {{ mcs_code_dir }}/server/scripts/mxEnv.sh'
+    line: '#. {{ mcs_code_dir }}/server/scripts/mxEnv.sh'
+    
+- name: Copy War Setup answer file to Installer Directory
+  template: src="answer_war_setup.j2" dest="{{ mcs_server_dir }}/linux_a64/code/command/answer_war_setup.txt" mode=2777
+  tags: 
+     - deploy-war
+     - install-mcs
+     - install-mcsfx
+   
+- name: clean previous build
+  shell: rm -rf {{ build_dir }}/*
+  tags: 
+     - deploy-war
+     - install-mcs
+     - install-mcsfx
+
+- name: Executing the War Setup installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./war_setup.sh < answer_war_setup.txt
+  args:
+    chdir: /{{ mcs_server_dir }}/linux_a64/code/command
+  tags: 
+    - deploy-war
+    - install-mcs
+    - install-mcsfx
+   
+# Check Build was Successfull
+
+- name: Check Build Successfull
+  shell: cat {{ mcs_server_dir }}/logs/ematrixwar.log
+  register: build_result
+  tags: 
+     - deploy-war
+     - install-mcs
+     - install-mcsfx
+
+- fail: msg="Build Not Successfull"
+  when: "'Build Successfull' not in build_result.stdout"
+  tags: 
+     - deploy-war
+     - install-mcs
+     - install-mcsfx
+   
+- name: Remove the War Setup answer file
+  remote_user: "{{ plm_user }}"
+  file: path="{{ mcs_server_dir }}/linux_a64/code/command/answer_war_setup.txt" state=absent
+  tags: 
+    - deploy-war
+    - install-mcs
+    - install-mcsfx
+   
+
+# Remove temp and tomcat cache
+
+- name: Removing MCS's Temp..
+  command: rm -rf {{ mcs_instance_path }}/{{ item }}/temp/*
+  with_items: "{{ instances }}"
+  tags: 
+    - deploy-war
+    - install-mcs
+    - install-mcsfx
+
+- name: Removing MCS's Cache
+  command: rm -rf {{ mcs_instance_path }}/{{ item }}/work/*
+  with_items: "{{ instances }}"
+  tags: 
+     - deploy-war
+     - install-mcs
+     - install-mcsfx
+
+  
+# Deploy The War
+
+- name: deploy the enovia war
+  shell: cp "{{mcs_build}}" "{{mcs_instance_path}}/{{ item.key }}/webapps"  
+  delegate_to: "{{inventory_hostname}}"
+  with_dict: instances
+  tags: 
+     - deploy-war
+     - install-mcs
+     - install-mcsfx
+     
+- name: Restart Tomcat instances.
+  remote_user: monitor
+  sudo: true
+  command: service {{ item.key }} restart
+  with_dict: instances
+  tags: 
+   - deploy-war
+   - install-mcs
+   - install-mcsfx
+  
+   
+- name: wait for tomcat to start
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port={{ item.value.port_http }}
+      delay=60
+      timeout=240
+  with_dict: instances
+  tags: 
+     - deploy-war
+     - install-mcs
+     - install-mcsfx
+    
+    

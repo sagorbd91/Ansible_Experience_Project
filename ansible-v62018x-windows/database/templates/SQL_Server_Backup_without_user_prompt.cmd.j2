@@ -1,0 +1,10 @@
+@echo off
+
+set DBUser={{ db_user }}
+set DBPassword={{ db_password }}
+SET DBServerName={{ db_server_name }}
+SET DBName={{ db_name }}
+SET Backup_Path={{ db_backup_path }}
+
+
+sqlcmd -U %DBUser% -P %DBPassword% -S %DBServerName% -Q "BACKUP DATABASE %DBName% TO DISK = N'%Backup_Path%\%DBName%_{{ ansible_date_time.day }}-{{ ansible_date_time.month }}-{{ ansible_date_time.year }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}{{ ansible_date_time.second }}.bak' WITH COMPRESSION" 

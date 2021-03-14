@@ -1,0 +1,92 @@
+env_name: 'TEST1'
+
+
+is_fcsremote_proxy:
+
+mcs_cas_server: "http://lb-mcscas-{{ env_name }}-plm.valmet.com:18180/3DSpace"
+mcs_no_cas_server: "http://lb-unsecured-3dspace-{{ env_name }}-plm.valmet.com:18380/internal"
+fcs_central_server: "http://lb-fcscentral-{{ env_name }}-plm.valmet.com:18580/enoviafcs"
+fcs_remote_server1: "http://lb-fcsremote1-{{ env_name }}-plm.valmet.com:18680/enoviafcs"
+fcs_remote_server2: "http://lb-fcsremote2-{{ env_name }}-plm.valmet.com:18780/enoviafcs"
+passport_server: "http://i1-3dpassport-{{ env_name }}-plm.valmet.com:{{passport_tomcat_port}}/3DPassport/"
+common_dir: 'C:\plm\{{ env_name }}\common'
+where_to_install: 'C:\middleware\R2018X\Apache24'
+windows_tmp_path: 'C:\Temp'
+test_dir: '{{ windows_tmp_path }}\Extra'
+server_name: 'v0626a.vstage.co'
+
+http_port: "80"
+dashboard_proxy_port: '443'
+passport_proxy_port: "8280"
+comment_proxy_port: '8780'
+notification_proxy_port: '8880'
+passport_tomcat_port: "8281"
+mcs_proxy_port: '8180'
+mcs_cas_http_port: "8080"
+mcs_no_cas_http_port: "8380"
+fcs_central_http_port: "8580"
+fcs_remote_http_port1: "8680"
+fcs_remote_http_port2: "8780"
+fed_proxy_port: '8980'
+client_installer_http_port: "8282"
+
+
+passport_server_common_name: "3dpassport-{{ env_name }}-plm.valmet.com"
+comment_server_common_name: "3dcomment-{{ env_name }}-plm.valmet.com"
+dashboard_server_common_name: '3ddashboard-{{ env_name }}-plm.valmet.com'
+notifiacation_server_common_name: '3dnotification-{{ env_name }}-plm.valmet.com'
+mcs_server_common_name: '3dspace-{{ env_name }}-plm.valmet.com'
+swym_server_common_name: '3dswym-{{ env_name }}-plm.valmet.com'
+fcs_server_common_name: 'fcscentral-{{ env_name }}-plm.valmet.com'
+fed_server_common_name: 'federated-{{ env_name }}-plm.valmet.com'
+
+
+vhost_path: '{{ test_dir }}'
+#vhost_path: '{{ where_to_install }}\conf\extra'
+ssl_directory: '{{ where_to_install }}\conf\ssl'
+ssl_dir_dash: '{{ common_dir }}\cert\dash-cert'
+
+
+
+
+certificate_self: 'selfsign-18xdev2'
+certificate_fcs: 'fcscentral-18xdev2-plm.valmet.com'
+certificate_fed: 'selfsign-fedsearch'
+certificate_passport: '3dpassport-18xdev2-plm.valmet.com'
+certificate_mcs: '3dspace-18xdev2-plm.valmet.com'
+
+Swym_dir: 'C:\PLM\{{ env_name }}\3DSwym\Code\'
+Comment_dir: 'C:\PLM\{{ env_name }}\3DComment\CODE'
+Dash_dir: 'C:\PLM\{{ env_name }}\3DDashboard\Code'
+Notif_dir: 'C:\PLM\{{ env_name }}\3DNotification\Code'
+Pass_dir: 'C:\PLM\{{ env_name }}\3DPassport'
+Mcs_dir: 'C:\PLM\{{ env_name }}\3DSpace\Server'
+Fcs_dir: 'C:\PLM\{{ env_name }}\Fcscentral\Code'
+Fed_dir: 'C:\PLM\{{ env_name }}\FedSearch'
+
+
+#win_plm: 'C:\PLM'
+#win_templates: 'win_b64\templates'
+fragment_dir: '{{where_to_install}}\conf\extra\fragment'
+
+passport_instance_port: '8281'
+comment_instance_port: '8781'
+dashboard_instance_port: '8381'
+notification_instance_port: '9040'
+mcs_instance_port: '8181'
+swym_instance_port: '8481'
+fcs_instance_port: '8581'
+fed_instance_port: '8981'
+
+#Fragment variables
+CacheRoot_comment_dir: C:/PLM/DEV2/3DComment/Temp/cache/httpd
+CacheRoot_swym_dir: C:/PLM/DEV2/3DSwym/Temp/cache/httpd
+
+
+
+
+
+
+
+
+

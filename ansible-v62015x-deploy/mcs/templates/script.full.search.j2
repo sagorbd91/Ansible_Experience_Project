@@ -1,0 +1,27 @@
+#!/bin/sh
+
+cd {{ mcs_server_dir }}/scripts
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  verbose on;
+  upgrade;
+  set system searchindex file {{ mcs_config_xml }};
+  stop searchindex;
+  clear searchindex;
+  start searchindex mode FULL;
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  verbose on;
+  upgrade;
+  set system searchindex file {{ mcs_config_xml }};
+  stop searchindex;
+  clear searchindex;
+  start searchindex mode FULL;
+  quit;
+EOF
+fi

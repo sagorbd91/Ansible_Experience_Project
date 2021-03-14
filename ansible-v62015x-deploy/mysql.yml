@@ -1,0 +1,10 @@
+---
+
+- name: Install MySQL
+  hosts: mysql_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor
+  become: yes
+  roles:
+      - { role: mysql  }

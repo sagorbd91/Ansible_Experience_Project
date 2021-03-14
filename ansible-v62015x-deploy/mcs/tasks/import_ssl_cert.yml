@@ -1,0 +1,282 @@
+---
+
+  
+- name: Copy CA Certificate file if not exist
+  copy: src=valmet-ca.crt dest={{ mcs_conf_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  tags: 
+     - import-ca-crt
+     - post-task
+     
+
+- name: Check if CA Certificate file exist or not
+  stat: path="{{ mcs_conf_dir }}/valmet-ca.crt"
+  register: check_CA_crt_file
+  tags: 
+     - import-ca-crt
+     - post-task
+     
+- name: Copy ROOT Certificate file if not exist
+  copy: src=valmet-root.crt dest={{ mcs_conf_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  tags: 
+     - import-ca-crt
+     - post-task
+
+- name: Check if ROOT Certificate file exist or not
+  stat: path="{{ mcs_conf_dir }}/valmet-root.crt"
+  register: check_root_crt_file
+  tags: 
+     - import-ca-crt
+     - post-task
+  
+       
+- name: Delete CA Certificate to mcs java7 
+  shell: keytool -delete -storepass {{ ssl_cert_pass }} -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -alias "Valmet Issuing CA 1 Class 1"
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     #- delete-ca-crt
+     - post-task
+
+- name: Delete CA Certificate to mcs java8
+  shell: keytool -delete -storepass {{ ssl_cert_pass }} -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -alias "Valmet Issuing CA 1 Class 1"
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     #- delete-ca-crt
+     - post-task    
+
+- name: Delete ROOT Certificate to mcs java7 
+  shell: keytool -delete -storepass {{ ssl_cert_pass }} -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -alias "Valmet Root CA"
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - delete-ca-crt#
+     - post-task#
+
+- name: Delete ROOT Certificate to mcs java8
+  shell: keytool -delete -storepass {{ ssl_cert_pass }} -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -alias "Valmet Root CA"
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - delete-ca-crt#
+     - post-task#
+            
+- name: Import CA Certificate to mcs java7 
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file valmet-ca.crt -alias "Valmet Issuing CA 1 Class 1"
+  when: check_CA_crt_file.stat.exists == true
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - import-ca-crt
+     - post-task
+  
+- name: Import CA Certificate to mcs java8
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file valmet-ca.crt -alias "Valmet Issuing CA 1 Class 1"
+  when: check_CA_crt_file.stat.exists == true
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - import-ca-crt
+     - post-task
+
+- name: Import ROOT Certificate to mcs java7 
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file valmet-root.crt -alias "Valmet Root CA"
+  when: check_root_crt_file.stat.exists == true
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - import-ca-crt
+     - post-task
+  
+- name: Import ROOT Certificate to mcs java8
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file valmet-root.crt -alias "Valmet Root CA"
+  when: check_root_crt_file.stat.exists == true
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - import-ca-crt
+     - post-task
+
+
+# 3DPass CRT to MCS-java 
+- name: Check if 3dpass Certificate file exist or not
+  stat: path="{{ mcs_conf_dir }}/{{env_name}}-3dpass.crt"
+  register: check_pass_crt_file
+  tags: import-ssl-crt
+  
+- name: Copy 3dpass Certificate file if not exist
+  copy: src={{env_name}}-3dpass.crt dest={{ mcs_conf_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  when: check_pass_crt_file.stat.exists == false
+  tags: import-ssl-crt
+
+# MCS-java-7
+- name: Import 3dpass Certificate for java7 to the server
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file {{env_name}}-3dpass.crt -alias {{ ssl_pass_cert_alias }} 
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  when: check_pass_crt_file.stat.exists
+  tags: import-ssl-crt
+
+- name: Check if 3dpass Certificate for java7 imported successfully or not
+  shell: echo {{ ssl_cert_pass }} | keytool -list -v -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -alias {{ ssl_pass_cert_alias }}
+  register: check_pass_crt_imp
+  tags: import-ssl-crt
+  
+- name: Check if 3dpass Certificate for java7 imported successfully or not
+  debug: msg="3dpass Certificate for java7 imported successfully"
+  when: check_pass_crt_imp.stdout.find('Valid from') != -1
+  tags: import-ssl-crt
+
+# MCS-java-8
+- name: Import 3dpass Certificate for java8 to the server
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file {{env_name}}-3dpass.crt -alias {{ ssl_pass_cert_alias }} 
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  when: check_pass_crt_file.stat.exists
+  tags: import-ssl-crt
+
+- name: Check if 3dpass Certificate for java8 imported successfully or not
+  shell: echo {{ ssl_cert_pass }} | keytool -list -v -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -alias {{ ssl_pass_cert_alias }}
+  register: check_pass_crt_imp
+  tags: import-ssl-crt
+  
+- name: Check if 3dpass Certificate for java8 imported successfully or not
+  debug: msg="3dpass Certificate for java8 imported successfully"
+  when: check_pass_crt_imp.stdout.find('Valid from') != -1
+  tags: import-ssl-crt
+
+
+# 3DSpace CRT to MCS-java   
+- name: Check if mcs Certificate file exist or not
+  stat: path="{{ mcs_conf_dir }}/{{env_name}}-3dspace.crt"
+  register: check_mcs_crt_file
+  tags: import-ssl-crt
+  
+- name: Copy mcs Certificate file if not exist
+  copy: src={{env_name}}-3dspace.crt dest={{ mcs_conf_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  when: check_mcs_crt_file.stat.exists == false
+  tags: import-ssl-crt
+  
+# MCS-java-7 
+- name: Import mcs Certificate for java7 to the server
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file {{env_name}}-3dspace.crt -alias {{ ssl_mcs_cert_alias }} 
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  when: check_mcs_crt_file.stat.exists
+  tags: import-ssl-crt
+  
+- name: Check if mcs Certificate for java7 imported successfully or not
+  shell: echo {{ ssl_cert_pass }} | keytool -list -v -keystore "{{ ssl_keystore_path_java7 }}/cacerts" -alias {{ ssl_mcs_cert_alias }}
+  register: check_mcs_crt_imp
+  tags: import-ssl-crt
+  
+- name: Check if mcs Certificate for java7 imported successfully or not
+  debug: msg="mcs Certificate for java7 imported successfully"
+  when: check_mcs_crt_imp.stdout.find('Valid from') != -1
+  tags: import-ssl-crt
+
+# MCS-java-8  
+- name: Import mcs Certificate for java8 to the server
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file {{env_name}}-3dspace.crt -alias {{ ssl_mcs_cert_alias }} 
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  when: check_mcs_crt_file.stat.exists
+  tags: import-ssl-crt
+  
+- name: Check if mcs Certificate for java8 imported successfully or not
+  shell: echo {{ ssl_cert_pass }} | keytool -list -v -keystore "{{ ssl_keystore_path_java8 }}/cacerts" -alias {{ ssl_mcs_cert_alias }}
+  register: check_mcs_crt_imp
+  tags: import-ssl-crt
+  
+- name: Check if mcs Certificate for java8 imported successfully or not
+  debug: msg="mcs Certificate for java8 imported successfully"
+  when: check_mcs_crt_imp.stdout.find('Valid from') != -1
+  tags: import-ssl-crt 
+  
+
+# 3DDash CRT to MCS-java  
+- name: Check if 3DDash Certificate file exist or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{mcs_conf_dir}}/{{env_name}}-3ddash.crt"
+  register: check_dash_crt_file
+  tags: 
+     - import-dashproxy-crt
+     - import-dash-crt
+  
+- name: Copy 3DDash Certificate file if not exist
+  remote_user: "{{ plm_user }}"
+  copy: src={{env_name}}-3ddash.crt dest={{ mcs_conf_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  when: check_dash_crt_file.stat.exists == false
+  tags: 
+     - import-dashproxy-crt
+     - import-dash-crt
+   
+- name: Import 3DDash Certificate to the server
+  remote_user: "{{ plm_user }}"
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file {{env_name}}-3ddash.crt -alias {{ ssl_dash_cert_alias }} 
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - import-dashproxy-crt
+     - import-dash-crt
+  
+- name: Check if 3DDash Certificate imported successfully or not
+  remote_user: "{{ plm_user }}"
+  shell: echo {{ ssl_cert_pass }} | keytool -list -v -keystore "{{ ssl_keystore_path }}/cacerts" -alias {{ ssl_dash_cert_alias }}
+  register: check_dash_crt_imp
+  tags: 
+     - import-dashproxy-crt
+     - import-dash-crt
+  
+- name: Check if 3DDash Certificate imported successfully or not
+  remote_user: "{{ plm_user }}"
+  debug: msg="3DDash Certificate imported successfully"
+  when: check_dash_crt_imp.stdout.find('Valid from') != -1
+  tags: 
+     - import-dashproxy-crt
+     - import-dash-crt
+
+
+# 3DDash-instance CRT to MCS-java  
+- name: Check if 3DDash-instance Certificate file exist or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{mcs_conf_dir}}/{{env_name}}-dashinstance.crt"
+  register: check_dashinstance_crt_file
+  tags: 
+     - import-dashinstance-crt
+     - import-dash-crt
+  
+- name: Copy 3DDash-instance Certificate file if not exist
+  remote_user: "{{ plm_user }}"
+  copy: src={{env_name}}-dashinstance.crt dest={{ mcs_conf_dir }}/ owner={{ plm_user }} group={{ plm_group }} mode=0755
+  when: check_dashinstance_crt_file.stat.exists == false
+  tags: 
+     - import-dashinstance-crt
+     - import-dash-crt
+   
+- name: Import 3DDash-instance Certificate to the server
+  remote_user: "{{ plm_user }}"
+  shell: keytool -importcert -keystore "{{ ssl_keystore_path }}/cacerts" -noprompt -storepass {{ ssl_cert_pass }} -file {{env_name}}-dashinstance.crt -alias {{ ssl_dashinstance_cert_alias }} 
+  args:
+    chdir: /{{ mcs_conf_dir }}
+  tags: 
+     - import-dashinstance-crt
+     - import-dash-crt
+  
+- name: Check if 3DDash-instance Certificate imported successfully or not
+  remote_user: "{{ plm_user }}"
+  shell: echo {{ ssl_cert_pass }} | keytool -list -v -keystore "{{ ssl_keystore_path }}/cacerts" -alias {{ ssl_dashinstance_cert_alias }}
+  register: check_dashinstance_crt_imp
+  tags: 
+     - import-dashinstance-crt
+     - import-dash-crt
+  
+- name: Check if 3DDash-instance Certificate imported successfully or not
+  remote_user: "{{ plm_user }}"
+  debug: msg="3DDash-instance Certificate imported successfully"
+  when: check_dashinstance_crt_imp.stdout.find('Valid from') != -1
+  tags: 
+     - import-dashinstance-crt
+     - import-dash-crt
+
+  

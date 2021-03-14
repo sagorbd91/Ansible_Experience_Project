@@ -1,0 +1,11 @@
+#!/bin/bash
+
+today=$(date +'%Y%m%d')
+get_log_msg=$(tail -n5 {{ mcs_log_dir }}/fts-cron/partial_index_status_$(date +'%Y%m%d').log | grep -o "An indexing operation is already running on vault 'vplm'")
+index_running_msg="An indexing operation is already running on vault 'vplm'"
+
+if [[ ( "$get_log_msg" == "$index_running_msg" ) || ( "$get_log_msg" == *"No such file or directory"* ) ]]; then
+echo problem
+else
+echo running
+fi

@@ -1,0 +1,31 @@
+--- 
+    
+- name: Copy script.compile.mcs.mql.j2 in scripts
+  template: src="script.compile.mcs.mql.j2" dest="{{ mcs_bin_dir }}/mcs_mql_compile.sh" mode=0755
+  tags: 
+     - compile-codefx
+     - install-mcsfx
+     
+- name: Execute the 3mcs_mql_compile.sh update script
+  shell: ./mcs_mql_compile.sh true > mcs_mql_compile_update.log 2>&1
+  args:
+    chdir: /{{ mcs_bin_dir }}
+  tags: 
+     - compile-codefx
+     - install-mcsfx
+
+
+- name: Check Compile Successfull
+  shell: cat {{ mcs_bin_dir }}/mcs_mql_compile_update.log
+  register: build_result
+  tags: 
+    - compile-codefx
+    - install-mcsfx
+
+
+- fail: msg="Compile Not Successfull"
+  when: "'Compile error' in build_result.stdout"
+  tags: 
+     - compile-codefx
+     - install-mcsfx
+

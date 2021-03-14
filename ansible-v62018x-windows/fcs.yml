@@ -1,0 +1,9 @@
+---
+
+- name: Install fcs
+  hosts: fcs_servers
+  vars_files:
+      - fcs/vars/main.yml
+      - fcs/vars/{{ env_name }}.yml
+  roles:
+    - fcs

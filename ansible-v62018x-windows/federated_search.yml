@@ -1,0 +1,10 @@
+---
+
+- name: Install federated search
+  hosts: federated_search_servers
+  vars_files:
+    - federated_search/vars/main.yml
+    - federated_search/vars/{{ env_name }}.yml
+  roles:
+    - federated_search
+    

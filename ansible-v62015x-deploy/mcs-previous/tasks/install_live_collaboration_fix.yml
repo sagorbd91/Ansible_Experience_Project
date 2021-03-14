@@ -1,0 +1,27 @@
+---
+
+- name: Copy the Live Collaboration Server Fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_serverfx.j2" dest="{{ mcs_fp_installer }}/ENOVIALiveCollaborationServer.Linux64/1/answer_serverfx.txt" mode=2777
+  tags: 
+   - install-mcsfx
+   - install-serverfx
+
+- name: Executing the Live Collaboration Server Fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh < answer_serverfx.txt
+  args:
+    chdir: /{{ mcs_fp_installer }}/ENOVIALiveCollaborationServer.Linux64/1
+  tags: 
+   - install-mcsfx
+   - install-serverfx
+   
+
+- name: Remove the Live Collaboration Server Fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_fp_installer }}/ENOVIALiveCollaborationServer.Linux64/1/answer_serverfx.txt" state=absent
+  tags: 
+   - install-mcsfx
+   - install-serverfx

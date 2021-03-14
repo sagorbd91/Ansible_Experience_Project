@@ -1,0 +1,37 @@
+<VirtualHost *:{{ fcs_remote_http_port2 }}>
+ServerName {{ fcs_remote_common_name2 }}
+ServerAlias {{ fcs_remote_common_name2 }}
+ErrorLog logs/{{ env_name }}-fcs-remote2_error_log
+TransferLog logs/{{ env_name }}-fcs-remote2_access_log
+LogLevel warn
+SSLEngine on
+SSLProxyEngine On
+SSLProtocol all -SSLv2 -SSLv3
+SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+####To adapt####
+SSLCertificateFile {{ ssl_directory }}/{{ fcsremote_crt2 }}.crt
+SSLCertificateKeyFile  {{ ssl_directory }}/{{ fcsremote_crt2 }}.key
+####End to adapt####
+<Files ~ "\.(cgi|shtml|phtml|php3?)$">
+        SSLOptions +StdEnvVars
+</Files>
+SetEnvIf User-Agent ".*MSIE.*" \
+nokeepalive ssl-unclean-shutdown \
+downgrade-1.0 force-response-1.0
+CustomLog logs/ssl_request_log \
+"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+<Location ~ \.eot$>
+        Header unset Cache-Control
+        Header unset Pragma
+</Location>
+#Proxy conf
+        ProxyPass /enoviafcs {{ fcs_remote_server2 }} connectiontimeout=300 timeout=300
+        ProxyPassReverse /enoviafcs {{ fcs_remote_server2 }}
+#CORS directives
+#REGEXP to customize
+        Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+        Header set Access-Control-Allow-Credentials "true"
+        Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+        Header set Access-Control-Allow-Headers "accept, x-requested-method, origin, x-requested-with, x-request"
+</VirtualHost>
+

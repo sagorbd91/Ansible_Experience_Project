@@ -1,0 +1,29 @@
+---
+
+- name: Copy input command file to temp
+  template: src="templates/creo_input.in.j2" dest="{{windows_tmp_path}}\creo_input.in"
+  force: yes
+  tags: 
+     - install-creo-ga
+     
+- name: Copy executable bat file to temp
+  template: src="templates/install_creo_batch.bat.j2" dest="{{windows_tmp_path}}\install_creo_batch.bat"
+  tags: 
+     - install-creo-ga
+
+- name: Copy Creo ga installer from source to temp
+  win_copy:
+    src: '{{ installer_creo }}\'
+    dest: '{{ windows_tmp_path }}\creo\'
+    remote_src: True
+  tags: 
+     - install-creo-ga
+
+
+- name: Execute mql commands
+  win_command: '{{ windows_tmp_path }}\install_creo_batch.bat'
+  
+  elevated: yes      
+  tags: 
+     - install-creo-ga
+     - execute-creo-cmd

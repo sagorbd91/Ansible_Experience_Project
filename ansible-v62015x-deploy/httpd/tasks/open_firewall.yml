@@ -1,0 +1,54 @@
+---
+
+- name: Allow http ports in iptable rules of http on  Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ http_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+   
+- name: Allow http ports in iptable rules of SSL on  Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ http_ssl_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+   
+- name: Allow http ports in iptable rules of mcs nocas on Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ mcs_no_cas_http_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+
+- name: Allow http ports in iptable rules of mcs cas on Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ mcs_cas_http_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+      
+- name: Allow http ports in iptable rules of passport on Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ passport_proxy_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+   
+- name: Allow http ports in iptable rules of passport on Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ passport_tomcat_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+      
+- name: Allow http ports in iptable rules of fcs on  Reverse Proxy Server
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ fcs_central_http_port }} -j ACCEPT
+  tags:
+   - config-firewall
+   - install-reverseproxy
+
+   
+- name: Save iptables
+  command: service iptables save
+  tags:
+   - config-firewall
+   - install-reverseproxy
+   
+
+
+

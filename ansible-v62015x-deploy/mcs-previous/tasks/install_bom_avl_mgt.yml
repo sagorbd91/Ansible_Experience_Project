@@ -1,0 +1,38 @@
+---
+ 
+- name: Copy the EBOMAVL Management Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_bom_avl_mgt.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAEBOMAVLManagement.Unix64/1/answer_bom_avl_mgt.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-bomavlmgt
+    - install-mcs
+   
+- name: Copy the EBOMAVL Management Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_bom_avl_mgt_nudb.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAEBOMAVLManagement.Unix64/1/answer_bom_avl_mgt.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-bomavlmgt
+     - install-mcs
+
+- name: Executing the EBOMAVL Management installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_bom_avl_mgt.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIAEBOMAVLManagement.Unix64/1
+  tags: 
+     - install-bomavlmgt
+     - install-mcs
+   
+
+- name: Remove the EBOMAVL Management Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIAEBOMAVLManagement.Unix64/1/answer_bom_avl_mgt.txt" state=absent
+  tags: 
+     - install-bomavlmgt
+     - install-mcs
+

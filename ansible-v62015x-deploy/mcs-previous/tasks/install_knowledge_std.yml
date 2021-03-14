@@ -1,0 +1,49 @@
+---
+
+- name: create the kwd dir for Knowledge Standardization or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_kwd_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2755
+  tags: 
+     - install-knowstd
+     - install-mcs
+   
+- name: Copy the Knowledge Standardization Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_know_std.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAKnowledgeStandardization.Unix64/1/answer_know_std.txt" mode=2777
+  when: update_database
+  tags: 
+     - install-knowstd
+     - install-mcs
+   
+   
+- name: Copy the Knowledge Standardization Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_know_std_nudb.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAKnowledgeStandardization.Unix64/1/answer_know_std.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-knowstd
+     - install-mcs
+
+- name: Executing the Knowledge Standardization installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_know_std.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIAKnowledgeStandardization.Unix64/1
+  tags: 
+     - install-knowstd
+     - install-mcs
+   
+   
+- name: Remove the Knowledge Standardization Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIAKnowledgeStandardization.Unix64/1/answer_know_std.txt" state=absent
+  tags: 
+     - install-knowstd
+     - install-mcs
+
+
+

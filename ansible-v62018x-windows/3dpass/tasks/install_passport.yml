@@ -1,0 +1,30 @@
+---
+
+- name: Copy passport-ga userintention file to target
+  template: src="templates/UserIntentions_GA.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_Pass_ga.xml"
+  tags: install-passport-ga
+ 
+- name: Copy passport-ga installer from NFS to local
+  win_copy:
+    src: '{{ passport_installer_path_ga }}'
+    dest: '{{ windows_tmp_path }}\Passport'
+    remote_src: True
+  tags: install-passport-ga   
+
+- name: Executing ga installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\Passport\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_Pass_ga.xml --xmlreport {{ windows_tmp_path }}\report_passport_ga.xml'
+     elevated: yes
+  tags: install-passport-ga
+
+- name: Remove the user Intension file of passport-ga
+  win_file: path="{{windows_tmp_path}}\UserIntentions_Pass_ga.xml" state=absent
+  tags: install-passport-ga
+
+- name: Remove the installer folder of passport-ga
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags: install-passport-ga
+
+- name: varify all variable
+  debug: msg="{{ installation_path_pass }}"
+  tags: testest

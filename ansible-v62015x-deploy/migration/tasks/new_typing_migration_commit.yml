@@ -1,0 +1,15 @@
+---
+    
+- name: Run the emxNewTypingMigrationProgram script for committing ALL step
+  shell: nohup time ./mql -c "set context user creator password creator.; exec prog emxNewTypingMigrationProgram -dir {{r15x_newtype_log_dir_notall}} -step All -commit;quit;" 2>&1 >{{r15x_server_dir}}/logs/Migration-fp1616/follow-full-migration-NT.txt &
+  args:
+    chdir: /{{ r15x_server_script_dir }}
+  tags:
+   - new_typing_migration-commit
+
+- name: Run the newtyping clean part with commit option
+  shell: nohup time ./mql -c "set context user creator password creator.; exec prog emxNewTypingMigrationProgram -dir {{r15x_newtype_log_dir_notall}} -clean -commit;quit;" 2>&1 >{{r15x_server_dir}}/logs/Migration-fp1616/follow-full-migration-NT-clean.txt &
+  args:
+    chdir: /{{ r15x_server_script_dir }}
+  tags:
+   - new_typing_migration-clean-commit

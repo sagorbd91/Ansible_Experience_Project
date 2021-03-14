@@ -1,0 +1,27 @@
+---
+
+- name: Copy ga UserIntention file to target
+  template: src="templates/UserIntentions_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_Notific_ga.xml"
+  tags: install-notification-ga
+ 
+- name: Copy ga installer from NFS to local
+  win_copy:
+    src: '{{ notification_installer_path_ga }}'
+    dest: '{{ windows_tmp_path }}\3DNotification'
+    remote_src: True
+  tags: install-notification-ga   
+
+- name: Executing notification-ga installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\3DNotification\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_Notific_ga.xml --xmlreport {{ windows_tmp_path }}\report_notification_ga.xml'
+     elevated: yes
+  tags: install-notification-ga
+
+- name: Remove the user Intension file of notification-ga
+  win_file: path="{{windows_tmp_path}}\UserIntentions_Notific_ga.xml" state=absent
+  tags: install-notification-ga
+
+- name: Remove the installer folder of notification-ga
+  win_file: path="{{windows_tmp_path}}\3DNotification" state=absent
+  tags: install-notification-ga
+

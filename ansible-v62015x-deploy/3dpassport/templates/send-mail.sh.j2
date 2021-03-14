@@ -1,0 +1,7 @@
+#!/bin/bash
+
+while IFS= read -r user || [[ -n "$user" ]];
+do
+get_mail_id=`echo $user | cut -d, -f2 | cut -d= -f2`
+cat mail-body.txt | mail -s "3DPassport" -r "3DPassport<test-admin.plm@valmet.com>" $get_mail_id
+done < imported_user_success.txt

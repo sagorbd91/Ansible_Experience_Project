@@ -1,0 +1,7 @@
+- name: Creating service specific user
+  hosts: user_creation_servers
+  vars_files:
+      - user_creation/vars/main.yml
+      - user_creation/vars/{{ env_name }}.yml
+  roles:
+    - user_creation

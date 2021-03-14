@@ -1,0 +1,37 @@
+@echo off
+setlocal EnableExtensions
+
+For /f "tokens=2-4 delims=/ " %%a in ('date /t') do (set mydate=%%c%%a%%b)
+For /f "tokens=1-2 delims=/:" %%a in ("%TIME%") do (set mytime=%%a%%b)
+
+{% set dbCreatedFor = create_database_for %}
+{% if dbCreatedFor == 'passport' %}
+sqlcmd -S {{ servername }} -i {{ script_dump_location }}\3DPassport.sql -v dbname={{ passport_app_database }} -v dbname1={{ passport_token_database }}  -v schema={{ passport_app_schema }} -v schema1={{ passport_token_schema }} -v pasword1={{ passport_password_x3dpass }}  -v pasword2={{ passport_password_x3dpassadmin }} -v pasword3={{ passport_password_x3dpasstokens }} -o {{ script_dump_location }}\logs\3DPassport_%mydate%.log
+{% else %}
+{% if dbCreatedFor == 'space' %}
+sqlcmd -S {{ servername }} -i {{ script_dump_location }}\3DSpace.sql -v dbname={{ space_database }} -v schema={{ space_schema }} -v dbdirectory="{{ space_db_directory }}" -v pasword1={{ space_pass_m1 }} -o {{ script_dump_location }}\logs\3DSpace_%mydate%.log
+{% else %}
+{% if dbCreatedFor == 'dashboard' %}
+sqlcmd -S {{ servername }} -i {{ script_dump_location }}\3Dashboard.sql -v dbname={{ dashboard_database }}  -v schema={{ dashboard_schema }} -v pasword1={{ dashboard_login_pass1 }}  -v pasword2={{ dashboard_admin_pass2 }} -o {{ script_dump_location }}\logs\3DDashboard_%mydate%.log
+{% else %}
+{% if dbCreatedFor == 'swym' %}
+sqlcmd -S {{ servername }} -i {{ script_dump_location }}\3DSwym.sql -v dbname={{ swym_social_database }} -v dbname1={{ swym_media_database }} -v dbname2={{ swym_widget_database }} -v schema={{ swym_social_schema }} -v schema1={{ swym_media_schema }} -v schema2={{ swym_widget_schema }} -v pasword1={{ swym_login_pass1 }}  -v pasword2={{ swym_admin_pass2 }}  -o {{ script_dump_location }}\logs\3DSwym_%mydate%.log
+{% else %}
+{% if dbCreatedFor == 'comment' %}
+sqlcmd -S {{ servername }} -i {{ script_dump_location }}\3DComment.sql -v dbname={{ comment_database }}  -v schema={{ comment_schema }} -v pasword1={{ comment_login_pass1 }}  -v pasword2={{ comment_admin_pass2 }} -o {{ script_dump_location }}\logs\3DComment_%mydate%.log
+{% else %}
+{% if dbCreatedFor == 'notification' %}
+sqlcmd -S {{ servername }} -i {{ script_dump_location }}\3DNotification.sql -v dbname={{ notification_database }}  -v schema={{ notification_schema }} -v pasword1={{ notification_login_pass1 }}  -v pasword2={{ notification_admin_pass2 }} -o {{ script_dump_location }}\logs\3DNotificaton_%mydate%.log
+{% else %}
+{% if dbCreatedFor == 'orchestrate' %}
+sqlcmd -S {{ servername }} -i {{ script_dump_location }}\3DOrchestrate.sql -v dbname={{ orchestrate_database }} -v dbdirectory="{{ orchestrate_db_directory }}" -v pasword1={{ orchestrate_pass1 }} -o {{ script_dump_location }}\logs\3DOrchestrate_%mydate%.log
+{% else %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+
+pause

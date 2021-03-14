@@ -1,0 +1,9 @@
+home_dir: "/plm/{{env_name}}/homes" 
+group_name: 
+user_name: 
+user_pass: 
+is_sudo: 
+user_passlesskey: true
+exp_days: 
+access_mode: 0755
+pub_key_store_path: "/home/users/as_user/.ssh/id_rsa.pub"

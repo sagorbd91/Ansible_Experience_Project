@@ -1,0 +1,27 @@
+---
+
+   
+- name: Copy the CAD Design Foundation fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_caddes_foundationfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAX-CADDesignFoundation.Unix64/1/answer_caddes_foundationfx.txt" mode=2777
+  tags: 
+     - install-caddesignfx
+     - install-mcsfx
+
+- name: Executing the CAD Design Foundation fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_caddes_foundationfx.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAX-CADDesignFoundation.Unix64/1
+  tags: 
+     - install-caddesignfx
+     - install-mcsfx
+
+- name: Remove the CAD Design Foundation fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/apps/ENOVIAX-CADDesignFoundation.Unix64/1/answer_caddes_foundationfx.txt" state=absent
+  tags:  
+     - install-caddesignfx
+     - install-mcsfx

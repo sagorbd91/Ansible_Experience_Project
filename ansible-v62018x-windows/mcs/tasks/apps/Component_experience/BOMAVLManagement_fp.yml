@@ -1,0 +1,34 @@
+---
+
+- name: Copy BOM_AVL FP Apps UserIntention file to target
+  template: src="templates/user_intention_apps/fp/UserIntentions_Component_exp_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_Component_exp_fp.xml"
+  tags: 
+     - install-app-fp
+     - component-exp-fp
+
+- name: Copy BOM_AVL FP Apps installer from NFS to local
+  win_copy:
+    src: '{{ apps_FP_installer_path }}\ENOVIAEBOMAVLManagement.Windows64\1'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: 
+     - install-app-fp
+     - component-exp-fp
+  
+- name: Executing BOM_AVL FP Apps installation on target
+  win_command: '{{windows_tmp_path}}\1\StartTUI.exe -installerPath {{ds_fp_installer_path}} --silent {{windows_tmp_path}}\UserIntentions_Component_exp_fp.xml --xmlreport {{windows_tmp_path}}\Report_comp_exp_FP.xml'
+  tags: 
+     - install-app-fp
+     - component-exp-fp
+
+- name: Removing the user Intension file for BOM_AVL FP Apps from traget
+  win_file: path="{{windows_tmp_path}}\UserIntentions_Component_exp_fp.xml" state=absent
+  tags: 
+     - install-app-fp
+     - component-exp-fp
+     
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags: 
+     - install-app-fp
+     - component-exp-fp

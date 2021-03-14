@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Media mediaLevel="420" mediaName="CODE\win_b64\X3D_PASS.media\media">
+	<SetVariable name="Java@jdk">
+		<SetJavaPath value="{{ Java_Path }}"/>
+	</SetVariable>
+	<SetVariable name="installEmbeddedServerJRE">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="install_Embedded_TomEE">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="TomEEConnectionPort">
+		<SetPort value="{{ passport_instance_port }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLURL_HOST_AND_PORT">
+		<SetText value="{{ passport_database_host_port }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLURL_SCHEMA">
+		<SetText value="{{ passport_database }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLUserAdmin">
+		<SetText value="{{ passport_database_user_admin }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLPasswordAdmin">
+		<SetText value="{{ passport_database_user_admin_password }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLUser">
+		<SetText value="{{ passport_database_user }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLPassword">
+		<SetText value="{{ passport_database_user_password }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLURLCas_HOST_AND_PORT">
+		<SetText value="{{ passport_token_database_host_port }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLURLCas_SCHEMA">
+		<SetText value="{{ passport_token_database }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLUserCas">
+		<SetText value="{{ passport_token_database_user }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_SQLPasswordCas">
+		<SetText value="{{ passport_token_database_user_password }}"/>
+	</SetVariable>
+	<SetVariable name="PASS_MSSQL_DatabaseConnectionCheck">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DPassportURL">
+		<SetText value="{{ X3DCSMA_3DPassportURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DCompassURL">
+		<SetText value="{{ X3DCSMA_3DSpaceURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_SMTP_HOST">
+		<SetText value="{{ smtp_host }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_SMTP_MAIL_SENDER">
+		<SetText value="{{ smtp_mail_sender }}"/>
+	</SetVariable>
+	<SetVariable name="ForceLowerCase">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="DatabaseType"/>
+	<SetVariable name="DatabaseType?oracle">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="DatabaseType?sqlserver">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="AdminPlatformEmail">
+		<SetText value="{{ admin_platform_email }}"/>
+	</SetVariable>
+	<SetVariable name="AdminPlatformPassword">
+		<SetText value="{{ admin_platform_password }}"/>
+	</SetVariable>
+	<SetVariable name="TARGET_PATH">
+		<SetPath value="{{ installation_path_pass }}"/>
+	</SetVariable>
+	<SetVariable name="FinishPanel"/>
+	<SetVariable name="DSYWelcomePanel">
+        <SetWelcome value="true"/>
+	</SetVariable>
+</Media>

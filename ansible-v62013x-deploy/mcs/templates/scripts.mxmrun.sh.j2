@@ -1,0 +1,198 @@
+#!/bin/ksh
+# COPYRIGHT 2008 DASSAULT SYSTEMES 
+
+# Source the mxEnv.sh shell for environment variable definitions
+. /plm/{{ env_name }}/mcs/code/scripts/mxEnv.sh
+
+usage(){
+	print "USAGE: mxmrun.sh [options] [-cp JAR:[JAR]*] [-nowindow] [-verbose] main-lib class [argument ...]"
+	print "  [options]"
+	print "    List of -DpropertyName=propertyValue arguments"
+	print "    Used to define system properties for the Java program to launch"
+	print "  [-cp JAR[:JAR]*]"
+	print "    Prefix the given comma-separated list of JAR files (given with their absolute path) to the"
+	print "    CLASSPATH taken into account by the launcher."
+	print "  [-nowindow]"
+	print "    Avoid a command prompt window to appear"
+	print "  [-verbose]"
+	print "    Print verbose information"
+	print "  main-lib"
+	print "    Name of the JAR containing the managed class to be invoked"
+	print "    Do not specify file extension (.jar)"
+	print "  class"
+	print "    Name of the class to be invoked. A fully-qualified class name must be used"
+	print "  [argument ...]"
+	print "    List of arguments to be passed to the Java program"
+	print "NOTE: do not put any option dedicated to Java Virtual Machine parameters, like"
+	print " -Xmx. If such an option is needed, use MXMRUN_JAVAOPTS environment variable:"
+	print "    export MXMRUN_JAVAOPTS=\"-Xms64m -Xmx512m\""
+	print "The content of MXMRUN_JAVAOPTS is added to the options of the JVM used to start"
+	print "the Java program"
+}
+
+# Make sure MATRIXINSTALL variable is set
+if [ "$MATRIXINSTALL" == "" ]; then
+	print "ERROR: missing MATRIXINSTALL variable from mxEnv.sh file or from environment"
+	exit 1
+fi
+
+
+# Parse optional -Dname=value arguments
+fullopts=""
+nowindow=0
+for  arg;do
+	if [[ $arg = -D* ]]; then
+		fullopts=${fullopts}" "${arg}
+        elif [[ $arg = -cp ]]; then
+                shift
+                if [[ $# -eq 0 ]];then
+                        print "ERROR: Missing argument after -cp option"
+                        usage
+                        exit 1
+                fi
+                case "$1" in -*)
+                        print "ERROR: Missing JAR after -cp option"
+                        usage
+                        exit 1
+                esac
+                fullopts=${fullopts}" -DENOJsyLoaderPreload="${1}
+	elif [[ $arg = -verbose ]]; then
+		verbose=1
+	elif [[ $arg = -nowindow ]]; then
+		nowindow=1
+	elif [[ $arg = -* ]]; then
+		print "ERROR: option ${arg} not allowed. If you need to set JVM options, use MXMRUN_JAVAOPTS instead"
+		usage
+		exit 1
+	else
+		break
+	fi
+	shift
+done
+
+
+# Try to locate enovia.install
+if [[ -f "$MATRIXINSTALL""/enovia.install" ]]; then
+	enoviaInstall="$MATRIXINSTALL""/enovia.install"
+	. "$enoviaInstall"
+	if [ "$verbose" == "1" ]; then 
+		print "INFO: found ENOVIA install configuration file: " "$enoviaInstall"
+	fi
+else
+	if [ "$verbose" == "1" ]; then 
+		print "WARNING: missing enovia.install file in directory: " "$MATRIXINSTALL"
+	fi
+fi
+
+
+
+# Check and read library name
+if [[ $# -eq 0 ]];then
+   print "ERROR: missing library name argument for mxmrun.sh"
+   usage
+   exit 1
+fi
+libName=${1}".jar"
+shift
+
+# Check and read main class name
+if [[ ${1} = -* ]]; then
+   print "ERROR: missing class name argument for mxmrun.sh, got option ${1} instead of class name."
+   usage
+   exit 1
+fi
+if [[ $# -eq 0 ]];then
+   print "ERROR: missing class name argument for mxmrun.sh"
+   usage
+   exit 1
+fi
+className=${1}
+shift
+
+# Add MXMRUN_JAVAOPTS to arguments list
+if [ "$MXMRUN_JAVAOPTS" != "" ]; then
+	fullopts=${fullopts}" "${MXMRUN_JAVAOPTS}
+fi
+
+# Add the main class option
+fullopts=${fullopts}" -DENOLoaderMainClass="${className}
+
+# Find Java pathes
+if [ "$enoviaInstall" == "" ]; then
+	webinfDir="${MATRIXINSTALL}""/STAGING/ematrix/WEB-INF"
+	javalibDir="${MATRIXINSTALL}""/java/lib"
+else
+	webinfDir="$STAGING_PATH""/WEB-INF"
+	javalibDir="$JAVA_SERVER_PATH"
+fi
+
+
+
+# MKMK-like file layout support
+if [[ "$javalibDir" = *javaserver ]]; then
+  fullopts=${fullopts}" -DENOrtvType=MKMK"
+  enovia_install=`echo $javalibDir|sed 's#/docs/javaserver$##'`
+  fullopts=${fullopts}" -DENOVIA_INSTALL="${enovia_install}
+else 
+  fullopts=${fullopts}" -DENOVIA_INSTALL="${MATRIXINSTALL}
+fi
+
+# Add optional verbose mode
+if [ "$verbose" != "" ]; then 
+  fullopts=${fullopts}" -DENOLoaderVerbose=true"
+fi
+
+# Add bit mode, this shell is for 64-bit media
+fullopts=${fullopts}" -DENOLoaderBitMode=64 -d64 "
+
+# Add checker mode
+fullopts=${fullopts}" -DENOLoaderCheckPreq=true"
+
+# Checks library path
+libNamePath=${javalibDir}"/"${libName}
+if [ ! -f ${libNamePath} ]; then
+   libNamePath2=${webinfDir}"/lib/"${libName}
+   if [ ! -f ${libNamePath2} ]; then
+      print "ERROR: missing library file: ${libNamePath}"
+      usage
+      exit 1
+   fi
+fi
+
+
+
+# Add the ENOVIA JAR Starter and libName to classpath definition and class name
+enoJarStarterPath=${javalibDir}"/ENOSysJarStarter.jar"
+fullopts=${fullopts}" -cp "${enoJarStarterPath}" com.dassault_systemes.enosysteminfra.enosysjarstarter.JarStarter"
+
+# Add the remaining arguments
+for  arg;do
+	fullopts="${fullopts} \"$1\""
+	shift
+done
+
+# Clear existing CLASSPATH to avoid any side-effect from caller.
+export CLASSPATH=
+
+# Launch the java command which is supposed to be at appropriate from PATH set by mxEnv.sh
+if [ "$nowindow" == "1" ]; then
+	JAVAPATH=`which javaw`
+else
+	JAVAPATH=`which java`
+fi
+if [ "$JAVAPATH" == "" ]; then
+	print "ERROR: missing java executable in PATH defined by mxEnv.sh file or from environment"
+	exit 1
+fi
+
+if [ "$verbose" == "1" ]; then 
+  print "INFO: about to start the following process: ${JAVAPATH} ${fullopts}"
+fi
+eval exec ${JAVAPATH} "${fullopts}"
+rc=$?
+
+if [ "$verbose" == "1" ]; then 
+	print "INFO: java return code=$rc"
+fi
+
+exit $rc

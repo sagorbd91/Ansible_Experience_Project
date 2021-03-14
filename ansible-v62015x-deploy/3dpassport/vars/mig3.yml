@@ -1,0 +1,83 @@
+
+plm_user: "plmm3pa"
+plm_group: "plm"
+
+has_plm_volume: yes
+
+# Instalation paths
+apps_file_storage_dir: "/plm"
+eplm_server_base_path: "/plm"
+passport_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+passport_install_rel_path: "{{ passport_install_path }}/3dpass"
+passport_instance_path: "{{ passport_install_rel_path }}/instances"
+passport_code_dir: "{{ passport_install_rel_path }}/code"
+passport_conf_dir: "{{ passport_install_rel_path }}/conf"
+passport_log_dir: "{{ passport_install_rel_path }}/logs"
+passport_soft_dir: "{{ passport_install_rel_path }}/softs"
+drivers_dir: "{{ passport_soft_dir }}/drivers"
+passport_jdk_name: "jdk-pp"
+passport_jdk_path: "{{ passport_soft_dir }}/{{ passport_jdk_name }}"
+passport_dir_var: "/var/DassaultSystemes"
+passport_installer_path: "{{ installer_path }}/3dpass"
+
+ssl_keystore_path: "{{ passport_jdk_path }}/jre/lib/security"
+ssl_cert_pass: "changeit"
+ssl_pass_cert_alias: "3dpassport-{{env_name}}-plm.valmet.com"
+ssl_mcs_cert_alias: "3dspace-{{env_name}}-plm.valmet.com"
+
+mcs_bin_dir: "{{ passport_install_path }}/mcsnocas/bin"
+mcs_plm_user: "plmm3ma"
+mcs_hostname: "i1-mcscas-{{env_name}}-plm.valmet.com"
+
+#Inforamtion for Installation
+web_app_name: "3DPassport"
+server_hostname: "i1-3dpassport-{{env_name}}-plm.valmet.com"
+server_port: "8285"
+admin_email: "test-admin.plm@valmet.com"
+admin_pass: "Jklalrahab321"
+mysql_db_option: "2"
+mysql_db_host: "db-3dpassport-{{env_name}}-plm.valmet.com"
+mysql_db_port: "3306"
+mysql_schema_name: "iam"
+mysql_db_url: "jdbc:mysql://{{ mysql_db_host }}:{{ mysql_db_port }}/{{ mysql_schema_name }}"
+mysql_db_driver: "com.mysql.jdbc.Driver"
+db_admin_user: "iam_admin"
+db_admin_pass: "iam_admin#"
+db_app_user: "iam"
+db_app_user_pass: "iam#"
+token_schema_name: "iam_cas"
+token_db_url: "jdbc:mysql://{{ mysql_db_host }}:{{ mysql_db_port }}/{{ token_schema_name }}"
+token_db_driver: "com.mysql.jdbc.Driver"
+token_db_user: "iam"
+token_db_user_pass: "iam#"
+mail_server_name: "smtp.valmet.com"
+mail_sender_email: "test-admin.plm@valmet.com"
+mail_sender_name: "3DPassport"
+user_login_case: ""
+dir_cont_cus: ""
+tomcat_webapp_dir: "{{ passport_instance_path }}/was_passport_1/webapps"
+tomcat_lib_dir:  "{{ passport_instance_path }}/was_passport_1/lib"
+mysql_conn_name: "mysql-connector-java-5.1.35"
+database_driver_path: "{{ drivers_dir }}/{{ mysql_conn_name }}/mysql-connector-java-5.1.35-bin.jar"
+instalation_string: "3dpassport 15x"
+passport_url: "https://3dpassport-{{env_name}}-plm.valmet.com:{{server_port}}/{{ web_app_name }}"
+mcs_url: "https://3dspace-{{env_name}}-plm.valmet.com:8185/3DSpace"
+
+tomcat_webinf_dir: "{{ tomcat_webapp_dir }}/3DPassport/WEB-INF"
+disp_env_3dxp_property_file_dir: "{{ tomcat_webinf_dir }}/labels/services/3dxp"
+disp_env_login_file_dir: "{{ tomcat_webinf_dir }}/uwaViews"
+disp_env_notranslate_property_file_dir: "{{ tomcat_webinf_dir }}/labels/notranslate"
+
+tomcat_user: tomcat
+tomcat_user_pass: tomcat123#
+
+
+# Instance Info
+instances:
+  was_passport_1:
+    app_name: was_passport_1
+    port_http: 8281
+    port_jmx: 8077
+    port_ajp: 8210
+    port_shutdown: 8206
+    port_redirect: 8644 

@@ -1,0 +1,30 @@
+---
+- name: Stop Notification Service
+  win_service: name="3DEXPERIENCE R2018x 3DNotification Node" state=stopped
+  tags: install-notification-fp
+
+- name: Copy notification-fp UserIntention file to target
+  template: src="templates/UserIntentions_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_fp.xml"
+  tags: install-notification-fp
+ 
+- name: Copy notification-fp installer from NFS to local
+  win_copy:
+    src: '{{ notification_installer_path_fp }}'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: install-notification-fp   
+
+- name: Executing notification-fp installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_fp.xml --xmlreport {{ windows_tmp_path }}\report_notification_fp.xml'
+     elevated: yes
+  tags: install-notification-fp
+
+- name: Remove the user Intension file of notification-fp
+  win_file: path="{{windows_tmp_path}}\UserIntentions_fp.xml" state=absent
+  tags: install-notification-fp
+
+- name: Remove the installer folder of notification-fp
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags: install-notification-fp
+

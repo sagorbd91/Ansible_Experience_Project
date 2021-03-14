@@ -1,0 +1,28 @@
+#!/bin/sh
+
+cd {{ r15x_server_script_dir }}
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  index vault "ADMINISTRATION";
+  index vault "eService Sample";
+  index vault "eService Administration";
+  index vault "eService Production";
+  index vault "vplm";
+  index vault "vplm_archive";
+  index vault "SIXW";
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} pass {{ mql_password }};
+  index vault "ADMINISTRATION";
+  index vault "eService Sample";
+  index vault "eService Administration";
+  index vault "eService Production";
+  index vault "vplm";
+  index vault "vplm_archive";
+  quit;
+EOF
+fi

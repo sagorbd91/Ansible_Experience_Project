@@ -1,0 +1,27 @@
+---
+
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_federated_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_federated_ga.xml"
+  tags: install-federated-ga
+ 
+- name: Copy Federated Search GA installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_fed }}'
+    dest: '{{ windows_tmp_path }}\FederatedSearch'
+    remote_src: True
+  tags: install-federated-ga  
+
+- name: Executing Federated Search GA installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\FederatedSearch\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_federated_ga.xml --xmlreport {{ windows_tmp_path }}\Report_federated_ga.xml'
+     #command: C:\installer\AM_3DEXP_Platform.AllOS\2\FederatedSearchFoundation\Windows64\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_federated_ga.xml --xmlreport {{ windows_tmp_path }}\Report_federated_ga.xml
+     elevated: yes
+  tags: install-federated-ga
+
+- name: Remove the Federated Search GA user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_federated_ga.xml" state=absent
+  tags: install-federated-ga
+
+- name: Remove the Federated Search GA installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags: install-federated-ga

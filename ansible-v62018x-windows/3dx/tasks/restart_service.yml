@@ -1,0 +1,13 @@
+---
+
+- name: Stop 3DIndex Service
+  win_service: name="3DEXPERIENCE R2018x PICDaemonService" state=stopped
+  tags:
+     - stop-index
+     - restart-index
+
+- name: Start 3DIndex service
+  win_service: name="3DEXPERIENCE R2018x PICDaemonService" state=started
+  tags:
+     - start-index
+     - restart-index

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Media mediaLevel="420" mediaName="CODE\win_b64\ENOVIA_PRF.media\media">
+	<SetVariable name="PATH_PH_Server">
+		<SetPath value="{{ target_path }}"/>
+	</SetVariable>
+	<SetVariable name="Text_SuperUserName">
+		<SetText value="creator"/>
+	</SetVariable>
+	<SetVariable name="Text_SuperUserPwd">
+		<SetText value="{{ creator_password }}"/>
+	</SetVariable>
+	<SetVariable name="TARGET_PATH">
+		<SetPath value="{{ apps_dir }}\ProgramCentral\V6R2018x"/>
+	</SetVariable>
+	<SetVariable name="FinishPanel"/>
+	<SetVariable name="Path_CustomSchemaDir">
+		<SetPath value="{{ apps_dir }}\ProgramCentral\V6R2018x\Apps\SchemaInstaller\CustomSchema"/>
+	</SetVariable>
+	<SetVariable name="BOOL_UpdateDB">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="DSYWelcomePanel">
+        <SetWelcome value="true"/>
+	</SetVariable>
+</Media>

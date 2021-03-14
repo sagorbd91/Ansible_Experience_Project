@@ -1,0 +1,36 @@
+---
+
+- name: Copy collaborative task UserIntention file to target
+  template: src="templates/user_intention_apps/fp/UserIntentions_colla_task_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_colla_task_fp.xml"
+  tags: 
+     - install-app-fp
+     - collaborative-fp
+
+- name: Copy collaborative task installer from NFS to local
+  win_copy:
+    src: '{{apps_FP_installer_path}}\CollaborativeTasksFoundation.Windows64\1'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: yes
+  tags: 
+     - install-app-fp
+     - collaborative-fp
+  
+- name: Executing collaborative task installation on target
+  win_psexec:
+      command: '{{windows_tmp_path}}\1\StartTUI.exe -installerPath {{ ds_fp_installer_path }} --silent {{windows_tmp_path}}\UserIntentions_colla_task_fp.xml --xmlreport {{windows_tmp_path}}\Report_task_fp.xml'
+      elevated: yes
+  tags: 
+     - install-app-fp
+     - collaborative-fp
+
+- name: Removing the user Intension file for collaborative task from traget
+  win_file: path="{{windows_tmp_path}}\UserIntentions_colla_task_fp.xml" state=absent
+  tags: 
+     - install-app-fp
+     - collaborative-fp
+     
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags:  
+     - install-app-fp
+     - collaborative-fp

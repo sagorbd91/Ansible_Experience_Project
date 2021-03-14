@@ -1,0 +1,906 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<InstallData version="1">
+	<Medias>
+		<Media mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media">
+			<SetVariable name="PATH_PH_Server" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)"/>
+			</SetVariable>
+			<SetVariable name="PATH_PH_ServerMql" setByUser="false" setType="default">
+				<SetPath value="^e(PATH_PH_Server)/scripts"/>
+			</SetVariable>
+			<SetVariable name="MQL_COMMAND_Server" setByUser="false" setType="default">
+				<SetText value="^e(PATH_PH_ServerMql)/mql"/>
+			</SetVariable>
+			<SetVariable name="DS_COPYRIGHT" setByUser="false" setType="default">
+				<SetText value="Copyright (c) 1993-2011 Dassault Systemes."/>
+			</SetVariable>
+			<SetVariable name="BOOL_JDK_BitModeTestRequired" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="JavaCheckBitMode" setByUser="false" setType="default">
+				<SetText value="64"/>
+			</SetVariable>
+			<SetVariable name="JavaCheckOption" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable name="Java@jdk" setByUser="true" setType="default">
+				<SetJavaPath value="/plm/{{ env_name }}/mcs/softs/jdk-mcs"/>
+			</SetVariable>
+			<SetVariable name="Db2_ProductDir" setByUser="true" setType="default">
+				<SetPath value="/opt/ibm/db2/V10.5"/>
+			</SetVariable>
+			<SetVariable name="Db2_Instance" setByUser="true" setType="default">
+				<SetText value="db2cli"/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_ConnectUser" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariableProtected condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_ConnectPwd" setByUser="false" setType="default">
+				<SetText value="Put your password here."/>
+			</SetVariableProtected>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_DBname" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_Default_Data_TBS" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_Default_Index_TBS" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable name="STARTER_PATH_DBTEST" setByUser="false" setType="default">
+				<SetPath value="^v(CATInst)"/>
+			</SetVariable>
+			<SetVariable condition="|!|VAR_BOOL_BootstrapCreationRequired" name="BOOL_ConnectionTestRequired" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="BOOL_BootstrapCreationRequired" setByUser="true" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_DBChoice" setByUser="true" setType="default"/>
+			<SetVariable name="Radio_DBChoice?Oracle" setByUser="true" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_DBChoice?DB2" setByUser="true" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable condition="|!|VAR_BOOL_BootstrapCreationRequired" name="BOOL_BootstrapExistenceCheck" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable condition="FIX_Db2_ConnectUser" name="Text_BootstrapDBoptions" setByUser="false" setType="default">
+				<SetText value="-user ^e(Db2_ConnectUser) -password ^e(Db2_ConnectPwd) -host ^e(Db2_DBname) -driver DB2/CLI"/>
+			</SetVariable>
+			<SetVariable name="Path_ConnectionFilePath" setByUser="true" setType="default">
+				<SetPath value="/plm/{{ env_name }}/mcs/conf"/>
+			</SetVariable>
+			<SetVariable name="BIN_PATH" setByUser="false" setType="default">
+				<SetPath value="^e(PATH_PH_ServerMql)"/>
+			</SetVariable>
+			<SetVariable name="DOCS_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(PATH_PH_Server)/linux_a64/docs]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_COMMON_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/javacommon]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_SERVER_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/javaserver]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_CLIENT_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/java]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_CUSTOM_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/custom]"/>
+			</SetVariable>
+			<SetVariable name="MQL_COMMAND" setByUser="false" setType="default">
+				<SetText value="^e(BIN_PATH)/mql"/>
+			</SetVariable>
+			<SetVariable name="Path_custom" setByUser="false" setType="default">
+				<SetPath value="^e(DOCS_PATH)/custom"/>
+			</SetVariable>
+			<SetVariable name="Path_logs" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/logs"/>
+			</SetVariable>
+			<SetVariable name="Path_mxcache" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/mxcache"/>
+			</SetVariable>
+			<SetVariable name="Radio_DeploymentOption" setByUser="true" setType="default"/>
+			<SetVariable name="Radio_DeploymentOption?J2EE" setByUser="true" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_DeploymentOption?None" setByUser="true" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_JavaHeapSize" setByUser="true" setType="default"/>
+			<SetVariable name="Radio_JavaHeapSize?Small" setByUser="true" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_JavaHeapSize?Medium" setByUser="true" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_JavaHeapSize?Large" setByUser="true" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_UTF8" setByUser="true" setType="default"/>
+			<SetVariable name="Radio_UTF8?UTF8" setByUser="true" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_UTF8?NotUTF8" setByUser="true" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="warutilInstallPath" setByUser="false" setType="default">
+				<SetPath value="^e(PATH_PH_Server)"/>
+			</SetVariable>
+			<SetVariable name="warutilJDKPath" setByUser="false" setType="default">
+				<SetPath value="^e(Java@jdk)"/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_UTF8?UTF8" name="warutilUTF8" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="warutilParameters" setByUser="false" setType="default">
+				<SetText value="old -substitutions encoding=^e(warutilParameters1),host=^e(warutilParameters3),"/>
+			</SetVariable>
+			<SetVariable name="warutilLaunch" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="warutilEnoviaInstall" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="warutilWarSetupPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilOSPath)code\command\war_setup.^e(warutilSh)"/>
+			</SetVariable>
+			<SetVariable name="warutilWebXmlPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)web.xml"/>
+			</SetVariable>
+			<SetVariable name="warutilIBMWebExtXmiPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)ibm-web-ext.xmi"/>
+			</SetVariable>
+			<SetVariable name="warutilWeblogicXmlPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)weblogic.xml"/>
+			</SetVariable>
+			<SetVariable name="warutilSunWebXmlPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)sun-web.xml"/>
+			</SetVariable>
+			<SetVariable name="warutilIndirectionPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilInstallPath)/ematrixwarutil/war_setup"/>
+			</SetVariable>
+			<SetVariable name="warutilEnoviaInstallPath" setByUser="false" setType="default">
+				<SetPath value="^e(warutilInstallPath)/enovia.install"/>
+			</SetVariable>
+			<SetVariable name="warutilSh" setByUser="false" setType="default">
+				<SetText value="sh"/>
+			</SetVariable>
+			<SetVariable name="warutilOSPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilInstallPath)\linux_a64\"/>
+			</SetVariable>
+			<SetVariable name="warutilResourcesPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilOSPath)resources/warutil/"/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_RIPOptions?RIP" name="warutilRIP" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="warutilRMIPortNb" setByUser="false" setType="default">
+				<SetText value="^e(Text_RMIPortNb)"/>
+			</SetVariable>
+			<SetVariable name="warutilHost" setByUser="false" setType="default">
+				<SetText value="^v(HOSTNAME)"/>
+			</SetVariable>
+			<SetVariable condition="VAR_warutilUTF8" name="warutilParameters1" setByUser="false" setType="default">
+				<SetText value="UTF8"/>
+			</SetVariable>
+			<SetVariable condition="VAR_warutilRIP" name="warutilParameters3" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable name="warutilEmatrixPath" setByUser="false" setType="default">
+				<SetPath value="^e(warutilInstallPath)/ematrixwarutil"/>
+			</SetVariable>
+			<SetVariable name="Path_AppServerPath" setByUser="true" setType="default">
+				<SetPath value="/plm/{{ env_name }}/mcs/instances/0-adm/was/bin"/>
+			</SetVariable>
+			<SetVariable name="Text_AppServerStartup" setByUser="true" setType="default">
+				<SetText value="startup.sh"/>
+			</SetVariable>
+			<SetVariable name="Radio_RIPOptions" setByUser="true" setType="default"/>
+			<SetVariable name="Radio_RIPOptions?RIP" setByUser="true" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_RIPOptions?RMID" setByUser="true" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Path_managed" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/managed"/>
+			</SetVariable>
+			<SetVariable name="Path_staging" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/STAGING/ematrix"/>
+			</SetVariable>
+			<SetVariable name="Path_app" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/Apps"/>
+			</SetVariable>
+			<SetVariable name="Path_workspace" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/workspace"/>
+			</SetVariable>
+			<SetVariable name="TARGET_PATH" setByUser="true" setType="default">
+				<SetPath value="/plm/{{ env_name }}/mcs/code"/>
+			</SetVariable>
+			<SetVariable name="FinishPanel" setByUser="true" setType="default"/>
+			<SetVariable name="SelectProduct" setByUser="false" setType="default"/>
+			<SetVariable condition="FIX_TARGET_PATH" instMode="standalone" name="SelectProduct?CODE\linux_a64\CSR.prd" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+		</Media>
+		<Media mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media">
+			<SetVariable name="PATH_PH_Server" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)"/>
+			</SetVariable>
+			<SetVariable name="PATH_PH_ServerMql" setByUser="false" setType="default">
+				<SetPath value="^e(PATH_PH_Server)/scripts"/>
+			</SetVariable>
+			<SetVariable name="MQL_COMMAND_Server" setByUser="false" setType="default">
+				<SetText value="^e(PATH_PH_ServerMql)/mql"/>
+			</SetVariable>
+			<SetVariable name="DS_COPYRIGHT" setByUser="false" setType="default">
+				<SetText value="Copyright (c) 1993-2011 Dassault Systemes."/>
+			</SetVariable>
+			<SetVariable name="BOOL_JDK_BitModeTestRequired" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="JavaCheckBitMode" setByUser="false" setType="default">
+				<SetText value="64"/>
+			</SetVariable>
+			<SetVariable name="JavaCheckOption" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable name="Java@jdk" setByUser="false" setType="default">
+				<SetJavaPath value="/plm/{{ env_name }}/mcs/softs/jdk-mcs"/>
+			</SetVariable>
+			<SetVariable name="Db2_ProductDir" setByUser="false" setType="default">
+				<SetPath value="/opt/ibm/db2/V10.5"/>
+			</SetVariable>
+			<SetVariable name="Db2_Instance" setByUser="false" setType="default">
+				<SetText value="db2cli"/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_ConnectUser" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariableProtected condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_ConnectPwd" setByUser="false" setType="default">
+				<SetText value="Put your password here."/>
+			</SetVariableProtected>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_DBname" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_Default_Data_TBS" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_DBChoice?DB2|AND||!|VAR_BOOL_BootstrapCreationRequired" name="Db2_Default_Index_TBS" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable name="STARTER_PATH_DBTEST" setByUser="false" setType="default">
+				<SetPath value="^v(CATInst)"/>
+			</SetVariable>
+			<SetVariable condition="|!|VAR_BOOL_BootstrapCreationRequired" name="BOOL_ConnectionTestRequired" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="BOOL_BootstrapCreationRequired" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_DBChoice" setByUser="false" setType="default"/>
+			<SetVariable name="Radio_DBChoice?Oracle" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_DBChoice?DB2" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable condition="|!|VAR_BOOL_BootstrapCreationRequired" name="BOOL_BootstrapExistenceCheck" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable condition="FIX_Db2_ConnectUser" name="Text_BootstrapDBoptions" setByUser="false" setType="default">
+				<SetText value="-user ^e(Db2_ConnectUser) -password ^e(Db2_ConnectPwd) -host ^e(Db2_DBname) -driver DB2/CLI"/>
+			</SetVariable>
+			<SetVariable name="Path_ConnectionFilePath" setByUser="false" setType="default">
+				<SetPath value="/plm/{{ env_name }}/mcs/conf"/>
+			</SetVariable>
+			<SetVariable name="BIN_PATH" setByUser="false" setType="default">
+				<SetPath value="^e(PATH_PH_ServerMql)"/>
+			</SetVariable>
+			<SetVariable name="DOCS_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(PATH_PH_Server)/linux_a64/docs]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_COMMON_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/javacommon]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_SERVER_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/javaserver]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_CLIENT_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/java]"/>
+			</SetVariable>
+			<SetVariable name="JAVA_CUSTOM_PATH" setByUser="false" setType="default">
+				<SetText value="^s[^e(DOCS_PATH)/custom]"/>
+			</SetVariable>
+			<SetVariable name="MQL_COMMAND" setByUser="false" setType="default">
+				<SetText value="^e(BIN_PATH)/mql"/>
+			</SetVariable>
+			<SetVariable name="Path_custom" setByUser="false" setType="default">
+				<SetPath value="^e(DOCS_PATH)/custom"/>
+			</SetVariable>
+			<SetVariable name="Path_logs" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/logs"/>
+			</SetVariable>
+			<SetVariable name="Path_mxcache" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/mxcache"/>
+			</SetVariable>
+			<SetVariable name="Radio_DeploymentOption" setByUser="false" setType="default"/>
+			<SetVariable name="Radio_DeploymentOption?J2EE" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_DeploymentOption?None" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_JavaHeapSize" setByUser="false" setType="default"/>
+			<SetVariable name="Radio_JavaHeapSize?Small" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_JavaHeapSize?Medium" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_JavaHeapSize?Large" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Radio_UTF8" setByUser="false" setType="default"/>
+			<SetVariable name="Radio_UTF8?UTF8" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_UTF8?NotUTF8" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="warutilInstallPath" setByUser="false" setType="default">
+				<SetPath value="^e(PATH_PH_Server)"/>
+			</SetVariable>
+			<SetVariable name="warutilJDKPath" setByUser="false" setType="default">
+				<SetPath value="^e(Java@jdk)"/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_UTF8?UTF8" name="warutilUTF8" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="warutilParameters" setByUser="false" setType="default">
+				<SetText value="old -substitutions encoding=^e(warutilParameters1),host=^e(warutilParameters3),"/>
+			</SetVariable>
+			<SetVariable name="warutilLaunch" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="warutilEnoviaInstall" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="warutilWarSetupPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilOSPath)code\command\war_setup.^e(warutilSh)"/>
+			</SetVariable>
+			<SetVariable name="warutilWebXmlPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)web.xml"/>
+			</SetVariable>
+			<SetVariable name="warutilIBMWebExtXmiPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)ibm-web-ext.xmi"/>
+			</SetVariable>
+			<SetVariable name="warutilWeblogicXmlPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)weblogic.xml"/>
+			</SetVariable>
+			<SetVariable name="warutilSunWebXmlPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilResourcesPath)sun-web.xml"/>
+			</SetVariable>
+			<SetVariable name="warutilIndirectionPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilInstallPath)/ematrixwarutil/war_setup"/>
+			</SetVariable>
+			<SetVariable name="warutilEnoviaInstallPath" setByUser="false" setType="default">
+				<SetPath value="^e(warutilInstallPath)/enovia.install"/>
+			</SetVariable>
+			<SetVariable name="warutilSh" setByUser="false" setType="default">
+				<SetText value="sh"/>
+			</SetVariable>
+			<SetVariable name="warutilOSPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilInstallPath)\linux_a64\"/>
+			</SetVariable>
+			<SetVariable name="warutilResourcesPath" setByUser="false" setType="default">
+				<SetText value="^e(warutilOSPath)resources/warutil/"/>
+			</SetVariable>
+			<SetVariable condition="VAR_Radio_RIPOptions?RIP" name="warutilRIP" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="warutilRMIPortNb" setByUser="false" setType="default">
+				<SetText value="^e(Text_RMIPortNb)"/>
+			</SetVariable>
+			<SetVariable name="warutilHost" setByUser="false" setType="default">
+				<SetText value="^v(HOSTNAME)"/>
+			</SetVariable>
+			<SetVariable condition="VAR_warutilUTF8" name="warutilParameters1" setByUser="false" setType="default">
+				<SetText value="UTF8"/>
+			</SetVariable>
+			<SetVariable condition="VAR_warutilRIP" name="warutilParameters3" setByUser="false" setType="default">
+				<SetText value=""/>
+			</SetVariable>
+			<SetVariable name="warutilEmatrixPath" setByUser="false" setType="default">
+				<SetPath value="^e(warutilInstallPath)/ematrixwarutil"/>
+			</SetVariable>
+			<SetVariable name="Path_AppServerPath" setByUser="false" setType="default">
+				<SetPath value="/plm/{{ env_name }}/mcs/instances/0-adm/was/bin"/>
+			</SetVariable>
+			<SetVariable name="Text_AppServerStartup" setByUser="false" setType="default">
+				<SetText value="startup.sh"/>
+			</SetVariable>
+			<SetVariable name="Radio_RIPOptions" setByUser="false" setType="default"/>
+			<SetVariable name="Radio_RIPOptions?RIP" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+			<SetVariable name="Radio_RIPOptions?RMID" setByUser="false" setType="default">
+				<SetBoolean value="false"/>
+			</SetVariable>
+			<SetVariable name="Path_managed" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/managed"/>
+			</SetVariable>
+			<SetVariable name="Path_staging" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/STAGING/ematrix"/>
+			</SetVariable>
+			<SetVariable name="Path_app" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/Apps"/>
+			</SetVariable>
+			<SetVariable name="Path_workspace" setByUser="false" setType="default">
+				<SetPath value="^e(TARGET_PATH)/workspace"/>
+			</SetVariable>
+			<SetVariable name="TARGET_PATH" setByUser="true" setType="default">
+				<SetPath value="/plm/{{ env_name }}/mcs/code"/>
+			</SetVariable>
+			<SetVariable name="FinishPanel" setByUser="true" setType="default"/>
+			<SetVariable name="SelectProduct" setByUser="false" setType="default"/>
+			<SetVariable condition="FIX_TARGET_PATH" instMode="standalone" name="SelectProduct?CODE\linux_a64\CSR.prd" setByUser="false" setType="default">
+				<SetBoolean value="true"/>
+			</SetVariable>
+		</Media>
+	</Medias>
+	<Features>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\CSR.prd">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsPH_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsServerOnly">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsJavaOnly_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsJavaServerOnly">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsJ2EEOnly">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\CATPLM3dxmlXSD_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-CommonScript">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-Message">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOKernelMQL">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOKernelMQL_PRFX-CLR">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-ServerScript">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOLiveCollaborationServer">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\PLMConfigCore">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VPLMJConfigFilterServices_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\LCLicenseInfo">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOJavaKernel_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOFCSJavaClient">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOStudioFederationToolkit_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOStudioModelingPlatform_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOWebNavigator_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\LCCommon">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOSystemMonitoring">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOMonitoringProbeItf">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOMonitorWatchdogCommons">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOKernelMonitoring">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1JSystem_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1JSystem_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WebServicesInfra_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WebServicesInfra_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WSInfraDefinition_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngr_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngr_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngr_PRFX-ServerScript">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngrDefinition_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngrDefinitionProxy_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOJavaSearch_PRFX-Common">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENGalaxy">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENKernelTcl">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENOpenSSL">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENApacheXerces">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENApacheCommonsLogging">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENApacheAxis1">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENJDOM">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOFCSSyncServer_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOFCSSyncServer_PRFX-ServerScript">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOSystemInfra">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VPLMJConfigEngineImpl">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VPLMJConfigEngineItf">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\VENApacheLog4j_Server">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsJava">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENODataBaseAbstract">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1DeploymentUtilities">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsVCpreq">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\Db2">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENODeploymentUtilities">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\M1ManagedStarter">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\InsV6Installation">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+		<Feature currentLevel="214.61" featureName="CODE\linux_a64\ENOVIA_CSR.media">
+			<FeatureElement featureLevel="214" mediaLevel="214" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+			<FeatureElement featureLevel="214.61" mediaLevel="214.61" mediaName="CODE\linux_a64\ENOVIA_CSR.media\media"/>
+		</Feature>
+	</Features>
+	<Actions>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOVIA_CSR.media" privateId="e87e301010d551d75cbcf25f7ce97d8323995d871dc26639b85d17aebe1e4c43"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOVIA_CSR.media" privateId="aa00e3a4daf57c11311803c8ef4a7a1137e44e7e25db07f9c5784f9b95803ce7"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsJava" privateId="a12955a4a3d5a358edd9b3514934f0e78eee4f454a3170790b0c3e4def7828ca"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODataBaseAbstract" privateId="d406a6f613761f8a0c5681ffcefdbaaaa51ebe86eb7a5f4ce1cb986d7b16d769"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="1a843f122b91f31fc4c1d8b61b40cb566ef42094d7dda6f230550d76b242d783"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsJ2EEOnly" privateId="6830bb4f4787e12464472ab0f2b6ae89f762e7990cb687c2680550ac8d8f17e3"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="9ca434c378f674d76c6192f7364587b82636804aa356da0c1c2111d3853df94d"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODataBaseAbstract" privateId="23596a2007c7ef77a5b73872c56388c38d78eb243d11b8a2341135954e2369a4"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOSystemInfra" privateId="a4441c2dcb0c5e00b8069a157eeaa5e5491db233f42ef2de9c7456e1300c9bd4"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1ManagedStarter" privateId="ac33e6ca63bc7bfdce616c8a30f185c63ff0c71501e9853a56c10179f2c793de"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1JSystem_Server" privateId="0cd976c043ab02530c980c82387ed53bd17825e546e680baa990150af10055b6"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1JSystem_PRFX-Common" privateId="cb9db6fcc72c4ef872d311ce360cf31ba65adfae933c72e41e89456776217b80"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="7b050f674c11f3a9ac0342a950e8892fdd1b671dd61c98792104c9b043920f7b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\CATPLM3dxmlXSD_Server" privateId="be1ccddf1394a6b423a0a0eceecea23345ef395049bedfc675a5175713569281"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOCppKernel_PRFX-Common" privateId="62c2a96ebe3ab9bdc3a5c4afdacee2e93cb1bdb0583b46435b0c89625891dea7"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOCppKernel_PRFX-CommonScript" privateId="dc2816c5504b231a97feea5811dd9cd9cffba602f5acb2098d75655578a7e28a"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOCppKernel_PRFX-Message" privateId="a194e425f91ad1d2e98a27e1650f799f3fc83eb3ba4c759c7169ce179d4044c9"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOKernelMQL" privateId="54f7f957762c32c975f2a381414466d29f6358d1602fc9bd9bd8adb36ff4909b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOCppKernel_PRFX-ServerScript" privateId="279d030313228f0625a1be46ec36234973413c0dd40b6fe76104d6834bc898ab"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOLiveCollaborationServer" privateId="254f7304bd7e6434ceba8e85bdf7d506fe96a8baf8a612bb47283fcbb9d6c1db"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\PLMConfigCore" privateId="246ce135054b4e74efabd1793096bc617bbe520cbb562bfe5fc08c2288521409"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VPLMJConfigFilterServices_PRFX-Common" privateId="be16f1c16de8ffe13cd7acb900d27778ecebe663b6d11908e0eed1b83eb15fe6"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\LCLicenseInfo" privateId="62e97436e265a31a5df780dbc1e5237d57b4fe09ee617a6006c13e4a4f3f44e8"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOJavaKernel_PRFX-Common" privateId="da8e375c2a64e419f971796a859cba4b294a3ad0839b11d199302e0f141449a0"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOFCSJavaClient" privateId="7a6bddeb41d9e355abf6151b74fe13998634445918eea4d1ad921321ab0803cc"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOStudioFederationToolkit_PRFX-Common" privateId="26bff5936dd21de0ef2462b4c18f357da5f46f558d7765b0d4a53e31a5dc2e11"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOStudioModelingPlatform_PRFX-Common" privateId="d1636f1411caa7b4a8e541245b931242826d408eb862154e7041e8f279329f44"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOWebNavigator_Server" privateId="651754479a95104489af9a903a8fd975f8aca02765564615b535c07465393ac0"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\LCCommon" privateId="511b8144c2eed1481889175b0ba802d0e147aa40e49cae6b3e3de45b582561ea"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOSystemMonitoring" privateId="f5c5b1c7f8b84a240c87828dcae630294693669c26d30b032aa98182125feca8"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOMonitoringProbeItf" privateId="1d60bbcf36a956a3717c3660ab39ff22a406809bae6a9081e72867afb740e4ff"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOMonitorWatchdogCommons" privateId="85cf1b7762740426fe6bc107b036c5c511b85b74eb7dfd0c5abeb43fe75cbb25"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOKernelMonitoring" privateId="c300f89ae3c73793f8698f73a46e911532e4d2de75ed3a1ad3233c5e47f1d84b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WebServicesInfra_PRFX-Common" privateId="f0cdcec32ff22488fbb39e442d8a81f1696983ab7221e993da5c5fcfc5d43671"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WebServicesInfra_Server" privateId="2c7bd2af3f7917fe1011ba69f550cf62b252603b416e43b1b5557d73c9a14545"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WSInfraDefinition_Server" privateId="d2ac619eca00f28cbcf611b2ae9ce6f4159b5fd98156848dc0a79585a1796977"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WSSessionMngr_PRFX-Common" privateId="0e02bb30b13e3399d297c6e7164121f91cb92539910bde0724f79d652a6bfbd4"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WSSessionMngr_Server" privateId="8b16b64916fa17ba8ca70581b696613d6072484982adecf4aaa2080b56015ea1"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WSSessionMngr_PRFX-ServerScript" privateId="140ce18b4ccf0bc173596378660a6be0e2c4aaebbf110fff74fdddd2859696e8"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WSSessionMngrDefinition_Server" privateId="2a12deb9362a5a269503f18b0c8067d2848c66ac3c0ea12677c3277eef93ddea"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1WSSessionMngrDefinitionProxy_Server" privateId="65a90f93b333a94d7b641ddcc8035fc7a42d422fa190e3f19940412c71c22298"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOJavaSearch_PRFX-Common" privateId="dacd2c0a219e15a0e8565fc028c70b1c5b2c0d400a8029b1fab1c1192450732d"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VENGalaxy" privateId="97f2b7e73398ba66b0c7bb7327865e27ca84670791f70e317e7c5af1454b5983"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VENKernelTcl" privateId="b5b9429955168687b04760a01ef9edd0aa059f6b70fc255cb6429a497ce552fb"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VENApacheXerces" privateId="9fb2eaef9fc1fc5ce2a3a11a2b46d54f99acce8677b6f71a1781d3e6ed1f0d61"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VENApacheCommonsLogging" privateId="bda9ac3f950fdb7482d07b47fc6cacd0bf274553837e76cba7f5718ebc54ddb4"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VENApacheAxis1" privateId="f611ba0d2379c6998bc845cad06b96e9e6ccc20a5943f0efd3245e383d887554"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOFCSSyncServer_Server" privateId="e598a50b6cdcfd1496fc61a61a2c2bc72283be6e7de4b354d334a8d505ddb188"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENOFCSSyncServer_PRFX-ServerScript" privateId="88b88ddbfdb51dfaf806d5be8ddd991e2f27ec3b36442582bf6b285b87bf3cc5"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VPLMJConfigEngineImpl" privateId="7abbe040b64c2409c85c17667137166bfba6547f1e53af00cdfabd4f83646508"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VPLMJConfigEngineItf" privateId="bba8bf1cb7f8861f2cdd56c0913ecb8cd06982162946757c7b113911c59de020"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\VENApacheLog4j_Server" privateId="7dd221415d5ccc5c44adee55c725eb0f2995e9bafa633d04c41ce835b1465cda"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="0f9e8e053cf70a195d7b842bd9de7bcecb15c1aa8f22254094ec5678ca6ae0b4"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="33f0f770456a450e096fb0797f55328586516160fdbb1b25267bfc55705f6766"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="1d63a2d357d201b02f378e9e15f47021adf0d6e4a9730d36195418ce593e5296"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="9c23cebe9acb9e324d35504fbfc9fd02af1905a1deea2aab65697da5133fda54"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="8ac06dc2d77996e1fdd4e8c8ddc4b564fbe1c1453b48952ff168bbfb4a430e03"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="5e9024d85a71334d7227023f244ee8cbd3b85eed1e0f5b877e453d8790424100"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="9664554b585173a7a35f4008b4375f1f9b5f1e161701ec169986cc6fb2abc211"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="3dbc994d7983567ee86849c040c4b5c4af9f06ebc60118ca8faae2686e699f5f"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="23df7cd92a0b606c8c15b0b4a4aa038bf6b161d6331794ced5907955b1d7e7eb"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="110c6a30746363c871542eea38c47ebd401863bfa4593b8008332d5284a7983f"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="f1fe01520298196f0cd36db5d1361e9fc49c66ad65fec24e22ee0bca6a715f47"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="eb3ec02b29c10995f68c66f8d5b34dd1ad32548b8449f9ae3b60ed4a130990ba"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="ce536cbf9e70e1972d6c4138e7cc3786e2789fec54095e0936f8e934f077fec1"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="1fc67f4f13d0146dfc2ed791f99b6fd524fe34c92eafe86d397521c156fdad40"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="fe541cd3b6f30f8d560c24faf8ada55ddd0e869ec1702eee9e36fcb40b762756"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="45a4efc197d4b29db5d4f9e21fa65bfb3453c5e7e86732cfda1b8a3f91820466"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="b7f55bdedcdfe1cc9dd8f3673780f0029f3528f0e88c0fb8bdea82defcd613f9"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="51923c3885cb9853c9eea0ec5a4add0ddeec889411b466f2538b097179309021"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="22b81dfdeed5105263923b357963973dd0be970e82abbd571dbe2bf21111315d"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="b8999775aaae2124cf0717257bb579ea01c510cec08c518435069a0deb1609d8"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="95b51a741ffd4c7f036a5c06f66a7b0e01181a946c2ee4d086f8c8570193e3cb"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="d8dfcc2dd4572c3bc4ec1351fd613e20b0554c65bca0a3e03216d07c2aee386e"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="095a2a5a4116c704e2dfc75a03e03361bd7f7a24d661f5f62ac5649bdceda408"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="25ffbd2087faefd7bf98a2752eda7262eb99e9b98cd3af587cc01ffcfca2dc5d"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="06f847e2914c84d08a45ebe4689c6bfe06acc5d2d9ad337bf0848e21b63c8b5b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="a54a68178e71acd341cd9dbfe0b186f0e97c7ac6401fe1034099557ba14a060f"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="0730355d01e6ccc38da9f17f090a5e2d54c49fbafb372f843a2fa015389c82b2"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="6624c1f84fade0ddbcb84b9c36e1f46ae4dc702e0ae45952585699506e4c24bc"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="8eeda1a8f73dd27433ed34f2ba237c37865fb257373fc54df8b68522341f2ae8"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="d47d06696e757447ac9190365a2c111ce81229f0d6b33aaeefcd97e9dfc85731"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="d716db9ee230cdcae734352c14dd90204f034f427f8f366ce0c397efd5ce8ed6"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="cb0c997049ce1fea2cf776c5d5a99bd9d4f493ddeaff04fe345b19de9daa1ce7"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="62d8f19c84c8fa242df60893bb361ec5eff6ea98a965fddd5a3fc4330bc83028"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="b361acfc70f580ad89fb3fef52a53f45a33ccc5e79ec8da7ac9421a40041f99d"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="cc186aeee0a4ef3cb172fee5fe89f95217e4f027e97954c52fa13fc206626ecb"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="018d36683e7fbfae0a8beaea2f75c8ab0fee8858e9895aab48570aaae1cb8963"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="441c68dadac70e885d728a929197d6181e031ff57b894f55b20e991630ded6ef"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="33ffaf8a521ca96856b3cb4c066ef9487080d6ae681a0854a429165e098c9b87"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="29ac306383bd222fb388c8862d1656796768b289b79b4a36266974f39a77d239"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="c099fd9a4d5177d90da63558226e16895648853bd4781feb0966173fe7fd125b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="b5d92edfdb4847cf4e8a519aa0be0aaefe58adae02edd355bafc98ce44568bf4"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="d570cfa6a54ba70f9d68f5466dba2fde305537f521160b267a8e5eb7c5993c7a"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="5799ac08f49c6ec28b44418544ba8d23c9cdf8628dc740814648a7713aeb7bef"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="c84225c08878adc2f42a015f02e7ef78c71e75145aa31b48be6afbcd9f599d8e"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="148ff909ef4f7f5bf5ce82ff8ca106451086889bf12c81788f966fa46adf5889"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="94be43fbcd020bc7736a63b3bc7c35a09cd3312a7aa240f3dc4007d6e6049e50"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="8799b11c5a6167442865f41ada617d1a1a99813b4642bf920ce1f2ad36defdaf"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="55fbac65cf2c0cc3696f78b08900ec8acc23ef3dc324aa4d6609fbb51b910a26"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="8640737bb6e29f7209d725559315f2182a47dbbfd3cd097f51f280ea2f568b9a"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="f6afa160fa8a45c48a45d6d0b87816edaef80a65850f7a517da6324d6b5343ef"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="c103ed207d8484b39d19fa8931302acf226ce2514ac7a8f697222fa4590a4ebe"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="73951feea11203f81474f7f91805ce6a8e46bf44be44982618ca6c94b637a792"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="1aa58446223e6074c4a24031465193cd11110431c3a555d44de7ad9ab9d2f456"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="b975d48d66fc35285c7dcb516e72aec1e416a723993b15fe80d5292635ccf54f"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="e807958b4a84699509a4a26a2bd042a221e3cef411085cef343d611b68b2ebee"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="862f8617358ba95527c938bf5917e115c037e3f3c113fd1978e02e4c820b5f2f"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="5fd8f893941c3511d5793e0bd87c2a0babb9b3e03f81e7619ca5b202b098769b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="da535b3427d7a2cdf9c7aa45dbdf7a2aa8700bc11692e8c3ecb123ed9d20182c"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="0b8380e7be8d91f1365ecde2ed390dcfc4dec0d842fe642a33a9a255adbf06b3"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="89606ae2f4df74e27d906dc157133ce98755248c83abc7d35d0267c9c6cd3ead"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="dd0c3daaf3a481302548f8f7867a8d9cf6e0ddd92166759cfbaa3406fe0ffa51"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="0c534e275ef9ac86dc44cab9c89ffba88b1e50cfd4e1ed5b01f3c237c2449d1e"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="b454acdc2d55aaddf62ce996f3a7f7824b44dc1200fd7fcde164c3cc56257a40"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="3f1d626e83a0ae7541bd9ec516f8295eae9403ffef294419d950d851cce12382"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1DeploymentUtilities" privateId="ce2e88911d7852db5e8a56484c00f0928b406b124d62747486ef200fb5f38957"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1DeploymentUtilities" privateId="9a22b9c232fcd6b4855d9777d9bfb7d0d4d83f444296f3b676aee5b4f72cfe20"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1DeploymentUtilities" privateId="06e01877f052630a35cb58137eca06d4a42a29c7617f9680713bd6f1570a225b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\M1DeploymentUtilities" privateId="038d0aacf347ab541980aecada7d812a8f5eac5ecf48ea76c0e9a625c9cdff81"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\CSR.prd" privateId="9660bf0bbb410dc43aeead8484de79ed33d2cf9d45ae17b52b927f47342fed8e"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\CSR.prd" privateId="356550a1d278070af12a611708a89b528b1acd0b181185e9a2b1fa596b61eb9d"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\CSR.prd" privateId="6ca7bfd3bec17fc242ae6e6120fe46b19084e764d8dfdb1fae7472444300b092"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\CSR.prd" privateId="7169926b8a732b9fa76f6efa463f911542c4617aa9c8e16e913cbf5b2ef2fd37"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\CSR.prd" privateId="c54a52d2ec0d97992c706dc69ea21fe16cf8a9d7819375ce98c8b12d7e217c6b"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\CSR.prd" privateId="ae2eec62fe1f2984096d7d834d46bf69ffcaacf1203cc08d0581a073d2dd3081"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsJ2EEOnly" privateId="ede42a99d259e548166dbf27a85c6284b52984a457c10e4721feac12c8b4c0df"/>
+		<ActionDone featureLevel="214" featureName="CODE\linux_a64\InsServerOnly" privateId="35b4368d86202f21896c3e716bf767b62f0e18360abb41d8b095a2fc3ec5c0ef"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOVIA_CSR.media" privateId="e87e301010d551d75cbcf25f7ce97d8323995d871dc26639b85d17aebe1e4c43"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOVIA_CSR.media" privateId="aa00e3a4daf57c11311803c8ef4a7a1137e44e7e25db07f9c5784f9b95803ce7"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENODataBaseAbstract" privateId="d406a6f613761f8a0c5681ffcefdbaaaa51ebe86eb7a5f4ce1cb986d7b16d769"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="9ca434c378f674d76c6192f7364587b82636804aa356da0c1c2111d3853df94d"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOSystemInfra" privateId="a4441c2dcb0c5e00b8069a157eeaa5e5491db233f42ef2de9c7456e1300c9bd4"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1ManagedStarter" privateId="ac33e6ca63bc7bfdce616c8a30f185c63ff0c71501e9853a56c10179f2c793de"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1JSystem_Server" privateId="0cd976c043ab02530c980c82387ed53bd17825e546e680baa990150af10055b6"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1JSystem_PRFX-Common" privateId="cb9db6fcc72c4ef872d311ce360cf31ba65adfae933c72e41e89456776217b80"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="7b050f674c11f3a9ac0342a950e8892fdd1b671dd61c98792104c9b043920f7b"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-CommonScript" privateId="dc2816c5504b231a97feea5811dd9cd9cffba602f5acb2098d75655578a7e28a"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-Message" privateId="a194e425f91ad1d2e98a27e1650f799f3fc83eb3ba4c759c7169ce179d4044c9"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-ServerScript" privateId="279d030313228f0625a1be46ec36234973413c0dd40b6fe76104d6834bc898ab"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOStudioModelingPlatform_PRFX-Common" privateId="d1636f1411caa7b4a8e541245b931242826d408eb862154e7041e8f279329f44"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WebServicesInfra_PRFX-Common" privateId="f0cdcec32ff22488fbb39e442d8a81f1696983ab7221e993da5c5fcfc5d43671"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WSInfraDefinition_Server" privateId="d2ac619eca00f28cbcf611b2ae9ce6f4159b5fd98156848dc0a79585a1796977"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngr_Server" privateId="8b16b64916fa17ba8ca70581b696613d6072484982adecf4aaa2080b56015ea1"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngr_PRFX-ServerScript" privateId="140ce18b4ccf0bc173596378660a6be0e2c4aaebbf110fff74fdddd2859696e8"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngrDefinition_Server" privateId="2a12deb9362a5a269503f18b0c8067d2848c66ac3c0ea12677c3277eef93ddea"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngrDefinitionProxy_Server" privateId="65a90f93b333a94d7b641ddcc8035fc7a42d422fa190e3f19940412c71c22298"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VENGalaxy" privateId="97f2b7e73398ba66b0c7bb7327865e27ca84670791f70e317e7c5af1454b5983"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VENKernelTcl" privateId="b5b9429955168687b04760a01ef9edd0aa059f6b70fc255cb6429a497ce552fb"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VENApacheXerces" privateId="9fb2eaef9fc1fc5ce2a3a11a2b46d54f99acce8677b6f71a1781d3e6ed1f0d61"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VENApacheCommonsLogging" privateId="bda9ac3f950fdb7482d07b47fc6cacd0bf274553837e76cba7f5718ebc54ddb4"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VENApacheAxis1" privateId="f611ba0d2379c6998bc845cad06b96e9e6ccc20a5943f0efd3245e383d887554"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOFCSSyncServer_PRFX-ServerScript" privateId="88b88ddbfdb51dfaf806d5be8ddd991e2f27ec3b36442582bf6b285b87bf3cc5"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENODataBaseAbstract" privateId="f53e0a92a232558f465bcd9d86b1fcd786a4b3efda588a82f983603b2259382f"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\CATPLM3dxmlXSD_Server" privateId="189c538de5436b5ed39f30679843f97422bafb72a3d0610cecb31292346b4f27"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOCppKernel_PRFX-Common" privateId="d8164b45619e26e20c8b0ffffb48f80286506dd99bbde8672003fc466b02ab4d"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOKernelMQL" privateId="b7ea9c95f95dc6663578b29bd67f6a93963fddc8e1661f6b398f5f3165774bf8"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOLiveCollaborationServer" privateId="2bfab4c8b03b667e994ffecf28cfc1bcf793f52f60ec43b8d0a0bbac65b8e9f2"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\PLMConfigCore" privateId="0dddc3219bd58c6b525e4b7390a737647aac0f4ec6b862662cf5b8533ef8ec71"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VPLMJConfigFilterServices_PRFX-Common" privateId="47f9ef910b6717f4a2f469673e46b7beb85224d87399f9ed6ebce569538f60c3"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\LCLicenseInfo" privateId="335e9408dd7c09c7ee23451332349b4a8e0b0d72432da4925fce4580a8e43594"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOJavaKernel_PRFX-Common" privateId="41794f1b580c31505f0c387f44a7685503ca8aa1ca97ab882729a04d2f313c1f"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOFCSJavaClient" privateId="9dccaec86d48c71902d62bbda8f209aadc5a89e849dbd690f89be63858684643"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOStudioFederationToolkit_PRFX-Common" privateId="58f788de03f179dc66794daba235a4f47670a03be108bfe8c6ba538ec8ead39c"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOWebNavigator_Server" privateId="227ebf0798b553ac0644af0ddf621eed45aa7921309d168ec6afaf5c528c74eb"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\LCCommon" privateId="dc4974f4f55f214caec3dafb7735689bb3c1f40e6c98477d7ee4b92f34fbbc04"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOSystemMonitoring" privateId="3163bca73c88022cd66459c77ed56f28dc7c4d56be67bc6de1fc6513c2a6a99a"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOMonitoringProbeItf" privateId="4134ba876b9ffdb5def1e014097ba1cee84cf244f3da6408cc784f801d81933f"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOMonitorWatchdogCommons" privateId="e2519556c42fd510dc4c77531c78a6d7562e5574b394279f4d3f57b1bc58c660"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOKernelMonitoring" privateId="1b8b29b4375199a4dca652910c191ad27d211c07729f54db32dfd1274127f47e"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WebServicesInfra_Server" privateId="a82f91958bdf2b5e3e5f665c6be430e42601f0f448159c1c1f79d2ad83b0c739"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1WSSessionMngr_PRFX-Common" privateId="180bf80fbf81a6005b9a096abcf9c7e159aec72cc76223cb410902bd5d6455d8"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOJavaSearch_PRFX-Common" privateId="f18ce4a72a8b2d88bc21df01877d983549ccda9d4db0e37abfa6a96a47de7ce3"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENOFCSSyncServer_Server" privateId="26d253c54b51fd3351991d06389ad82fd7856250f57296830f5e8d9ccee98d3b"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VPLMJConfigEngineImpl" privateId="9f178d961342b64942ccc1ee9db6b7127873b50c5f6ad52ffd12b948bad65102"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VPLMJConfigEngineItf" privateId="dfd0887828749d4c5361620f8634fdf3027bd35b908079e084e46efc87eccc18"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\VENApacheLog4j_Server" privateId="3b17ef5abf2db6a17f2d0516c304eb4e92d3d5d6e95878cc045caf5a8a188efe"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="0f9e8e053cf70a195d7b842bd9de7bcecb15c1aa8f22254094ec5678ca6ae0b4"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="33f0f770456a450e096fb0797f55328586516160fdbb1b25267bfc55705f6766"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="1d63a2d357d201b02f378e9e15f47021adf0d6e4a9730d36195418ce593e5296"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="9c23cebe9acb9e324d35504fbfc9fd02af1905a1deea2aab65697da5133fda54"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="8ac06dc2d77996e1fdd4e8c8ddc4b564fbe1c1453b48952ff168bbfb4a430e03"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="5e9024d85a71334d7227023f244ee8cbd3b85eed1e0f5b877e453d8790424100"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="9664554b585173a7a35f4008b4375f1f9b5f1e161701ec169986cc6fb2abc211"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsServerOnly" privateId="018d36683e7fbfae0a8beaea2f75c8ab0fee8858e9895aab48570aaae1cb8963"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="33ffaf8a521ca96856b3cb4c066ef9487080d6ae681a0854a429165e098c9b87"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="29ac306383bd222fb388c8862d1656796768b289b79b4a36266974f39a77d239"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="c099fd9a4d5177d90da63558226e16895648853bd4781feb0966173fe7fd125b"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="b5d92edfdb4847cf4e8a519aa0be0aaefe58adae02edd355bafc98ce44568bf4"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="d570cfa6a54ba70f9d68f5466dba2fde305537f521160b267a8e5eb7c5993c7a"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="5799ac08f49c6ec28b44418544ba8d23c9cdf8628dc740814648a7713aeb7bef"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="c84225c08878adc2f42a015f02e7ef78c71e75145aa31b48be6afbcd9f599d8e"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="148ff909ef4f7f5bf5ce82ff8ca106451086889bf12c81788f966fa46adf5889"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="94be43fbcd020bc7736a63b3bc7c35a09cd3312a7aa240f3dc4007d6e6049e50"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="f6afa160fa8a45c48a45d6d0b87816edaef80a65850f7a517da6324d6b5343ef"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="b014aa86e00c170f662882c9ebc8f08743a92ba0d68befb5aada3acd03712679"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\InsStudioServerOnly_PRFX-Common" privateId="73951feea11203f81474f7f91805ce6a8e46bf44be44982618ca6c94b637a792"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\ENODeploymentUtilities" privateId="1aa58446223e6074c4a24031465193cd11110431c3a555d44de7ad9ab9d2f456"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1DeploymentUtilities" privateId="9a22b9c232fcd6b4855d9777d9bfb7d0d4d83f444296f3b676aee5b4f72cfe20"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1DeploymentUtilities" privateId="06e01877f052630a35cb58137eca06d4a42a29c7617f9680713bd6f1570a225b"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\M1DeploymentUtilities" privateId="038d0aacf347ab541980aecada7d812a8f5eac5ecf48ea76c0e9a625c9cdff81"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\CSR.prd" privateId="9660bf0bbb410dc43aeead8484de79ed33d2cf9d45ae17b52b927f47342fed8e"/>
+		<ActionDone featureLevel="214.61" featureName="CODE\linux_a64\CSR.prd" privateId="356550a1d278070af12a611708a89b528b1acd0b181185e9a2b1fa596b61eb9d"/>
+	</Actions>
+</InstallData>

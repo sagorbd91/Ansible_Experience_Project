@@ -1,0 +1,17 @@
+env_name: 'DEV3'
+fixpack_version: ''
+
+
+#Installer Path details
+installer_path_3dx_fp: '{{ installer_path }}\3DIndexingServer\{{ fix_pack_version }}\3DIndexingServer.Windows64\1'
+
+
+#Installer path and parameters
+KoaRMIPath: 'D:\PLM\{{ env_name }}\3DSpace\Server'
+BBD_PATH: 'D:\PLM\{{ env_name }}\VolumeSearch\3DIndexes'
+TARGET_PATH: 'D:\PLM\{{ env_name }}\VolumeSearch'
+BBD_HOST: 'v0641a.vstage.co'
+KoaHostname: 'v0641a.vstage.co'
+BBD_PASSWD: '3DIndexAdminUser'
+
+

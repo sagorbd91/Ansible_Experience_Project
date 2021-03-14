@@ -1,0 +1,9 @@
+#!/bin/bash
+
+while IFS= read -r user || [[ -n "$user" ]];
+do
+if [[ ${user} != *" "* ]];then
+echo "=============================="$user"======================"
+./VPLMPosExport.sh -user "{{app_administrator_user}}" -password "{{app_administrator_pass}}" -context "VPLMAdmin.Company Name.Default" -server "{{mcs_server_enovia_url}}" -object person:$user -exportlicenseassignment -file {{mcs_bin_dir}}/data/export-user-data/POexport-$user.txt
+fi
+done < {{mcs_bin_dir}}/data/PO-export-person.txt

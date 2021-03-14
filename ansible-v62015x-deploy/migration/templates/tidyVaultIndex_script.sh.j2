@@ -1,0 +1,28 @@
+#!/bin/sh
+
+cd {{ r15x_server_script_dir }}
+
+if [ ! {{ mql_password }} ]; then
+  ./mql << EOF
+  set context person {{ mql_user }};
+  tidy vault "ADMINISTRATION";
+  tidy vault "eService Sample";
+  tidy vault "eService Administration";
+  tidy vault "eService Production";
+  tidy vault "vplm";
+  tidy vault "vplm_archive";
+  tidy vault "SIXW";
+  quit;
+EOF
+else
+  ./mql << EOF
+  set context person {{ mql_user }} pass {{ mql_password }};
+  tidy vault "ADMINISTRATION";
+  tidy vault "eService Sample";
+  tidy vault "eService Administration";
+  tidy vault "eService Production";
+  tidy vault "vplm";
+  tidy vault "vplm_archive";
+  quit;
+EOF
+fi

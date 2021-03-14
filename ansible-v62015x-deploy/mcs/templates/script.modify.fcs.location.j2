@@ -1,0 +1,70 @@
+#!/bin/bash
+MQLPASS={{ mql_password }}
+cd {{ mcs_server_dir }}/scripts
+
+if [ $MQLPASS == "" ]
+then
+echo "Modifying fcs store location ..."
+  ./mql << EOF
+  set context person {{ mql_user }};
+  mod location {{remote_location_1}}-plmx path '{{remote_location_path_1}}/plmx';
+  mod location {{remote_location_1}}-STORE path '{{remote_location_path_1}}/STORE';
+  mod location {{remote_location_1}}-ImageStore path '{{remote_location_path_1}}/IMAGESTORE';
+
+  mod location {{remote_location_1}}-plmx fcs '{{remote_fcs_url_1}}';
+  mod location {{remote_location_1}}-STORE fcs '{{remote_fcs_url_1}}';
+  mod location {{remote_location_1}}-ImageStore fcs '{{remote_fcs_url_1}}';
+
+  mod location {{remote_location_1}}-plmx host '{{remote_fcs_host_1}}';
+  mod location {{remote_location_1}}-STORE host '{{remote_fcs_host_1}}';
+  mod location {{remote_location_1}}-ImageStore host '{{remote_fcs_host_1}}';
+  
+  mod location {{remote_location_2}}-plmx path '{{remote_location_path_2}}/plmx';
+  mod location {{remote_location_2}}-STORE path '{{remote_location_path_2}}/STORE';
+  mod location {{remote_location_2}}-ImageStore path '{{remote_location_path_2}}/IMAGESTORE';
+
+  mod location {{remote_location_2}}-plmx fcs '{{remote_fcs_url_2}}';
+  mod location {{remote_location_2}}-STORE fcs '{{remote_fcs_url_2}}';
+  mod location {{remote_location_2}}-ImageStore fcs '{{remote_fcs_url_2}}';
+
+  mod location {{remote_location_2}}-plmx host '{{remote_fcs_host_2}}';
+  mod location {{remote_location_2}}-STORE host '{{remote_fcs_host_2}}';
+  mod location {{remote_location_2}}-ImageStore host '{{remote_fcs_host_2}}';
+  quit;
+EOF
+echo "Modify fcs store location sucessfullly"
+else
+echo "Modifying fcs store location ..."
+  ./mql << EOF
+  set context person {{ mql_user }} password {{ mql_password }};
+  mod location {{remote_location_1}}-plmx path '{{remote_location_path_1}}/plmx';
+  mod location {{remote_location_1}}-STORE path '{{remote_location_path_1}}/STORE';
+  mod location {{remote_location_1}}-ImageStore path '{{remote_location_path_1}}/IMAGESTORE';
+
+  mod location {{remote_location_1}}-plmx fcs '{{remote_fcs_url_1}}';
+  mod location {{remote_location_1}}-STORE fcs '{{remote_fcs_url_1}}';
+  mod location {{remote_location_1}}-ImageStore fcs '{{remote_fcs_url_1}}';
+
+  mod location {{remote_location_1}}-plmx host '{{remote_fcs_host_1}}';
+  mod location {{remote_location_1}}-STORE host '{{remote_fcs_host_1}}';
+  mod location {{remote_location_1}}-ImageStore host '{{remote_fcs_host_1}}';
+  
+  mod location {{remote_location_2}}-plmx path '{{remote_location_path_2}}/plmx';
+  mod location {{remote_location_2}}-STORE path '{{remote_location_path_2}}/STORE';
+  mod location {{remote_location_2}}-ImageStore path '{{remote_location_path_2}}/IMAGESTORE';
+
+  mod location {{remote_location_2}}-plmx fcs '{{remote_fcs_url_2}}';
+  mod location {{remote_location_2}}-STORE fcs '{{remote_fcs_url_2}}';
+  mod location {{remote_location_2}}-ImageStore fcs '{{remote_fcs_url_2}}';
+
+  mod location {{remote_location_2}}-plmx host '{{remote_fcs_host_2}}';
+  mod location {{remote_location_2}}-STORE host '{{remote_fcs_host_2}}';
+  mod location {{remote_location_2}}-ImageStore host '{{remote_fcs_host_2}}';
+  quit;
+EOF
+echo "Modify fcs store location sucessfullly"
+fi
+
+
+
+

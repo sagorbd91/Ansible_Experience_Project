@@ -1,0 +1,64 @@
+---
+
+- include_vars: common.yml
+  tags: 
+    - install-fcs
+    - install-fcsfx 
+    - create_stores
+
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_instances.yml
+
+- name: install the services
+  remote_user: monitor
+  become: true
+  template: src="service.j2" dest="{{ service_dir }}/{{item.key}}" owner=root group=root mode="u=rwx,g=rx,o=rx"  
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy_service
+    - install-fcs
+
+- include: install_fcs.yml
+- include: install_fcs_fixpack.yml
+- include: deploy_war.yml
+
+- include: import_ssl_cert.yml
+
+- include: install_nfs_mount.yml
+  tags:
+    - install-nfs-mount
+- include: create_stores.yml
+
+
+
+
+
+- name: Stop Services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=stopped
+  with_dict: "{{ instances }}"
+  tags: 
+    - stop-fcs
+    - install-fcsfx
+
+- name: start services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started enabled=yes
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy_service
+    - run-service
+    - start-fcs
+    - install-fcs
+    - install-fcsfx
+
+
+
+- include: open_firewall.yml
+- include: uninstall_fcs.yml
+- include: find_files.yml
+
+

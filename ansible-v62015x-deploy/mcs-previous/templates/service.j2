@@ -1,0 +1,104 @@
+# This is the init script for starting up the
+#  Tomcat server for ENOVIA V6
+#
+# chkconfig: 345 91 10
+# description: Starts and stops the Tomcat daemon
+#
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Get config.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "${NETWORKING}" = "no" ] && exit 0
+
+
+#tomcat_user=v6mcs${mcs_instance}
+tomcat_user={{ plm_user }}
+base_dir={{ mcs_instance_path }}
+app_name="Tomcat service for {{ item.value.app_name }}"
+tomcat_dir=${base_dir}/{{ item.key }}
+startup=${tomcat_dir}/bin/startup.sh
+shutdown=${tomcat_dir}/bin/shutdown.sh
+app_string="java"
+pidfile="/var/run/{{ item.key }}.pid"
+
+retcode_check(){
+  if [ $1 -eq 0 ]
+  then
+    success $"$app_name"
+    echo
+  else
+    failure $"$app_name"
+    echo
+    exit $1
+  fi
+}
+
+start(){
+ if [ ! -f $pidfile ]
+ then
+   touch $pidfile
+   chown $tomcat_user $pidfile
+ fi
+ printf "Starting ${app_name} :"
+ su - $tomcat_user -c "$startup > /dev/null 2>&1"
+ retcode_check $?
+ sleep 1
+ ps -u ${tomcat_user} | grep $app_string | grep -v grep | awk '{print $1}' > $pidfile
+}
+
+stop(){
+ printf "Stopping ${app_name}"
+
+ su - $tomcat_user -c "$shutdown" > /dev/null 2>&1
+
+ retcode_check $?
+ rm -f $pidfile
+}
+
+restart(){
+  stop
+  sleep 10
+  start
+}
+
+status(){
+  if [ -f $pidfile ];
+  then # File exists
+    pid=$(head -n 1 $pidfile)
+    if ps -p $pid > /dev/null
+    then
+      echo "$app_name is running"
+    else
+      echo "$app_name is not running, removing $pidfile"
+      rm -f $pidfile
+    fi
+  else
+    echo "$app_name is not running"
+  fi
+}
+
+
+# See how we were called.
+case "$1" in
+start)
+ start
+ ;;
+stop)
+ stop
+ ;;
+status)
+ status
+ ;;
+restart)
+ restart
+ ;;
+*)
+ echo $"Usage: $0 {start|stop|status|restart}"
+ exit 1
+esac
+
+exit 0

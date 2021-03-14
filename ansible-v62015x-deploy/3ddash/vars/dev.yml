@@ -1,0 +1,104 @@
+
+plm_user: "monitor"
+plm_group: "plm"
+
+has_plm_volume: yes
+
+# Instalation paths
+system_apps_dir: "/plm"
+eplm_server_base_path: "/plm"
+dash_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+dash_install_rel_path: "{{ dash_install_path }}/3ddash"
+dash_instance_path: "{{ dash_install_rel_path }}/instances"
+dash_code_dir: "{{ dash_install_rel_path }}/code"
+dash_conf_dir: "{{ dash_install_rel_path }}/conf"
+dash_log_dir: "{{ dash_install_rel_path }}/logs"
+dash_soft_dir: "{{ dash_install_rel_path }}/softs"
+drivers_dir: "{{ dash_soft_dir }}/drivers"
+dash_jdk_name: "jdk-ds"
+dash_jdk_path: "{{ dash_soft_dir }}/{{ dash_jdk_name }}"
+dash_installer_path: "{{ installer_path }}/3ddash"
+mysql_conn_name: "mysql-connector-java-5.1.35"
+database_driver_path: "{{ drivers_dir }}/{{ mysql_conn_name }}/mysql-connector-java-5.1.35-bin.jar"
+dash_ds_dir: "/var/DassaultSystemes"
+dash_license_dir: "{{ dash_ds_dir }}/Licenses"
+
+
+#Inforamtion for Installation
+mysql_db_option: "2"
+mysql_db_host: "db-3ddashboard-preprod-plm.valmet.com"
+mysql_db_port: "3306"
+mysql_schema_name: "3ddashboard"
+
+db_admin_user: "x3dsadmin"
+db_admin_pass: "x3dsadmin#"
+db_app_user: "x3ds"
+db_app_user_pass: "x3ds#"
+
+mail_server_name: "smtp.valmet.com"
+mail_sender_email: "test-admin.plm@valmet.com"
+
+tomcat_setenv_path: "{{ dash_instance_path }}/was_dash_1/bin/setenv.sh"
+tomcat_conf_dir: "{{ dash_instance_path }}/was_dash_1/conf"
+tomcat_webapp_dir: "{{ dash_instance_path }}/was_dash_1/webapps"
+tomcat_lib_dir:  "{{ dash_instance_path }}/was_dash_1/lib"
+tomcat_instance_ip: "139.74.112.51"
+tomcat_http_port: "8481"
+
+untrusted_domain: "google.com"
+passport_service_url: "https://3dpassport-preprod-plm.valmet.com:8280/3DPassport"
+dashboard_service_url: "http://i1-3ddashboard-preprod-plm.valmet.com:8481/uwp"
+mcs_service_url: "https://3dspace-preprod-plm.valmet.com:8180/3DSpace"
+
+
+tomcat_user: tomcat
+tomcat_user_pass: tomcat123#
+
+
+# Instance Info
+instances:
+  was_dash_1:
+    app_name: was_dash_1
+    port_http: 8481
+    port_jmx: 8489
+    port_ajp: 8410
+    port_shutdown: 8306
+    port_redirect: 8444 
+
+
+
+
+#================================== 3DDash Local Reverseproxy vars: =============================================================================
+
+httpd_pkgs:
+      - httpd
+      - mod_ssl
+      - openssl
+
+dash_instance_common_name: "i1-3ddashboard-{{ env_name }}-plm.valmet.com"
+
+http_ssl_port: "443"
+dash_instance_port: "{{ tomcat_http_port }}"
+
+dash_crt: "{{env_name}}-3ddash-self"
+
+http_install_path: "/etc/httpd"
+vhost_path: "{{ http_install_path }}/conf.d"
+ssl_directory: "{{ http_install_path }}/ssl"
+
+ssl_certs_privkey_path: "{{ ssl_directory }}/{{ dash_crt }}.key"
+ssl_certs_cert_path: "{{ ssl_directory }}/{{ dash_crt }}.crt"
+
+ssl_certs_path_owner: "{{ plm_user }}"
+ssl_certs_path_group: "{{ plm_group }}"
+ssl_certs_mode: 0644
+ssl_cert_pass: "changeit"
+ssl_certs_country: "FI"
+ssl_certs_state: "Helsinki"
+ssl_certs_locality: "Helsinki"
+ssl_certs_organization: "valmet"
+ssl_certs_common_name: "{{dash_instance_common_name}}"
+ssl_certs_days: "365"
+ssl_certs_fields: "/C={{ssl_certs_country}}/ST={{ssl_certs_state}}/L={{ssl_certs_locality}}/O={{ssl_certs_organization}}/CN={{ssl_certs_common_name}}"
+
+#==================================================================== END =============================================================================

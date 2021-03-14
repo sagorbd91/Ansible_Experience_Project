@@ -1,0 +1,9 @@
+---
+- include: copy_class_properties.yml
+- include: execute_pre_migration_mql.yml
+- include: vplm_data_migration.yml
+- include: migration_new_typing.yml
+- include: effective_migration.yml
+- include: new_typing_migration_commit.yml
+- include: copy_mxEnv.yml
+

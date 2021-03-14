@@ -1,0 +1,8 @@
+---
+
+- hosts: 3dx_servers
+  vars_files:
+      - 3dx/vars/main.yml
+      - 3dx/vars/{{ env_name }}.yml
+  roles:
+    - 3dx

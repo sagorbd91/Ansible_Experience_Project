@@ -1,0 +1,34 @@
+---
+
+env_name: "sandbox2"
+plm_user: plms2ma
+
+has_plm_volume: no
+
+# Installer Info
+studio_installer_path: "{{ installer_path }}/studio/ga/ENOVIAStudioModelingPlatformRichClients.Linux64"
+studio_fp_installer_path: "{{ installer_path }}/studio/{{ fix_pack_version }}/ENOVIAStudioModelingPlatformRichClients.Linux64"
+
+
+# Installation dir path
+studio_env_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+studio_install_path: "{{ studio_env_path }}/studio"
+studio_code_dir: "{{studio_install_path}}/code"
+studio_log_dir: "{{studio_install_path}}/logs"
+studio_conf_dir: "{{studio_install_path}}/conf"
+studio_soft_dir: "{{studio_install_path}}/softs"
+studio_java_path: "{{studio_soft_dir}}/jdk-studio"
+java7_version_dir: "jdk1.7.0_67"
+java8_version_dir: "jdk1.8.0_92"
+
+
+
+# Installation infomation
+db_option_db2: "2"
+db2_product_dir: "/opt/ibm/db2/V10.5"
+db2_instance_name: "dsprod"
+db2_connection_user: "dsprod"
+db2_connection_user_pass: "dsprod#"
+db2_database_name: "DSPROD"
+db2_data_tablespace: "MX_DATA"
+db2_index_tablespace: "MX_INDEX"

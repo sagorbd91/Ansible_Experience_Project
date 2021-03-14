@@ -1,0 +1,29 @@
+env_name: '18xdev4'
+
+is_fcsremote_lb:
+
+mode: http
+lb_port: 8001
+balance: roundrobin
+
+#frontend_port_mcs_nocas: "18380"
+frontend_port_mcs_nocas: "18282"
+frontend_port_mcs_cas: "18180"
+frontend_port_fcs_central: "18580"
+frontend_port_fcs_remote1: "18680"
+frontend_port_fcs_remote2: "18682"
+
+mcs_nocas_i1: "i1-mcsnocas-{{ env_name }}.plm.valmet.com:8081"
+#mcs_nocas_i2: "i1-mcsnocas-{{ env_name }}.plm.valmet.com:8081"
+
+mcs_cas_i1: "i1-mcscas-{{ env_name }}.plm.valmet.com:8181"
+#mcs_cas_i2: "i2-mcscas-{{ env_name }}.plm.valmet.com:8181"
+
+fcs_central_i1: "i1-fcscentral-{{ env_name }}.plm.valmet.com:8581"
+#fcs_central_i2: "i2-fcscentral-{{ env_name }}.plm.valmet.com:8581"
+
+fcs_remote_valmet_1_i1: "i1-fcsremote-valmet1-{{ env_name }}.plm.valmet.com:8683"
+fcs_remote_valmet_1_i2: "i2-fcsremote-valmet1-{{ env_name }}.plm.valmet.com:8684"
+
+fcs_remote_valmet_2_i1: "i11-fcsremote-valmet2-{{ env_name }}.plm.valmet.com:8681"
+fcs_remote_valmet_2_i2: "i12-fcsremote-valmet2-{{ env_name }}.plm.valmet.com:8682"

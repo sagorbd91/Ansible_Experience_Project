@@ -1,0 +1,93 @@
+---
+
+- name: Check if instance path exists or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{passport_instance_path}}/{{ item.key }}"
+  register: check_path
+  with_dict: "{{ instances }}"
+  tags: 
+    - install-instances
+    - install-passport
+  
+- name: unarchiving tomee 
+  remote_user: monitor
+  become: true
+  unarchive: src="{{tomee_installer}}" dest="{{ passport_instance_path }}" owner={{ plm_user }} group={{ plm_group }} copy=no 
+  tags: 
+   - install-instances
+   - install-passport
+  
+- name: create tomee instances
+  remote_user: "{{ plm_user }}"
+  file: dest="{{ passport_instance_path }}/{{ item.key }}" state=directory 
+  with_dict: "{{ instances }}"
+  tags: 
+   - install-instances
+   - install-passport
+
+- name: copy tomcat content to instance
+  remote_user: monitor
+  become: true
+  synchronize:
+     src: "{{ passport_instance_path }}/{{ tomee_version }}/." 
+     dest: "{{ passport_instance_path }}/{{ item.key }}" 
+     checksum: yes 
+     recursive: yes
+     archive: no 
+  delegate_to: "{{inventory_hostname}}"
+  with_dict: "{{ instances }}"
+  tags: 
+   - install-instances
+   - install-passport
+
+- name: remove tomee version
+  remote_user: monitor
+  become: true
+  file: path="{{ passport_instance_path }}/{{ tomee_version }}" state=absent
+  tags: 
+      - install-instances
+      - install-passport
+
+- name: chage ownership
+  remote_user: monitor
+  become: true
+  command: chown -R "{{plm_user}}":"{{plm_group}}" "{{ passport_instance_path }}/{{ item.key }}" 
+  with_dict: "{{ instances }}"
+  tags: 
+   - install-instances
+   - install-passport
+  
+
+- name: create link for logs
+  remote_user: monitor
+  become: true 
+  file: src="{{passport_log_dir}}/{{item.key}}" dest="{{passport_instance_path}}/{{item.key}}/logs" owner={{plm_user}} group={{plm_group}} state=link force=yes 
+  with_dict: "{{ instances }}"
+  tags: 
+   - install-instances
+   - install-passport
+   
+- name: tomee instance server.xml config
+  remote_user: "{{ plm_user }}"
+  template: src="tomee.server.xml.j2" dest="{{passport_instance_path}}/{{ item.key }}/conf/server.xml"
+  with_dict: "{{ instances }}"   
+  tags: 
+    - install-instances
+    - install-passport
+    
+- name: tomee instance setenv.sh config
+  remote_user: "{{ plm_user }}"
+  template: src="tomee.setenv.sh.j2" dest="{{passport_instance_path}}/{{ item.key }}/bin/setenv.sh"
+  with_dict: "{{ instances }}"
+  tags: 
+     - install-instances
+     - install-passport
+     
+     
+- name: Config tomcat user
+  remote_user: "{{ plm_user }}"
+  template: src="tomcat.users.xml.j2" dest="{{passport_instance_path}}/{{ item.key }}/conf/tomcat-users.xml"
+  with_dict: "{{ instances }}"
+  tags: 
+     - install-instances
+     - install-passport

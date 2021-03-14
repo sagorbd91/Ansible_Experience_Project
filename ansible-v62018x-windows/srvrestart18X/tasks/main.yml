@@ -1,0 +1,155 @@
+---
+
+- name: Stopping 3DPassport Service
+  win_service: name=3DPassport_R2018x state=stopped
+  
+- name: Stoppping 3DDashboard Service
+  win_command: taskkill /f /fi "Services eq 3DDashboard_R2018x"
+
+- name: Stoppping 3DFederated Service
+  win_service: name=federated_R2018x state=stopped
+
+- name: Stoppping 3DSpaceTomEENoCAS Service
+  win_service: name=3DSpaceTomEENoCAS_R2018x state=stopped
+
+- name: Stoppping 3DSpaceTomEE Service
+  win_service: name=3DSpaceTomEE_R2018x state=stopped
+
+- name: Stoppping 3DEXPERIENCE 3DSpace Index Service
+  win_service: name='3DEXPERIENCE R2018x 3DSpace Index' state=stopped
+
+- name: Stoppping 3DEXPERIENCE R2018x PICDaemonService Service
+  win_service: name='3DEXPERIENCE R2018x PICDaemonService' state=stopped
+
+- name: Stoppping 3DEXPERIENCE R2018x 3DNotification Node Service
+  win_service: name='3DEXPERIENCE R2018x 3DNotification Node' state=stopped
+
+- name: Stoppping 3DComment Service
+  win_service: name=3DComment_R2018x state=stopped
+
+- name: Stoppping Exalead CloudView Service
+  win_service: name='Exalead CloudView - R2018x_3DSwym' state=stopped
+
+- name: Stoppping 3DSwym Service
+  win_service: name=3DSwym_R2018x state=stopped
+
+- name: Stoppping 3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc Service
+  win_service: name='3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc' state=stopped
+
+- name: Stoppping FileCollaborationServer_R2018x Service
+  win_service: name=FileCollaborationServer_R2018x state=stopped
+  
+- name: Setting 3DPass Service dependency
+  win_service: 
+    name: 3DDashboard_R2018x
+    start_mode: delayed
+    dependencies: ['3DPassport_R2018x']
+    
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: federated_R2018x
+    start_mode: delayed
+    dependencies: ['3DDashboard_R2018x']
+     
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: 3DSpaceTomEENoCAS_R2018x
+    start_mode: delayed
+    dependencies: ['federated_R2018x']
+     
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: 3DSpaceTomEE_R2018x
+    start_mode: delayed
+    dependencies: ['3DSpaceTomEENoCAS_R2018x']
+     
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: '3DEXPERIENCE R2018x 3DSpace Index'
+    start_mode: delayed
+    dependencies: ['3DSpaceTomEE_R2018x']
+
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: '3DEXPERIENCE R2018x PICDaemonService'
+    start_mode: delayed
+    dependencies: ['3DEXPERIENCE R2018x 3DSpace Index']
+    
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: '3DEXPERIENCE R2018x 3DNotification Node'
+    start_mode: delayed
+    dependencies: ['3DEXPERIENCE R2018x PICDaemonService']
+    
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: 3DComment_R2018x
+    start_mode: delayed
+    dependencies: ['3DEXPERIENCE R2018x 3DNotification Node']   
+
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: 'Exalead CloudView - R2018x_3DSwym'
+    start_mode: delayed
+    dependencies: ['3DComment_R2018x']  
+    
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: 3DSwym_R2018x
+    start_mode: delayed
+    dependencies: ['Exalead CloudView - R2018x_3DSwym']
+    
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: '3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc'
+    start_mode: delayed
+    dependencies: ['3DSwym_R2018x']
+
+- name: Setting 3DFederated Service dependency
+  win_service: 
+    name: FileCollaborationServer_R2018x'
+    start_mode: delayed
+    dependencies: ['3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc']
+    
+- name: STARTING 3DPass Service
+  win_service: name=3DPassport_R2018x state=started
+    
+- name: Starting 3DDashboard Service
+  win_service: name=3DDashboard_R2018x state=started
+
+- name: Starting 3DFederated Service
+  win_service: name=federated_R2018x state=started
+
+- name: Starting 3DSpaceTomEENoCAS Service
+  win_service: name=3DSpaceTomEENoCAS_R2018x state=started
+
+- name: Starting 3DSpaceTomEE Service
+  win_service: name=3DSpaceTomEE_R2018x state=started
+
+- name: Starting 3DEXPERIENCE 3DSpace Index Service
+  win_service: name='3DEXPERIENCE R2018x 3DSpace Index' state=started
+
+- name: Starting 3DEXPERIENCE R2018x PICDaemonService Service
+  win_service: name='3DEXPERIENCE R2018x PICDaemonService' state=started
+
+- name: Starting 3DEXPERIENCE R2018x 3DNotification Node Service
+  win_service: name='3DEXPERIENCE R2018x 3DNotification Node' state=started
+
+- name: Starting 3DComment Service
+  win_service: name=3DComment_R2018x state=started
+
+- name: Starting Exalead CloudView Service
+  win_service: name='Exalead CloudView - R2018x_3DSwym' state=started
+
+- name: Starting 3DSwym Service
+  win_service: name=3DSwym_R2018x state=started
+
+- name: Starting 3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc Service
+  win_service: name='3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc' state=started
+
+- name: Starting FileCollaborationServer_R2018x Service
+  win_service: name=FileCollaborationServer_R2018x state=started
+
+#  tags:
+#     - start-pass
+#     - restart-pass

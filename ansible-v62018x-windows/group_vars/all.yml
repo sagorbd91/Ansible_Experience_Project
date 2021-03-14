@@ -1,0 +1,59 @@
+
+ansible_user: 'SRV_APP_Ansible@VSTAGE.CO'
+ansible_password: 'heDo#z_GH7!-NJF73gtp'
+ansible_port: '5985'
+ansible_connection: 'winrm'
+ansible_winrm_transport: kerberos
+ansible_winrm_server_cert_validation: ignore
+validate_certs: false
+ansible_become: false
+become_method: sudo
+become: yes
+
+
+#Common Installer
+installer_path: 'C:\Installer'
+#installer_path: '\\v0667a\D\Data\Sources\dsproducts\enoviav6\R2018x\server-side'
+ds_ga_installer_path: '{{ installer_path }}\DS_Installer\ga\DS_Installer.Windows64\1'
+ds_fp_installer_path: '{{ installer_path }}\DS_Installer\{{fix_pack_version}}\DS_Installer.Windows64\1'
+java_installer_path: 'C:\installer\jdk\jdk-8u162-windows-x64.exe'
+windows_tmp_path: 'C:\Temp'
+#windows_tmp_path: '\\v0626a\installer\temp'
+system_path: 'C:\Windows\System32'
+fix_pack_version: ''
+
+#installer_path: '\\jkls0326vm12a\data\sources\dsproducts\enoviav6\r2018x\server-side'
+#ds_ga_installer_path: '{{ installer_path }}\3DSpace\DS_Installer.Windows64\1'
+#ds_fp_installer_path: '{{ mcs_installer_path }}\DS_Installer-V6R2018x.HF3.Windows64\DS_Installer.Windows64\1'
+#ds_fp_installer_path: '{{installer_path}}\installer\{{fix_pack_version}}\DS_Installer.Windows64\1'
+#ds_fp_installer_path: '{{mcs_installer_path}}\DS_Installer.HF2.Windows64\1'
+
+
+#Java path
+#Java_Path: 'C:\middleware\R2018X\java\jdk'
+Java_Path: 'D:\PLM\{{ env_name }}\common\soft\java\jdk'
+
+
+#URL 
+X3DCSMA_3DPassportURL : 'https://3dpassport-18x{{ env_name.lower() }}-plm.valmet.com:8280/3dpassport'
+X3DCSMA_3DDashboardURL: 'https://3ddashboard-18x{{ env_name.lower() }}-plm.valmet.com:443/3ddashboard'
+X3DCSMA_3DCompassURL: 'https://3dspace-18x{{ env_name.lower() }}-plm.valmet.com:8180/3dspace'
+X3DCSMA_6WTAGURL: 'https://3dspace-18x{{ env_name.lower() }}-plm.valmet.com:8180/3dspace'
+X3DCSMA_3DSWYMURL: 'https://3dswym-18x{{ env_name.lower() }}-plm.valmet.com:8480/3dswym'
+X3DCSMA_3DSpaceURL: 'https://3dspace-18x{{ env_name.lower() }}-plm.valmet.com:8180/3dspace'
+X3DCSMA_FEDERATED_SEARCH: 'https://federated-18x{{ env_name.lower() }}-plm.valmet.com:8980/federated'
+X3DCSMA_3DCommentURL: 'https://3dcomment-18x{{ env_name.lower() }}-plm.valmet.com:8780/3dcomment'
+X3DCSMA_3DNotificationURL: 'https://3dnotification-18x{{ env_name.lower() }}-plm.valmet.com:8880/3dnotification'
+X3DCSMA_FTSURL: 'http://3dftsearch-18x{{ env_name.lower() }}-plm.valmet.com:19000'
+X3DCSMA_CloudViewURL: 'http://3dftsearch-18x{{ env_name.lower() }}-plm.valmet.com:29000'
+X3DCSMA_ENOVIAV5: 'https://v0641a.vstage.co:443/enoviav5'
+fcsSrvURL: 'https://fcscentral-18x{{ env_name.lower() }}-plm.valmet.com:8580/enoviafcs'
+
+#Mail server info
+X3DCSMA_SMTP_HOST: 'smtp.valmet.com'
+X3DCSMA_SMTP_MAIL_SENDER : 'test-admin.plm@valmet.com'
+
+
+time_out_limit: '300000'
+
+

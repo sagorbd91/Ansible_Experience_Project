@@ -1,0 +1,12 @@
+# Tomcat configuration
+#   Default template for configuration file server.xml
+tomcat_default_server_xml_template: server.xml.j2
+#   Default shutdown port (per instance name: item.port_shutdown)
+tomcat_default_port_shutdown: 8005
+#   Default connector port (per instance name: item.port_connector)
+tomcat_default_port_connector: 8080
+#   Default redirect port (per instance name: item.port_redirect)
+tomcat_default_port_redirect: 8443
+#   Default AJP port (per instance name: item.port_ajp)
+tomcat_default_port_ajp: 8009
+

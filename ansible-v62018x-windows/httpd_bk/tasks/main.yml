@@ -1,0 +1,10 @@
+---
+- include: install_apache.yml
+  when: ansible_os_family == "Windows"
+#- include: create_cert.yml
+- include: copy_self_sign.yml
+- include: deploy_vhost.yml
+- include: deploy_self_sign.yml
+- include: deploy_fragment.yml
+
+

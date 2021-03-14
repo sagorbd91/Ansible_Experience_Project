@@ -1,0 +1,2 @@
+$service = gwmi win32_service -computer $env:COMPUTERNAME -filter "name='{{ item }}'"
+$service.change($null,$null,$null,$null,$null,$null,"$env:COMPUTERNAME\{{ Enovia_User_Name }}","{{ Enovia_User_password }}")

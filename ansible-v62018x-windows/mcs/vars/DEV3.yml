@@ -1,0 +1,67 @@
+env_name: DEV3
+
+#MCS Installer details
+mcs_installer_path: '{{installer_path}}\3DSpace'
+platform_GA_installer_path: '{{mcs_installer_path}}\ga\platform\Windows64\1'
+platform_FP_installer_path: '{{mcs_installer_path}}\{{ fix_pack_version }}\platform\3DSpace.Windows64\1'
+apps_GA_installer_path: '{{mcs_installer_path}}\ga\apps'
+apps_FP_installer_path: '{{mcs_installer_path}}\{{ fix_pack_version }}\apps'
+bin_dir: '{{ installation_path }}\bin'
+
+#MCS Installation path and parameters
+application_root_path: 'D:\PLM\{{ env_name }}\'
+installation_path: '{{application_root_path}}\3DSpace'
+mcs_server_dir: '{{installation_path}}\Server'
+data_target: '{{ installation_path }}\Data'
+target_path: '{{ mcs_server_dir }}'
+common_dir: '{{application_root_path}}\common'
+
+
+#Database variables
+db_user_name: 'm1'
+db_user_pwd: 'm1#01'
+db_instance_name: 'spacedb'
+db_server: 'v0641a'
+db_temp_path: 'D:\DassaultSystemes\3DEXP_DB'
+admin_user_pwd: 'Admpas_Dev3'
+creator_password: 'creator.'
+data_fg: 'M1_DATA'
+data_index: 'M1_INDEX'
+
+apps_dir: '{{mcs_server_dir}}\Apps'
+tbs_data: 'I1_DATA'
+tbs_index: 'I1_INDEX'
+vplm_data: 'V1_DATA'
+vplm_index: 'V1_INDEX'
+tbs: ''
+
+
+
+#email and deploy information
+smtp_host: 'smtp.valmet.com'
+mail_sender: 'test-admin.plm@valmet.com'
+mcscas_appname: '3dspace'
+mcscas_instance_port: '8181'
+cert_repo: 'D:\plm\{{ env_name }}common\soft\Apache24\conf\ssl'
+port_cas: '8181'
+ui: ""
+system_path: 'C:\Windows\System32'
+
+#update license information
+license_file_location: 'C:\ProgramData\DassaultSystemes\Licenses'
+license_name: 'license-pool1.vstage.co:4085'
+
+#FCS and FTS config
+config_xml_path: '{{ installer_path }}\Server\Apps\BusinessProcessServices\V6R2018x\Modules\ENOFramework\AppInstall\Programs\config.xml'
+fcs_store_location_path: 'D:\PLM\{{ env_name }}\Fcscentral\stores'
+
+#DateTime_Format
+DATETIME_FORMAT : 'moy/dom/yr4 h12:min:sec'
+
+#Display Env and Release note
+
+#resource_properties_dir: '{{ instanance_dir }}\tomee\webapps\3dspace\WEB-INF\classes'
+resource_properties_dir: '{{ windows_tmp_path }}'
+#topbar_html_dir: '{{ instanance_dir }}\tomee\webapps\3dspace\webapps\TopBar\assets\templates'
+topbar_html_dir: '{{ windows_tmp_path }}'
+

@@ -1,0 +1,38 @@
+---
+ 
+- name: Copy the Integration Exchange Framework Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_intex_framework.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAIntegrationExchangeFramework.Unix64/1/answer_intex_framework.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-intexfw
+    - install-mcs
+   
+- name: Copy the Integration Exchange Framework Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_intex_framework_nudb.j2" dest="{{ mcs_apps_ga_installer }}/ENOVIAIntegrationExchangeFramework.Unix64/1/answer_intex_framework.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-intexfw
+     - install-mcs
+
+- name: Executing the Integration Exchange Framework installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_prog_cen_foundation.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIAIntegrationExchangeFramework.Unix64/1
+  tags: 
+     - install-intexfw
+     - install-mcs
+   
+
+- name: Remove the Integration Exchange Framework Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_apps_ga_installer }}/ENOVIAIntegrationExchangeFramework.Unix64/1/answer_prog_cen_foundation.txt" state=absent
+  tags: 
+     - install-intexfw
+     - install-mcs
+

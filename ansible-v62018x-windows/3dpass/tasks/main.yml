@@ -1,0 +1,11 @@
+---
+- include: prerequisite.yml
+- include: java_installation.yml
+- include: install_passport.yml
+- include: install_passport_fp.yml
+- include: restart_service.yml
+- include: run_test.yml
+- include: edit_createservice.yml
+- include: post_activity.yml
+- include: copy_installer_local.yml
+

@@ -1,0 +1,14 @@
+---
+
+- include: create_dirs.yml
+- include: pre_requisite.yml
+- include: deploy-xvfbd.yml
+- include: install_3dx.yml
+- include: install_3dx_fixpack.yml
+- include: deploy_3dx_scripts.yml
+- include: open_firewall.yml
+- include: deploy_cron.yml
+- include: copy_pinpoint.yml
+- include: run_services.yml
+- include: uninstall_3dx.yml
+

@@ -1,0 +1,65 @@
+---
+
+- name: create symbolic link for the java path
+  remote_user: monitor
+  become: true
+  file: src="{{ java8_version_dir }}" dest="{{ mcs_java_path }}" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags: 
+     - ENOVIACAPAandAuditFoundation-FP
+#     - install-apps-fp
+
+- name: Copy the CAPA and Audit Foundation fixpack Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_cap_audit_foundationfx.j2" dest="{{ mcs_conf_dir }}/answer_cap_audit_foundationfx.txt" mode=2777
+  when: update_database
+  tags: 
+     - ENOVIACAPAandAuditFoundation-FP
+     - install-mcsfx
+#     - install-apps-fp
+
+
+- name: Copy the CAPA and Audit Foundation fixpack Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_cap_audit_foundation_nudbfx.j2" dest="{{ mcs_conf_dir }}/answer_cap_audit_foundationfx.txt" mode=2777
+  when: not update_database
+  tags: 
+    - ENOVIACAPAandAuditFoundation-FP
+    - install-mcsfx
+#    - install-apps-fp
+
+
+- name: Executing the CAPA and Audit Foundation fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_fp_installer_path }} < {{ mcs_conf_dir }}/answer_cap_audit_foundationfx.txt
+  args:
+    chdir: /{{ mcs_apps_fp_installer }}/ENOVIACAPAandAuditFoundation.Unix64/1
+  tags: 
+     - ENOVIACAPAandAuditFoundation-FP
+     - install-mcsfx
+#     - install-apps-fp
+   
+
+- name: Remove the CAPA and Audit Foundation fixpack Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_conf_dir }}/answer_cap_audit_foundationfx.txt" state=absent
+  tags: 
+     - ENOVIACAPAandAuditFoundation-FP
+     - install-mcsfx
+#     - install-apps-fp
+
+
+- name: Copy CAPA hotfix
+  synchronize:
+      src: "{{mount_dest_dir}}/backups/catia-v6/migration-2/mcsnocas/fix-CAAU-HF7/linux_a64/docs/javaserver/" 
+      dest: "{{mcs_server_dir}}/linux_a64/docs/javaserver/"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags:
+#    - ENOVIACAPAandAuditFoundation-FP
+    - capa_hotfix_deploy
+

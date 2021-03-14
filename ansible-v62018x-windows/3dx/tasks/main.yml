@@ -1,0 +1,6 @@
+- include: prerequisite.yml
+- include: ga_installation.yml
+- include: fixpack_installation.yml
+- include: restart_service.yml
+- include: 3dx_script_copy.yml
+- include: copy_installer_local.yml

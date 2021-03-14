@@ -1,0 +1,40 @@
+---
+
+- name: Check if studio installed or not  
+  stat: path="{{studio_install_path}}/code/linux_a64"
+  register: check_instalation
+  tags: install-studio
+
+- name: Studio installation doesn't exist
+  fail: msg="studio instaltion already exist!!"
+  when: check_instalation.stat.exists
+  tags: install-studio
+  
+- name: Check if studio installer path exists
+  stat: path="{{studio_installer_path}}"
+  register: check_path
+  tags: install-studio
+
+- name: Studio installer doesn't exist
+  fail: msg="studio installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: install-studio
+
+- name: Copy the Studio Modeling Platform RichClients Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_studio.j2" dest="{{ studio_installer_path }}/1/answer_studio.txt" mode=2777
+  tags: install-studio
+
+- name: Executing the Studio Modeling Platform RichClients installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh < answer_studio.txt
+  args:
+    chdir: /{{ studio_installer_path }}/1
+  tags: install-studio
+
+- name: Remove the Studio Modeling Platform RichClients Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ studio_installer_path }}/1/answer_studio.txt" state=absent
+  tags: install-studio

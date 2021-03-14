@@ -1,0 +1,22 @@
+---
+
+- name: Stop Services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=stopped
+  with_dict: "{{ instances }}"
+  tags: 
+    - uninstall-fcs
+   
+- name: Remove the fcs dir
+  remote_user: monitor
+  become: true
+  file: path="{{ fcs_install_rel_path }}" state=absent
+  tags: uninstall-fcs
+  
+- name: Remove the fcs store dir
+  remote_user: monitor
+  become: true
+  file: path="{{ fcs_file_store_dir }}" state=absent
+  tags: uninstall-fcs
+  

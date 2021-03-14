@@ -1,0 +1,79 @@
+---
+
+- name: Check that cert exists, Failed if file not found
+  win_stat: path="{{ src_location }}{{ src_filename }}"
+  register: stat_file
+  failed_when: "stat_file.stat.exists != True"
+  tags:
+    - ssl_cert_deploy_src
+
+- debug:
+    var: stat_file
+  tags:
+    - ssl_cert_deploy_src
+  
+- name: Fetch a the cert
+  fetch: src={{ src_location }}{{ src_filename }} dest=/tmp/ flat=yes 
+  tags:
+    - ssl_cert_deploy_src
+    
+
+- name: Copy the cert to target 
+  win_copy: 
+      src: /tmp/{{ src_filename }}
+      dest: '{{ target_location }}{{ src_filename }}'
+  tags: 
+     - ssl_cert_deploy_target
+
+- name: Import using keytool
+  win_command: >
+      {{ java_path }}\bin\keytool.exe -importcert -keystore {{ java_path }}\jre\lib\security\cacerts -noprompt -storepass changeit -file {{ target_location }}\{{ src_filename }} -alias {{ alias }}
+  tags: 
+     - ssl_cert_deploy_target
+     
+
+     
+     
+     
+     
+     
+     
+     
+     
+
+- name: Collecting -> List using keytool
+  win_command: >
+      {{ java_path }}\bin\keytool.exe -list -v -keystore {{ java_path }}\jre\lib\security\cacerts -storepass changeit -alias {{ alias }}    
+  register: outputListCommand
+  tags: 
+     - ssl_cert_list
+     - ssl_cert_delete
+
+- name: Printing -> List using keytool
+  debug: msg={{ outputListCommand.stdout_lines  }}
+  tags: 
+     - ssl_cert_list
+     - ssl_cert_delete 
+
+ 
+ 
+- name: Deleting using keytool
+  win_command: >
+      {{ java_path }}\bin\keytool.exe -delete -keystore {{ java_path }}\jre\lib\security\cacerts -storepass changeit -alias {{ alias }}    
+  register: outputListCommand
+  tags: 
+     - ssl_cert_delete
+
+- name: Collecting -> List using keytool
+  win_command: >
+      {{ java_path }}\bin\keytool.exe -list -v -keystore {{ java_path }}\jre\lib\security\cacerts -storepass changeit -alias {{ alias }}    
+  register: outputListCommand
+  ignore_errors: yes
+  tags: 
+     - ssl_cert_delete
+
+- name: Printing -> List using keytool
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - ssl_cert_delete    
+     

@@ -1,0 +1,64 @@
+---
+
+plm_user: "plms1tm"
+plm_group: "plm"
+
+has_plm_volume: yes
+
+fts_installer_path: "{{ installer_path }}/3dsearch/fp1517/ENOVIAFull-textSearchServerwithExalead.Full.Linux64"
+fts_fixpack_installer: "{{ installer_path }}/3dsearch/{{ fix_pack_version }}/ENOVIAFull-textSearchServerwithExalead.Linux64"
+
+apps_file_storage_dir: "/plm"
+eplm_server_base_path: "/plm"
+fts_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+fts_install_rel_path: "{{fts_install_path}}/{{fts_type}}"
+#fts_common_dir: "{{ fts_install_path }}/ftscommon"
+fts_code_dir: "{{fts_install_rel_path}}/code"
+fts_conf_dir: "{{fts_install_rel_path}}/conf"
+fts_log_dir: "{{fts_install_rel_path}}/logs"
+fts_bin_path: "{{fts_install_rel_path}}/bin"
+fts_soft_dir: "{{fts_install_rel_path}}/softs"
+fts_bin_path: "{{fts_install_rel_path}}/bin"
+fts_jdk_path: "{{fts_soft_dir}}/jdk-fts"
+
+
+
+fts_custom_install: "2"
+fts_master_server_install: "2"
+fts_slave_server_install: "3"
+fts_base_port: "19000"
+slave_base_port: "19000"
+fts_slices_no: "1"
+fts_analyzers_no: "4"
+fts_server_admin_pass: "admin1234"
+fts_host: "3dftsearch-master-{{env_name}}-plm.valmet.com"
+#fts_host: "{{ inventory_hostname }}"
+fts_service_url: "http://3dftsearch-master-{{env_name}}-plm.valmet.com:{{fts_base_port}}"
+fts_slave_service_url: "http://3dftsearch-slave-{{env_name}}-plm.valmet.com:{{slave_base_port}}"
+fts_bin_dir: "{{ fts_code_dir }}/linux_a64/cv/data/bin"
+
+
+
+
+pre_pkgs:
+    - libxml2
+    - libxcb
+    - bzip2-libs
+    - bzip2-libs.i686
+    - compat-openldap
+    - compat-openldap.i686
+    - gd
+    - gd.i686
+    - glib2
+    - glib2.i686
+    - openssl
+    - openssl.i686
+    - openssl098e
+    - openssl098e.i686
+    - libaio
+    - libaio.i686
+    - libstdc++
+    - libstdc++.i686
+    - libSM
+    - libxslt
+

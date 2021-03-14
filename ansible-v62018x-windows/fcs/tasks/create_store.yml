@@ -1,0 +1,25 @@
+---
+   
+- name: create the fcs stores file storage
+  win_file: path="{{ fcscentral_file_dir }}\stores" state=directory
+  tags:
+   - create_stores
+   - install-fcs-ga
+
+- name: create the fcscentral Imagestore file storage
+  win_file: path="{{ fcscentral_file_store_dir }}\IMAGESTORE" state=directory
+  tags:
+   - create_stores
+   - install-fcs-ga
+
+- name: create fcscentral plmx file store
+  win_file: path="{{ fcscentral_file_store_dir }}\plmx" state=directory 
+  tags:
+   - create_stores
+   - install-fcs-ga
+
+- name: create fcscentral store file store
+  win_file: path="{{ fcscentral_file_store_dir }}\STORE" state=directory
+  tags:
+   - create_stores
+   - install-fcs-ga

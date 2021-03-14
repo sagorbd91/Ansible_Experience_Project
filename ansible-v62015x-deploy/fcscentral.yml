@@ -1,0 +1,71 @@
+---
+
+- name: pre task 
+  hosts: fcscentral_servers
+  strategy: free
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor 
+  become: true
+  tags: install-fcs
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     tags: mounting
+
+
+- name: Create user
+  hosts: fcscentral_servers
+  strategy: free
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: "monitor"
+  become: true
+  tags: install-fcs
+  vars:
+    plm_user: "plms2fa"
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }	
+
+
+
+- name: Install fcs Central
+  hosts: fcscentral_servers 
+  strategy: free
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - fcs/vars/main.yml
+      - fcs/vars/{{env_name}}.yml
+  vars:
+   fcs_type: "fcscentral"
+   instance_name: "was_fcs_1"
+   instances:
+       was_fcs_1:
+         app_name: was_fcs_1
+         port_http: 8581
+         port_jmx: 8290
+         port_ajp: 8510
+         port_shutdown: 8506
+         port_redirect: 8544 
+  remote_user: monitor
+  sudo: false
+  roles:
+     - { role: fcs  }		
+
+
+- name: post tasks
+  hosts: fcscentral_servers
+  strategy: free
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor 
+  sudo: true
+  tags: umount-nfs
+  tasks:
+    - name: unmounting NFS from local
+      mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=ro state=unmounted
+  
+

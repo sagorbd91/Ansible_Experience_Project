@@ -1,0 +1,15 @@
+#!/bin/bash
+
+time_old=$(date +'%H:%M')
+tail -n4 {{ mcs_log_dir }}/cron-error.log | cut -d':' -f1,2 > {{ mcs_log_dir }}/script_time.txt
+time_new=(`head -1 "{{ mcs_log_dir }}/script_time.txt"`)
+IFS=: read time_old_hour time_old_min <<< "$time_old"
+IFS=: read hour min <<< "$time_new"
+total_old_minutes=$((10#$time_old_hour*60 + 10#$time_old_min))
+total_minutes=$((10#$hour*60 + 10#$min))
+count=$((total_old_minutes - total_minutes))
+if [[ ( "$count" -gt 10 ) ]]; then
+echo disable
+else
+echo enable
+fi

@@ -1,0 +1,49 @@
+---
+
+- name: create the csg dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_csg_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2755
+  tags: 
+     - install-collspacemgt
+     - install-mcs
+ 
+ 
+- name: Copy the Collaborative Space Management Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_collspace_mgt.j2" dest="{{ mcs_ga_installer }}/ENOVIACollaborativeSpaceManagement.Unix64/1/answer_collspace_mgt.txt" mode=2777
+  when: update_database
+  tags: 
+    - install-collspacemgt
+    - install-mcs
+   
+   
+- name: Copy the Collaborative Space Management Answer file (database will not update)
+  remote_user: monitor
+  sudo: true
+  template: src="answer_collspace_mgt_nudb.j2" dest="{{ mcs_ga_installer }}/ENOVIACollaborativeSpaceManagement.Unix64/1/answer_collspace_mgt.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-collspacemgt
+     - install-mcs
+
+
+- name: Executing the Collaborative Space Management installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_collspace_mgt.txt
+  args:
+    chdir: /{{ mcs_ga_installer }}/ENOVIACollaborativeSpaceManagement.Unix64/1
+  tags: 
+    - install-collspacemgt
+    - install-mcs
+   
+
+- name: Remove the Collaborative Space Management Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_ga_installer }}/ENOVIACollaborativeSpaceManagement.Unix64/1/answer_collspace_mgt.txt" state=absent
+  tags: 
+     - install-collspacemgt
+     - install-mcs
+     

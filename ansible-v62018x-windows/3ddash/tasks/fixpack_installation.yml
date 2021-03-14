@@ -1,0 +1,30 @@
+---
+
+- name: Stop 3DDash Service
+  win_service: name=3DDashboard_R2018x state=stopped
+  tags: install-3ddash-fp
+
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_3ddash_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3ddash_fp.xml"
+  tags: install-3ddash-fp
+ 
+- name: Copy 3dash installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_3dd_fp }}'
+    dest: '{{ windows_tmp_path }}\3dash'
+    remote_src: True
+  tags: install-3ddash-fp  
+
+- name: Executing FP installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\3dash\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3ddash_fp.xml --xmlreport {{ windows_tmp_path }}\Report_fp.xml'
+     elevated: yes
+  tags: install-3ddash-fp
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3ddash_fp.xml" state=absent
+  tags: install-3ddash-fp
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\3dash" state=absent
+  tags: install-3ddash-fp

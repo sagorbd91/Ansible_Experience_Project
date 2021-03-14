@@ -1,0 +1,37 @@
+<Location "/3dpassport">
+#<Location "/">
+	# Overwrite X-Forwarded-Proto declaration for port :{{ passport_proxy_port }}, request are "https"
+	RequestHeader set X-Forwarded-Proto "https"
+
+	# CORS support
+	SetEnvIfNoCase Origin "^http(s)?:\/\/(.+\.)?(valmet.com|vstage.co)(:\d{1,5})?$" origin_is=$0
+	Header setifempty Access-Control-Allow-Origin %{origin_is}e env=origin_is
+	Header setifempty Access-Control-Allow-Credentials "true"
+	Header setifempty Access-Control-Allow-Methods "GET, POST, OPTIONS, HEAD, PUT, DELETE, PATCH"
+	Header setifempty Access-Control-Allow-Headers "accept,x-requested-method,origin,x-requested-with,x-request,cache-control,content-type,X-DS-IAM-CSRFTOKEN"
+	Header setifempty Access-Control-Expose-Headers "X-DS-IAM-CSRFTOKEN"
+	Header setifempty Access-Control-Max-Age "600"
+</Location>
+
+<Location "/3dpassport">
+	ProxyPass "http://{{passport_server_common_name}}:{{ passport_instance_port }}/3dpassport" retry=0
+	ProxyPassReverse "http://{{passport_server_common_name}}:{{ passport_instance_port }}/3dpassport"
+</Location>
+	
+# Uncomment the following configuration if the reverse proxy expose 
+# a root "/" url but the application is deployed with an application path "/app-name" in tomcat.
+#
+#<Location "/">
+#	ProxyPass "http://{{passport_server_common_name}}:{{ passport_instance_port }}/3dpassport/"
+#	ProxyPassReverse "http://{{ passport_server_common_name }}:{{ passport_instance_port }}/3dpassport/"
+#</Location>
+#<Location "/3dpassport">
+#	ProxyPass "http://{{ passport_server_common_name }}:{{ passport_instance_port }}/3dpassport/"
+#</Location>
+#Header edit Set-Cookie "^(JSESSIONID=.*;?[Pp]ath=)/3dpassport(?:/|)(.*?)$" "$1/$2"
+
+# Fix font issue in IE10+
+<Location ~ \.eot$>
+   Header unset Cache-Control
+   Header unset Pragma
+</Location>

@@ -1,0 +1,15 @@
+---
+
+- name: copy mql bat file to target
+  template: src="templates/search_config.bat.j2" dest="{{windows_tmp_path}}\search_config.bat"
+  tags: 
+    - search-config
+    - post-activity
+    
+- name: run compile through mql
+  win_psexec:
+     command: '{{windows_tmp_path}}\search_config.bat >> {{windows_tmp_path}}\Report_search_config.xml'
+     elevated: yes
+  tags: 
+    - search-config
+    - post-activity

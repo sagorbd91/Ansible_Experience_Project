@@ -1,0 +1,51 @@
+---
+
+- name: pre task 
+  hosts: 3dx_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: monitor 
+  become: true
+  tags: install-3dx
+  pre_tasks:
+   - name: create dir for mount 
+     file: path="{{ mount_dest_dir }}" state=directory
+   - name: mounting NFS to local
+     mount: name="{{ mount_dest_dir }}" src="{{ mount_src_dir }}" fstype=nfs opts=defaults state=mounted
+     
+
+
+- name: Create user
+  hosts: 3dx_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+  remote_user: "monitor"
+  become: true
+  tags: install-3dx
+  vars:
+    plm_user: "plmd1xa"  
+    plm_group: "plm"
+  roles:
+      - { role: create-user, action: "create" ,  user_name: "{{ plm_user }}", user_pass: "{{ plm_user }}", group_name: "{{ plm_group }}" }	
+
+
+     
+- name: Install 3dx
+  hosts: 3dx_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - 3dx/vars/main.yml
+      - 3dx/vars/{{env_name}}.yml
+  remote_user: monitor
+  become: false
+  roles:
+      - { role: 3dx  }
+
+#- name: install zabbix-agent
+#  hosts: 3dx_servers
+#  vars:
+#     3dindex: "true"
+#  remote_user: monitor
+#  become: true
+#  roles:
+#     - { role: ansible-zabbix-agent }

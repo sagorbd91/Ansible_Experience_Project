@@ -1,0 +1,18 @@
+plm3dx_user: "plmyma"
+e3denv_name: "Env"
+plm_group: "plm"
+
+e3dx_installer_path: "/data/sources/2013x/"
+#e3dx_install_path: "{{ eplm_server_base_path }}/{{ e3denv_name }}/e3dx"
+
+
+e3dx_plugin_contact_hostname: "localhost"
+e3dx_1st_port_range: "58200"
+e3dx_start_instance_count: "5"
+enovia_v6_server_path: "{{ eplm_server_base_path }}/test/mcs/server"
+enovia_v6_server_name: "localhost"
+enovia_v6_server_port: "8181"
+enovia_v6_server_rootURI: "enovia"
+e3dx_server_user: "PLMADM"
+e3dx_server_user_pass: "PLMADM"
+e3dx_server_security_context: "VPLMAdmin.Company Name.Default"

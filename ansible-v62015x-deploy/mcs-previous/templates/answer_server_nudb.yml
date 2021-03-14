@@ -1,0 +1,15 @@
+{{ mcs_server_dir }}
+{{ mcs_java_path }}
+
+{{ db_option_db2 }}
+
+{{ db2_product_dir }}
+{{ db2_instance_name }}
+{{ mcs_conf_dir }}
+
+
+
+{{ mcs_instance_path }}/{{instance_name}}/bin
+startup.sh
+
+

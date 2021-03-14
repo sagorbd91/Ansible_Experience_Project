@@ -1,0 +1,32 @@
+- include: apps/CollaborativeTask/collaborative_task_ga.yml
+- include: apps/LibraryCentral/library_central_ga.yml
+- include: apps/EnterpriseChange/enterprise_change_ga.yml
+- include: apps/EngineeringCentral/Engineering_central_ga.yml
+- include: apps/CAD_Design/cad_design_ga.yml
+- include: apps/Catiav5Connector/Catiav5Connector_ga.yml
+- include: apps/ConnectorforSolidWorks/ConnectorSolidWorks_ga.yml
+- include: apps/ConnectorforAutoCAD/ConnectorAutoCAD_ga.yml
+- include: apps/Integration/integration_ga.yml
+- include: apps/DMA/DMA_ga.yml
+- include: apps/QCC/quality_check_ga.yml
+- include: apps/Program_Central/program_central_ga.yml
+- include: apps/Component_experience/BOMAVLManagement_ga.yml
+- include: apps/Component_Central/component_central_ga.yml
+- include: apps/Requirements_Management/requirements_ga.yml
+- include: apps/Varient_management/variant_ga.yml
+- include: apps/XBOM/xbom_ga.yml
+- include: apps/3Dexplore/3Dexplore_ga.yml
+- include: apps/UnifiedCad/unifiedcad_ga.yml
+- include: apps/Delmia_Management/delmia_management_ga.yml
+- include: apps/Delmia_Process/delmia_process_ga.yml
+- include: apps/Delmia_wordbook/delmia_wordbook_ga.yml
+- include: apps/Simprocess/simprocess_ga.yml
+- include: apps/CAPA/CAPA_ga.yml
+- include: apps/NRCF/NRCF_ga.yml
+- include: apps/3DLiveExamine/3DLiveExamine_ga.yml
+- include: apps/3DLean/3DLean_ga.yml
+- include: apps/ConnectorforCreo/ConnectorForCreo.yml
+
+
+
+

@@ -1,0 +1,43 @@
+---
+
+      
+- name: Copy the Collaborative Space Management fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_collspace_mgtfx.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIACollaborativeSpaceManagement.Unix64/1/answer_collspace_mgtfx.txt" mode=2777
+  when: update_database
+  tags: 
+     - install-collspacemgtfix
+     - install-mcsfx
+  
+  
+- name: Copy the Collaborative Space Management fixpack Answer file to Installer Directory
+  remote_user: monitor
+  sudo: true
+  template: src="answer_collspace_mgtfx_nudb.j2" dest="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIACollaborativeSpaceManagement.Unix64/1/answer_collspace_mgtfx.txt" mode=2777
+  when: not update_database
+  tags: 
+     - install-collspacemgtfix
+     - install-mcsfx
+
+
+- name: Executing the Collaborative Space Management fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_collspace_mgtfx.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIACollaborativeSpaceManagement.Unix64/1
+  tags: 
+     - install-collspacemgtfix
+     - install-mcsfx
+   
+
+- name: Remove the Collaborative Space Management fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/{{ fix_pack_version }}/platform/ENOVIACollaborativeSpaceManagement.Unix64/1/answer_collspace_mgtfx.txt" state=absent
+  tags: 
+     - install-collspacemgtfix
+     - install-mcsfx
+   
+   
+   

@@ -1,0 +1,13 @@
+---
+
+- name: Stop 3DPass Service
+  win_service: name=3DPassport_R2018x state=stopped
+  tags:
+     - stop-pass
+     - restart-pass
+
+- name: Start 3DPass service
+  win_service: name=3DPassport_R2018x state=started
+  tags:
+     - start-pass
+     - restart-pass

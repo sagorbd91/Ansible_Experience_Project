@@ -1,0 +1,13 @@
+---
+
+- name: Stop Notification Service
+  win_service: name="3DEXPERIENCE R2018x 3DNotification Node" state=stopped
+  tags:
+     - stop-notification
+     - restart-notification
+
+- name: Start Notification service
+  win_service: name="3DEXPERIENCE R2018x 3DNotification Node" state=started
+  tags:
+     - start-notification
+     - restart-notification

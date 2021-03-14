@@ -1,0 +1,73 @@
+---
+
+
+- name: Deploy main configuration file
+  template:
+    src: httpd.conf.j2
+    dest: "{{ http_install_path }}/conf/httpd.conf"
+    owner: root
+    group: root
+    mode: '0644'
+#  when: "'Config for R15X' not in conf_text.stdout"
+  tags: 
+    - deploy-httpd
+    - install-reverseproxy
+
+- name: Deploy mod_ssl configuration file
+  template:
+    src: ssl.conf.j2
+    dest: "{{ http_install_path }}/conf.d/ssl.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  tags: 
+    - deploy-httpd
+    - install-reverseproxy
+
+- name: Check contents of 'httpd conf' file if exists 
+  command: cat {{ http_install_path }}/conf/httpd.conf | grep "Config for R15X" 
+  register: conf_text
+  tags: 
+    - deploy-httpdcon
+#    - install-reverseproxy
+
+- name: Update 'httpd conf' file 
+  blockinfile:
+    dest: "{{ http_install_path }}/conf/httpd.conf"
+    block: |
+      ###############################
+      ###############################
+      # Config for R15X {{ env_name }}
+      #=============================
+      <IfModule ssl_module>
+            SSLRandomSeed startup builtin
+            SSLRandomSeed connect builtin
+            SSLSessionCache         shmcb:/run/httpd/sslcache(512000)
+      # 3DSpace CAS
+            Listen {{mcs_cas_proxy_port}}
+      # 3DSpace NO_CAS
+           Listen {{mcs_no_cas_http_port}}
+      #  3DPassport
+            Listen {{passport_proxy_port}}
+      #  FCS Central
+            Listen {{fcs_central_http_port}}
+      </IfModule>
+      ##############################
+      ##############################
+
+      ## !! Start Customization !! ##
+      #####################################################
+      ####################################################
+      Include {{ vhost_path }}/{{ env_name }}-3dspace.conf
+      Include {{ vhost_path }}/{{ env_name }}-3dpassport.conf
+      Include {{ vhost_path }}/{{ env_name }}-fcs-central.conf
+      Include {{ vhost_path }}/{{ env_name }}-unsecured-3dspace.conf
+      Include {{ vhost_path }}/{{ env_name }}-untrusted-3dspace.conf
+
+      ## !!End Customization !! ###
+      ####################################################
+      ####################################################
+  when: "'Config for R15X' in conf_text.stdout"
+  tags: 
+    - deploy-httpdcon
+#    - install-reverseproxy

@@ -1,0 +1,24 @@
+
+fcs_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+fcs_install_rel_path: "/plm/{{env_name}}/{{fcs_type}}"
+fcs_instance_path: "{{fcs_install_rel_path}}/instances"
+fcs_code_dir: "{{fcs_install_rel_path}}/code"
+fcs_log_dir: "{{fcs_install_rel_path}}/logs"
+fcs_java_dir: "{{fcs_install_rel_path}}/softs"
+fcs_java_path: "{{fcs_java_dir}}/jdk-fcs"
+fcs_build_path: "{{ fcs_code_dir }}/distrib/enoviafcs.war"
+fcs_file_store_dir: "{{ apps_file_storage_dir }}/{{ env_name }}/{{fcs_type}}"
+
+fcs_installer_path: "{{ installer_path }}/3dspace/ga/platform/ENOVIAFileCollaborationServer.Linux64"
+fcs_fixpack_installer: "{{ installer_path }}/3dspace/{{ fix_pack_version }}/platform/ENOVIAFileCollaborationServer.Linux64"
+web_app_name: "enoviafcs"
+tomcat_user: "tomcat"
+tomcat_user_pass: "tomcat123#"
+
+
+fcs_store_mount_dest: "{{ fcs_file_store_dir }}"
+fcs_store_mount_source: "jkls0326vm45a:{{ apps_file_storage_dir }}/{{ env_name }}/{{fcs_type}}"
+
+nfs_mount_shared_dir: "{{fcs_file_store_dir}}"
+nfs_mount_shared_to: "v50013a.vstage.co"
+shared_mode: "(rw,insecure,sync,insecure_locks,no_root_squash)"

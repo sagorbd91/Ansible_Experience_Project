@@ -1,0 +1,85 @@
+env_name: 'DEV2'
+
+##DB Creation
+
+servername: 'V0626A\CATIASQLSERVER'
+script_dump_location: 'C:\Temp\DB_Creation'
+
+orchestrate_database: ''
+orchestrate_db_directory: ''
+orchestrate_pass1: ''
+
+notification_database: 'x3dnotification'
+notification_schema: 'x3dnotification'
+notification_login_pass1: 'x3dn#01'
+notification_admin_pass2: 'x3dn_admin#01'
+
+comment_database: 'x3dcomment'
+comment_schema: 'x3dcomment'
+comment_login_pass1: 'x3d#01'
+comment_admin_pass2: 'x3d_admin#01'
+
+swym_social_database: 'x3dswym_social'
+swym_media_database: 'x3dswym_media'
+swym_widget_database: 'x3dswym_widget'
+swym_social_schema: 'x3dswym_social'
+swym_media_schema: 'x3dswym_media'
+swym_widget_schema: 'x3dswym_widget'
+swym_login_pass1: 'x3ds#01'
+swym_admin_pass2: 'x3ds_admin#01'
+
+dashboard_database: 'dashdb'
+dashboard_schema: 'dashdb'
+dashboard_login_pass1: 'x3ddash#01'
+dashboard_admin_pass2: 'x3ddashadmin#01'
+
+space_database: 'spacedb'
+space_schema: 'spacedb'
+space_db_directory: ''
+space_pass_m1:  'm1#01'
+
+passport_app_database: 'passdb'
+passport_token_database: 'passtkdb'
+passport_app_schema: 'passdb'
+passport_token_schema: 'passtkdb'
+passport_password_x3dpass: 'x3dpass#01'
+passport_password_x3dpassadmin: 'x3dpassadmin#01'
+passport_password_x3dpasstokens: 'x3dpasstokens#01'
+
+
+
+
+
+sql_scripts:
+    - 3Dashboard.sql
+    - 3DNotification.sql
+    - 3DPassport.sql
+    - 3DSwym.sql
+    - 3DComment.sql
+    - 3DOrchestrate.sql   
+    - 3DSpace.sql
+    
+#db backup: THIS WILL COME FROM RUNDECK
+db_user:
+db_password:
+db_server_name:
+db_name:
+db_backup_path:
+db_backup_script_dump: 'C:\Temp\DB_Backup'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,32 @@
+---
+
+- name: create the code dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_install_rel_path }}/code" state=directory owner=root group=root mode=2777
+  tags: 
+   - install-fcs
+   - copy-code
+
+- name: copy the code
+  remote_user: monitor
+  sudo: true
+  synchronize:
+#src: "{{ mount_dest_dir }}/backups/catia-v6/old-platforms/clone/fcs/prd/fcs/code"
+      src: "/plm/v62015x/fcs/" 
+      dest: "{{ fcs_install_rel_path }}/code"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+  - install-fcs
+  - copy-code
+
+- name: change ownership
+  remote_user: monitor
+  sudo: true
+  command: chown -R "{{plm_user}}":"{{plm_group}}" "{{fcs_install_rel_path}}" 
+  tags: 
+   - install-fcs
+   - copy-code

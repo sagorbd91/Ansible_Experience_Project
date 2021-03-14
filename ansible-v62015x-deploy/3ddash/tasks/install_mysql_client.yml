@@ -1,0 +1,9 @@
+---
+
+- name: install mysql-client
+  remote_user: monitor
+  become: true
+  yum: name=mysql state=installed
+  tags:
+     - install-mysql-client
+     - install-dashboard

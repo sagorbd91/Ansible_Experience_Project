@@ -1,0 +1,13 @@
+- name: Firing -> Run test script for 3dpass
+  win_command: '{{ installation_path_pass }}\win_b64\code\command\run_test.bat'
+  register: outputListCommand
+  tags: 
+     - run_test
+     - install-passport-ga
+     - install-passport-fp
+- name: Printing -> Run test output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - run_test
+     - install-passport-ga
+     - install-passport-fp

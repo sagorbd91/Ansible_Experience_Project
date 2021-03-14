@@ -1,0 +1,32 @@
+---
+
+    
+- name: Test mcs config file
+  shell: grep localhost {{ mcs_config_xml }}
+  register: checkconf
+  always_run: True
+  ignore_errors: True
+  changed_when: False
+  tags: run-full-index
+  
+    
+- name: Update mcs config for fts
+  tags: run-full-index
+  lineinfile:
+    dest: "{{ mcs_config_xml }}"
+    regexp: '<SERVER host="localhost" baseport="19000"/>'
+    line: '  <SERVER host="{{ fts_host }}" baseport="{{ fts_base_port }}"/>'
+  when: checkconf.rc == 0
+      
+    
+- name: Copy script.full.search.j2 in scripts
+  template: src="script.full.search.j2" dest="{{ mcs_bin_dir }}/run_full_search_index.sh" mode=0755
+  tags: run-full-index
+     
+- name: Execute the run_full_search_index.sh script
+  shell: ./run_full_search_index.sh > run_full_search_index.log 2>&1
+  args:
+    chdir: /{{ mcs_bin_dir }}
+  tags: run-full-index
+
+    

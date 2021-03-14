@@ -1,0 +1,16 @@
+env_name: "" 
+#system_apps_dir: "/data/apps"
+#eplm_server_base_path: "/data/apps/plm"
+
+system_apps_dir: "/data/enovia/apps"
+eplm_server_base_path: "/data/enovia/apps"
+mount_dest_dir: /data2/nfs-mount
+mount_src_dir: jkls0326vm12a:/data
+apps_file_storage_dir: "/data/enovia/appdata"
+service_dir: /etc/init.d
+installer_path: "{{ mount_dest_dir }}/sources"
+java_installer: "jdk/jdk-7u67-linux-x64.tar.gz"
+tomcat_installer: "tomcat/apache-tomcat-7.0.57.tar.gz"
+tomcat_version: apache-tomcat-7.0.57
+port_loadbalancer: 8080
+zabbix_server_ip: 139.74.122.202

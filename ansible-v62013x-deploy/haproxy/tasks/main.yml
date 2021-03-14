@@ -1,0 +1,37 @@
+---
+#- name: Download and install haproxy
+#  remote_user: monitor
+#  sudo: true
+#  yum: name=ftp://195.220.108.108/linux/centos/6.7/os/x86_64/Packages/haproxy-1.5.4-2.el6#.x86_64.rpm state=present
+#  with_items:
+#  - haproxy
+
+- name: Configure the haproxy cnf file with hosts
+  remote_user: monitor
+  sudo: true
+  template: src=haproxy.cfg.j2 dest=/etc/haproxy/haproxy.cfg
+  notify: restart haproxy
+
+- name: Start the haproxy service
+  remote_user: monitor
+  sudo: true
+  service: name=haproxy state=started enabled=yes
+
+- name: check iptables not running
+  remote_user: monitor
+  sudo: true
+  shell: service iptables status | grep not | awk '{ print $4 }'
+  register: iptables_stoped
+
+- name: Allow JMX ports ip in iptable rule
+  remote_user: monitor
+  sudo: true 
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ port_loadbalancer }} -j ACCEPT
+  when: "'not' not in iptables_stoped.stdout"
+
+- name: save iptables
+  remote_user: monitor
+  sudo: true 
+  command: iptables-save
+  when: "'not' not in iptables_stoped.stdout" 
+

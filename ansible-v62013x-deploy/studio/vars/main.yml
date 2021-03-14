@@ -1,0 +1,29 @@
+---
+#ENV Name
+env_name: mig4
+
+# Installer Info
+studio_installer_path: "{{ installer_path }}/dsproducts/enoviav6/r2013x/catia-v6-project/ga/server-side/ENOVIAStudioModelingPlatformRichClients.RHEL64"
+fix_pack_version: "fp1508"
+studio_fp_installer_path: "{{ installer_path }}/dsproducts/enoviav6/r2013x/catia-v6-project/{{ fix_pack_version }}/client-side/studio/ENOVIAStudioModelingPlatformRichClients.RHEL64"
+
+# Installation dir path
+studio_env_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+studio_install_path: "{{ studio_env_path }}/studio13x"
+studio_code_dir: "{{studio_install_path}}/code"
+studio_log_dir: "{{studio_install_path}}/logs"
+studio_conf_dir: "{{studio_install_path}}/conf"
+studio_soft_dir: "{{studio_install_path}}/softs"
+studio_java_path: "{{studio_soft_dir}}/jdk-studio"
+
+
+
+# Installation infomation
+db_option_db2: "2"
+db2_product_dir: "/opt/ibm/db2/V10.5"
+db2_instance_name: "v6admin"
+db2_connection_user: "v6admin"
+db2_connection_user_pass: "v6admin"
+db2_database_name: "V6DB"
+db2_data_tablespace: "MX_DATA"
+db2_index_tablespace: "MX_INDEX"

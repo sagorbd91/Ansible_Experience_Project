@@ -1,0 +1,59 @@
+---
+
+- name: create the base dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ system_apps_dir }}" state=directory owner=root group=root mode=2777
+  tags: 
+   - install-mcs
+   - create_dirs
+
+- name: create the base dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ eplm_server_base_path }}" state=directory owner=root group=root mode=2777
+  tags: 
+   - install-mcs
+   - create_dirs  
+
+- name: create the Installer Directory or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ e3dx_installer_path }}" state=directory owner={{plm3dx_user}}  group={{plm_group}} mode=2777
+  tags: 
+   - install-mcs
+   - create_dirs  
+
+#- name: copy the code
+#  remote_user: monitor
+#  sudo: true
+#  synchronize:
+#      src: "{{ mount_dest_dir }}/sources/dsproducts/enoviav6/r2013x/catia-v6-project/ga/server-side/" 
+#      dest: "{{ e3dx_installer_path }}"
+#      checksum: yes
+#      recursive: yes
+#      archive: no
+#  delegate_to: "{{inventory_hostname}}"
+#  tags: 
+#  - install-mcs
+#  - copy-code
+
+#- name: change ownership
+#  remote_user: monitor
+#  sudo: true
+#  command: chown -R "{{plm3dx_user}}":"{{plm_group}}" "{{e3dx_installer_path}}" 
+#  tags: 
+#   - install-mcs
+#   - copy-code
+ 
+#- name: copy answer file to Installer Directory
+#  template: src="answer.j2" dest="{{ e3dx_installer_path }}/ENOVIA3DIndexingServer.RHEL64/1/answer.txt" mode=2777
+
+- name: Executing the installation script.
+  command: sh StartTUI.sh < answer.txt
+  args:
+    chdir: "{{ e3dx_installer_path }}/ENOVIA3DIndexingServer.RHEL64/1/"
+  
+#- name: remove the answer file
+#  file: path="{{ e3dx_installer_path }}/ENOVIA3DIndexingServer.RHEL64/1/answer.txt" state=absent
+

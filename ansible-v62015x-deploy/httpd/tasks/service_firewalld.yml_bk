@@ -1,0 +1,189 @@
+---
+
+- name: Allow http ports in iptable rules of http on  Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ http_port }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow http ports in iptable rules of SSL on  Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ http_ssl_port }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of mcs nocas on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ mcs_no_cas_http_port }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of mcs cas on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ mcs_cas_http_port }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of passport on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ passport_proxy_port }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow http ports in iptable rules of client installer on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ client_installer_http_port }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow http ports in iptable rules of fcs on  Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ fcs_central_http_port }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow dashboard ports in iptable rules on  Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ dashboard_service }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of mcs cas on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ mcs_cas_proxy_port: }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: save iptables
+  command: service iptables save
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow http ports in iptable rules of http on  Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ http_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of SSL on  Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ http_ssl_port }}/tcp --permaneknt
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow http ports in iptable rules of mcs nocas on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ mcs_no_cas_http_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+      
+- name: Allow http ports in iptable rules of mcs cas on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ mcs_cas_http_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of passport on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ passport_proxy_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow http ports in iptable rules of Client Installer on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ client_installer_http_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of fcs on  Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ fcs_central_http_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of fcs on  Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ fcs_central_http_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of fcs on  Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ fcs_central_http_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow dashboard ports in iptable rules on  Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ dashboard_service }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow http ports in iptable rules of mcs cas on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ mcs_cas_proxy_port }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Reload Iptables for RHEL7
+  shell: firewall-cmd --reload
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+
+   
+   
+
+
+
+
+
+      
+
+

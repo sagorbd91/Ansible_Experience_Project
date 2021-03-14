@@ -1,0 +1,13 @@
+#!/bin/ksh
+_()
+{ 
+	echo `egrep "^$1=" "$WARUTIL_INSTPATH/enovia.install" | cut -d= -f2`
+}
+cd "`dirname \`type $0 | cut -d' ' -f3\``"
+export CATInstallPath="`dirname \`dirname $PWD\``"
+export WARUTIL_INSTPATH="`dirname $CATInstallPath`"
+. "`_ BIN_PATH`/mxEnv.sh"
+_mxmrun="`_ BIN_PATH`/mxmrun.sh"
+[ -x  "$_mxmrun" ] || _mxmrun="`_ LIB_PATH`/../command/mxmrun.sh"
+"$_mxmrun" -Dosds=`echo "$CATInstallPath" | sed "s,.*/\([^/]*\)$,\1,"` \
+ENOSysWarutil com.dassault_systemes.infra.warutil.Warutil  -w enoviafcs -s installDir=/plm/prd/fcs/code -p /plm/prd/fcs/code/enovia.install -i /plm/prd/fcs/code "$@"

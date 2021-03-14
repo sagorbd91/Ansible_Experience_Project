@@ -1,0 +1,27 @@
+env_name: 'DEV2'
+
+
+#Installer path details
+installer_path_3dspaceIndex_ga: '{{ installer_path }}\3DSpaceIndex\ga\Windows64\1'
+installer_path_3dspaceIndex_fp: '{{ installer_path }}\3DSpaceIndex\{{ fix_pack_version }}\3DSpaceIndex.Windows64\1'
+
+
+#Installation path
+TARGET_PATH_3dindex: 'C:\PLM\{{ env_name }}\3dSpaceIndex'
+FullCloud_AdminPassword: 'Admpas_Dev2'
+
+
+#URL 
+X3DCSMA_3DPassportURL: 'https://3dpassport-18x{{ env_name.lower() }}.plm.valmet.com:8280/3dpassport'
+X3DCSMA_3DDashboardURL: 'https://3ddashboard-18x{{ env_name.lower() }}.plm.valmet.com:443/3ddashboard'
+X3DCSMA_3DCompassURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_6WTAGURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_3DSWYMURL: 'https://3dswym-18x{{ env_name.lower() }}.plm.valmet.com:8480/3dswym'
+X3DCSMA_3DSpaceURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_FEDERATED_SEARCH: 'https://federated-18x{{ env_name.lower() }}.plm.valmet.com:8980/federated'
+X3DCSMA_3DCommentURL: 'https://3dcomment-18x{{ env_name.lower() }}.plm.valmet.com:8780/3dcomment'
+X3DCSMA_3DNotificationURL: 'https://3dnotification-18x{{ env_name.lower() }}.plm.valmet.com:8880/3dnotification'
+X3DCSMA_FTSURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:19000'
+X3DCSMA_CloudViewURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:29000'
+X3DCSMA_ENOVIAV5: 'https://v0642a.vstage.co:443/enoviav5'
+fcsSrvURL: 'https://fcscentral-18x{{ env_name.lower() }}.plm.valmet.com:8580/enoviafcs'

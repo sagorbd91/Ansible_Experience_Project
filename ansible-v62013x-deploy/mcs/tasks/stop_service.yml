@@ -1,0 +1,8 @@
+---
+- name: stop fcs services
+  remote_user: monitor
+  sudo: true
+  service: name={{ item.key }} state=stopped
+  with_dict: instances
+  tags:
+   - stop_service

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+{{ mcs_server_dir }}/scripts/mql << EOF
+      set context person {{ mql_user }} pass {{ mql_password }};
+      print person {{ UserName }} select site;
+	  mod person {{ UserName }} site '{{  NewSite  }}';
+	  print person {{ UserName }} select site;
+      quit;
+EOF
+
+exit

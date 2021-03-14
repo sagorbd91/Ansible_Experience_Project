@@ -1,0 +1,20 @@
+---
+
+#- name: "Installing sample file"
+#  copy: src=sample.conf
+#        dest="{{ agent_include }}/mysql.conf"
+#        owner=zabbix
+#        group=zabbix
+#        mode=0755
+#  notify: restart zabbix-agent
+#  become: yes
+
+#- name: "Installing 3dindex_monitoring"
+#  copy: src=3dindex_monitoring
+#        dest=/var/local
+#        owner=zabbix
+#        group=zabbix
+#        mode=0777
+#  notify: restart zabbix-agent
+#  become: yes
+

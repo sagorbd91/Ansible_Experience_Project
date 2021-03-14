@@ -1,0 +1,89 @@
+---
+
+- name: Setup Cron Job to execute indexation-launch.sh script every 5 minutes
+  remote_user: monitor
+  become: true
+  cron: user={{ plm_user }} name="Execute indexation script" minute="*/5" job="/bin/bash {{ e3dx_bin_dir }}/indexation-launch.sh >> {{ e3dx_bin_dir }}/indexation-launch.log 2>&1"
+  tags: 
+     - deploy-cron
+     - install-3dx-fp
+
+- name: Disable 3DX Cron Job 
+  remote_user: monitor
+  become: true
+  cron: user={{ plm_user }} name="Execute indexation script" minute="*/5" job="/bin/bash {{ e3dx_bin_dir }}/indexation-launch.sh >> {{ e3dx_bin_dir }}/indexation-launch.log 2>&1" state=present disabled=yes
+  tags: 
+     - disable-3dx-cron 
+     - install-3dx-fp
+
+- name: Enable 3DX Cron Job 
+  remote_user: monitor
+  become: true
+  cron: user={{ plm_user }} name="Execute indexation script" minute="*/5" job="/bin/bash {{ e3dx_bin_dir }}/indexation-launch.sh >> {{ e3dx_bin_dir }}/indexation-launch.log 2>&1" state=present disabled=no
+  tags: 
+     - enable-3dx-cron 
+     
+- name: copy logclean.sh in scripts
+  remote_user: "{{ plm_user }}"
+  template: src="script.logclean.sh.j2" dest="{{ e3dx_bin_dir }}/logclean.sh" mode=0755
+  tags: 
+    - logclean-cron-deploy
+    - install-3dx-fp
+     
+- name: Setup Cron Job to execute Logclean script every 5 minutes
+  remote_user: monitor
+  become: true
+  cron: user={{ plm_user }} name="Execute Logclean script" hour="1" minute="30" job="/bin/bash {{ e3dx_bin_dir }}/logclean.sh >> {{ e3dx_bin_dir }}/logclean-error.log 2>&1"
+  tags: 
+     - logclean-cron-deploy
+     - install-3dx-fp
+
+
+ 
+- set_fact: CronName="Execute indexation script" 
+  tags:
+     - status-3dx-cron
+     
+- name: Execute Indexation Script Cron Status Check
+  remote_user: "{{ plm_user }}"
+  shell: crontab -l|grep -q "{{ CronName }}"&& printf ""||printf "NOTFOUND ";crontab -l|awk '/{{ CronName }}$/{f=NR}f&&NR==f+1'|cut -c 1|sed 's/#/DISABLED /;t;s/*/ENABLED  /;t;s/[0-9]/ENABLED  /;'
+  register: cron_status
+  tags:
+     - status-3dx-cron
+   
+- name: Execute Indexation Script Cron Status write in /tmp/cron_status @ ansible server
+  local_action: shell echo  {{ cron_status.stdout }},{{ plm_user }},{{ inventory_hostname }},{{  CronName  }} >> /tmp/cron_status;
+  tags:
+     - status-3dx-cron
+     
+- debug:
+    msg: "{{ cron_status.stdout }},{{ plm_user }},{{ inventory_hostname }},{{  CronName  }}"
+  tags:
+   - status-3dx-cron
+   
+
+
+
+
+
+   
+- set_fact: CronName="Execute Logclean script" 
+  tags:
+     - Status_Logclean_Script_Cron
+     
+- name: Execute Logclean Script Cron Status Check
+  remote_user: "{{ plm_user }}"
+  shell: crontab -l|grep -q "{{ CronName }}"&& printf ""||printf "NOTFOUND ";crontab -l|awk '/{{ CronName }}$/{f=NR}f&&NR==f+1'|cut -c 1|sed 's/#/DISABLED /;t;s/*/ENABLED  /;t;s/[0-9]/ENABLED  /;'
+  register: cron_status
+  tags:
+     - Status_Logclean_Script_Cron
+   
+- name: Execute Logclean Script Cron Status write in /tmp/cron_status @ ansible server
+  local_action: shell echo  {{ cron_status.stdout }},{{ plm_user }},{{ inventory_hostname }},{{  CronName  }} >> /tmp/cron_status;
+  tags:
+     - Status_Logclean_Script_Cron
+     
+- debug:
+    msg: "{{ cron_status.stdout }},{{ plm_user }},{{ inventory_hostname }},{{  CronName  }}"
+  tags:
+   - Status_Logclean_Script_Cron

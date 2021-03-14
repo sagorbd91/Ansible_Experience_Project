@@ -1,0 +1,169 @@
+---
+
+- name: install pre-requisite packages
+  remote_user: monitor
+  become: true
+  yum: name={{item}} state=present
+  with_items: "{{ pre_pkgs }}"
+  when: ansible_os_family == "RedHat"
+  tags:
+    - install-prerequisite
+    - install-3dx
+  
+# Install libX11 (dependecy)
+- name: Check libX11 installed or not
+  remote_user: monitor
+  become: true
+  command: rpm -q libXp
+  register: rpm_check1
+  ignore_errors: yes
+  tags: 
+    - install-prerequisite
+    - install-3dx
+  
+- name: copy libXp-1.0.2-2.1.el6.x86_64.rpm to user home Directory
+  remote_user: "{{ plm_user }}"
+  copy: src="libXp-1.0.2-2.1.el6.x86_64.rpm" dest="/tmp/libXp-1.0.2-2.1.el6.x86_64.rpm" mode=0755
+  when: rpm_check1.stdout.find('is not installed') != -1
+  tags: 
+    - copy-rpm
+    - install-prerequisite
+    - install-3dx
+    
+- name: Install libXp package.
+  remote_user: monitor
+  become: true
+  yum: 
+     name: /tmp/libXp-1.0.2-2.1.el6.x86_64.rpm 
+     state: present
+  when: rpm_check1.stdout.find('is not installed') != -1   
+  tags: 
+    - install-prerequisite
+    - install-3dx
+
+
+# Install openmotif
+- name: Check openmotif installed or not
+  remote_user: monitor
+  become: true
+  command: rpm -q openmotif
+  register: rpm_check2
+  ignore_errors: yes
+  tags: 
+    - install-prerequisite
+    - install-3dx
+  
+- name: copy openmotif to user home Directory
+  remote_user: "{{ plm_user }}"
+  copy: src="openmotif-2.3.3-8.el6.x86_64.rpm" dest="/tmp/openmotif-2.3.3-8.el6.x86_64.rpm" mode=0755
+  when: rpm_check2.stdout.find('is not installed') != -1
+  tags: 
+    - copy-rpm
+    - install-prerequisite
+    - install-3dx
+    
+- name: Install openmotif package.
+  remote_user: monitor
+  become: true
+  yum: 
+     name: /tmp/openmotif-2.3.3-8.el6.x86_64.rpm 
+     state: present
+  when: rpm_check2.stdout.find('is not installed') != -1
+  tags: 
+    - install-prerequisite
+    - install-3dx
+    
+
+# Install mesa-libGL
+- name: Check mesa-libGL installed or not
+  remote_user: monitor
+  become: true
+  command: rpm -q mesa-libGL
+  register: rpm_check3
+  ignore_errors: yes
+  tags: 
+    - install-prerequisite
+    - install-3dx
+  
+- name: copy mesa-libGL to user home Directory
+  remote_user: "{{ plm_user }}"
+  copy: src="mesa-libGL-10.4.3-1.el6.x86_64.rpm" dest="/tmp/mesa-libGL-10.4.3-1.el6.x86_64.rpm" mode=0755
+  when: rpm_check3.stdout.find('is not installed') != -1
+  tags: 
+    - copy-rpm
+    - install-prerequisite
+    - install-3dx
+    
+- name: Install mesa-libGL package.
+  remote_user: monitor
+  become: true
+  yum: 
+     name: /tmp/mesa-libGL-10.4.3-1.el6.x86_64.rpm 
+     state: present
+  when: rpm_check3.stdout.find('is not installed') != -1
+  tags: 
+    - install-prerequisite
+    - install-3dx
+
+# Install mesa-libOSMesa
+- name: Check mesa-libOSMesa installed or not
+  remote_user: monitor
+  become: true
+  command: rpm -q mesa-libOSMesa
+  register: rpm_check4
+  ignore_errors: yes
+  tags: 
+    - install-prerequisite
+    - install-3dx
+  
+- name: copy mesa-libOSMesa to user home Directory
+  remote_user: "{{ plm_user }}"
+  copy: src="mesa-libOSMesa-10.4.3-1.el6.x86_64.rpm" dest="/tmp/mesa-libOSMesa-10.4.3-1.el6.x86_64.rpm" mode=0755
+  when: rpm_check4.stdout.find('is not installed') != -1
+  tags: 
+    - copy-rpm
+    - install-prerequisite
+    - install-3dx
+    
+- name: Install mesa-libOSMesa package.
+  remote_user: monitor
+  become: true
+  yum: 
+     name: /tmp/mesa-libOSMesa-10.4.3-1.el6.x86_64.rpm 
+     state: present
+  when: rpm_check4.stdout.find('is not installed') != -1
+  tags: 
+    - install-prerequisite
+    - install-3dx
+    
+    
+# Install xorg-x11-server-Xvfb
+- name: Check xorg-x11-server-Xvfb installed or not
+  remote_user: monitor
+  become: true
+  command: rpm -q xorg-x11-server-Xvfb
+  register: rpm_check5
+  ignore_errors: yes
+  tags: 
+    - install-prerequisite
+    - install-3dx
+  
+- name: copy xorg-x11-server-Xvfb to user home Directory
+  remote_user: "{{ plm_user }}"
+  copy: src="xorg-x11-server-Xvfb-1.10.4-6.el6.x86_64.rpm" dest="/tmp/xorg-x11-server-Xvfb-1.10.4-6.el6.x86_64.rpm" mode=0755
+  when: rpm_check5.stdout.find('is not installed') != -1
+  tags: 
+    - copy-rpm
+    - install-prerequisite
+    - install-3dx
+    
+- name: Install xorg-x11-server-Xvfb package.
+  remote_user: monitor
+  become: true
+  yum: 
+     name: /tmp/xorg-x11-server-Xvfb-1.10.4-6.el6.x86_64.rpm 
+     state: present
+  when: rpm_check5.stdout.find('is not installed') != -1
+  tags: 
+    - install-prerequisite
+    - install-3dx

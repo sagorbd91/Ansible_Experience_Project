@@ -1,0 +1,26 @@
+---
+
+- name: Copy platform GA UserIntention file to target
+  template: src="templates/UserIntentions_3dx_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3dx_ga.xml"
+  tags: install-3dx-ga
+ 
+- name: Copy 3dx-ga installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_ga }}'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: install-3dx-ga   
+
+- name: Executing platform GA installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3dx_ga.xml --xmlreport {{ windows_tmp_path }}\Report_3dx.xml'
+     elevated: yes
+  tags: install-3dx-ga
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3dx_ga.xml" state=absent
+  tags: install-3dx-ga
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags: install-3dx-ga

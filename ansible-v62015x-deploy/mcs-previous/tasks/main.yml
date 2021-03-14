@@ -1,0 +1,114 @@
+---
+
+#Create directory and instances
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_instances.yml
+- include: copy_config.yml
+
+
+#Install MCS GA  
+- include: install_live_collaboration.yml
+- include: install_live_collaboration_fix_cas.yml
+  when: not update_database
+  
+- name: Backup "logback-classic.jar" from javacommon
+  shell: cp "{{mcs_server_dir}}/linux_a64/docs/javacommon/slf4j-api.jar" "{{mcs_server_dir}}/linux_a64/docs/javacommon/logback-classic.jar" "{{ mcs_bin_dir }}"  
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+    - backup-jar
+    - install-mcs
+
+- include: install_business_process.yml
+- include: install_3dexapps_mgt.yml
+- include: install_multidis_collplat.yml
+- include: install_collspace_mgt.yml
+#- include: install_studio_toolkit.yml
+
+- include: install_eng_central.yml
+- include: install_lib_central.yml
+- include: install_prog_cen_foundation.yml
+- include: install_prog_experience.yml
+- include: install_req_cen_foundation.yml
+- include: install_variantconf_central.yml
+- include: install_cap_audit_foundation.yml
+- include: install_comp_ncr_foundation.yml
+- include: install_bom_conf_env.yml
+- include: install_knowledge_std.yml
+- include: install_bom_avl_mgt.yml
+- include: install_3dlive.yml
+- include: install_caddes_foundation.yml
+- include: install_conn_autocad.yml
+- include: install_conn_solidworks.yml
+- include: install_micro_proj_intrsrv.yml
+- include: install_coll_microsoft_server.yml
+
+
+
+
+#Install MCS Fixpack  
+
+- include: install_business_process_fix.yml
+- include: install_live_collaboration_fix.yml
+  when: update_database
+
+- include: install_multidis_collplat_fix.yml
+- include: install_3dexapps_mgt_fix.yml
+- include: install_collspace_mgt_fix.yml
+
+- include: install_eng_central_fix.yml
+- include: install_req_cen_foundation_fix.yml
+- include: install_variantconf_central_fix.yml
+- include: install_knowledge_std_fix.yml
+- include: install_3dlive_fix.yml
+- include: install_caddes_foundation_fix.yml
+- include: install_conn_autocad_fix.yml
+- include: install_conn_solidworks_fix.yml
+
+
+#- include: install_studio_toolkit_fix.yml
+
+
+#config change and compile
+- include: install_services.yml
+- include: open_firewall.yml
+- include: deploy_KOALA_config.yml
+- include: deploy_mxenv_config.yml
+- include: config_auth_passport.yml
+  when: mcs_with_cas
+- include: deploy_war.yml    
+- include: build_compile_code.yml
+- include: build_compile_code_fix.yml   
+- include: reg_in_passport.yml
+  when: mcs_with_cas
+  
+- name: Restore "logback-classic.jar" to javacommon
+  shell: cp "{{ mcs_bin_dir }}/slf4j-api.jar" "{{ mcs_bin_dir }}/logback-classic.jar" "{{mcs_server_dir}}/linux_a64/docs/javacommon/"  
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+    - restore-jar
+    - install-mcs
+    - install-mcsfx
+    
+#Run index script
+- include: run_mcs_search_index.yml
+- include: run_partial_search_index.yml
+- include: restart_services.yml
+
+# Backup MCSNOCAS Code
+
+- include: backup_mcs_code.yml
+
+# Restore MCSNOCAS CODE
+
+- include: restore_mcs_code.yml
+
+# Uninstall script
+
+#- include: uninstall_mcs.yml
+
+
+
+
+
+

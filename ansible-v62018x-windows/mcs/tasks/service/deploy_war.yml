@@ -1,0 +1,31 @@
+---
+
+- name: built and deploy mcsnocas war
+  win_command: '{{mcs_server_dir}}\win_b64\code\command\BuildDeploy3DSpace_NoCAS.bat'
+  register: outputListCommand
+  tags: 
+    - deploy_war_mcsnocas
+    - post-activity
+
+- name: Printing -> Run deploy mcsnocas war output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - deploy_war_mcsnocas
+     - post-activity
+
+
+
+- name: built and deploy mcscas war
+  win_command: '{{mcs_server_dir}}\win_b64\code\command\BuildDeploy3DSpace_CAS.bat'
+  register: outputListCommand
+  tags: 
+     - deploy_war_mcscas
+     - post-activity
+    
+     
+- name: Printing -> Run deploy mcscas war output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - deploy_war_mcscas
+     - post-activity
+     

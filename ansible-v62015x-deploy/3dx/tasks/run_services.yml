@@ -1,0 +1,91 @@
+---
+
+- name: Execute the 3dindex stop script
+  become: true
+  become_user: "{{ plm_user }}"
+  shell: ./stop3dindexserver.sh > stop3dindexserver.log 2>&1
+  args:
+    chdir: /{{ e3dx_bin_dir }}
+  ignore_errors: yes
+  tags: 
+    - run-15x-script
+    - stop-3dx
+####  
+- name: Execute the PICMain_3dindex_server.sh script
+  shell:  nohup /plm/{{ env_name }}/3dx/bin/PICMain_3dindex_server.sh >> /plm/{{ env_name }}/3dx/bin/PICMain_3dindex_server.log 2>&1
+  become: true
+  become_user: "{{ plm_user }}"
+  args:
+    chdir: /{{ e3dx_bin_dir }}
+  tags: 
+    - run-15x-script
+    - start-3dx-PICMain
+
+- name: Check if PICMain running or not
+  become: true
+  become_user: "{{ plm_user }}"
+  shell: ps cax | grep PICMain | awk '{print $5}'
+  register: check_service
+  tags: 
+     - run-15x-script
+     - start-3dx-PICMain
+
+- fail: msg="PICMain not running"
+  become: true
+  become_user: "{{ plm_user }}"
+  when: "'PICMain' not in check_service.stdout"
+  tags: 
+     - run-15x-script
+     - start-3dx-PICMain
+####  
+
+## 
+- name: Execute the 3DXAdminHttpServer-launch.sh script
+  shell: nohup ./3DXAdminHttpServer-launch.sh >> 3DXAdminHttpServer-launch.log 2>&1
+  become: true
+  become_user: "{{ plm_user }}"
+  args:
+    chdir: /{{ e3dx_bin_dir }}
+  tags: 
+    - run-15x-script
+    - start-3dx-3DXAdminHttpServer
+
+- name: Check if 3DXAdminHttpServer running or not
+  become: true
+  become_user: "{{ plm_user }}"
+  shell: sleep 20; ps -ef | grep CATBBDHTTPServer | grep -v grep
+  register: check_service_http
+  tags: 
+     - start-3dx-3DXAdminHttpServer
+
+- fail: msg="3DXAdminHttpServer not running"
+  become: true
+  become_user: "{{ plm_user }}"
+  when: "'CATBBDHTTPServer' not in check_service_http.stdout"
+  tags: 
+     - start-3dx-3DXAdminHttpServer
+## 
+
+
+
+
+
+
+
+
+
+
+- name: Execute the checkrun.sh script
+  remote_user: "{{ plm_user }}"
+  shell: ./checkrun.sh 
+  args:
+    chdir: /{{ e3dx_bin_dir }}
+  register: checkrun
+  tags: 
+    - run-15x-script
+  
+- debug: msg="{{checkrun.stdout_lines}}"
+  remote_user: "{{ plm_user }}"
+  tags: 
+    - run-15x-script
+  

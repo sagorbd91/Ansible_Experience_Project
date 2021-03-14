@@ -1,0 +1,31 @@
+env_name: 'DEV3'
+
+# Installer path details
+installer_path_3comm: '{{ installer_path }}\3DComment\ga\Windows64\1'
+Comment_installer_path_fp: '{{ installer_path }}\3DComment\{{fix_pack_version}}\3DComment.Windows64\1'
+
+# Instalation path and paremeters
+INSTALL_DIR: 'D:\PLM\{{ env_name }}\3DComment'
+TARGET_PATH: '{{INSTALL_DIR}}\CODE'
+SOCIAL_SHARED_DIR: '{{INSTALL_DIR}}\3DCommentData'
+SOCIAL_LOG_DIR: '{{INSTALL_DIR}}\3DCommentLog'
+SOCIAL_TMP_DIR: '{{INSTALL_DIR}}\3DCommentTemp'
+TomEEConnectionPort: '8781'
+instance_dir: '{{ TARGET_PATH }}\win_b64\code'
+# Modify create_service.bat
+comm_command_dir: '{{ instance_dir }}\command'
+service_name: '3DComment_R2018x'
+Jmx_port: '8389'
+
+# Database info
+SOCIAL_DB_MSSQL_SERVER: 'V0641A\CATIASQLSERVER'
+SOCIAL_DB_MSSQL_DBNAME: 'x3dcomment'
+SOCIAL_DB_MSSQL_ADMIN_USER: 'x3d_admin'
+SOCIAL_DB_MSSQL_ADMIN_PASSWORD: 'x3d_admin#01'
+SOCIAL_DB_MSSQL_USER: 'x3d'
+SOCIAL_DB_MSSQL_PASSWORD: 'x3d#01'
+
+#Update Time Out
+conf-dir: '{{ instance_dir }}\conf'
+
+

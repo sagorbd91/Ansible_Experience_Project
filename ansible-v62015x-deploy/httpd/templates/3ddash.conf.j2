@@ -1,0 +1,66 @@
+#===============================================================
+# VIRTUAL HOST PORT 80 --> Redirection vers url SSL de 3ddashboard
+#===============================================================
+#<VirtualHost *:80>
+#ServerName {{ dashboard_server_common_name }}
+#Redirect  / https://{{ dashboard_server_common_name }}:{{ dashboard_proxy_port }}/
+#</VirtualHost>
+#===============================================================
+# VIRTUAL HOST PORT 8480 (port SSL)
+# --> Redirection vers url SSL de 3ddashboard sur autre server
+# --> Proxy / ReverseProxy definition
+#===============================================================
+Listen {{ dashboard_proxy_port }}
+<VirtualHost *:{{ dashboard_proxy_port }}>
+ServerName {{ dashboard_server_common_name }}
+ServerAlias {{ dashboard_server_common_name }}
+ErrorLog logs/{{ env_name }}-3ddashboard_error_log
+TransferLog logs/{{ env_name }}-3ddashboard_access_log
+LogLevel warn
+
+SSLEngine on
+SSLProxyEngine On
+SSLProtocol all -SSLv2 -SSLv3
+SSLCipherSuite ALL:!ADH:!EXPORT:!SSLv2:RC4+RSA:+HIGH:+MEDIUM:+LOW
+#===============================================================
+# SSL certification for 3ddashboard WP1 FLS OOTB
+#===============================================================
+SSLCertificateFile {{ ssl_directory }}/{{ dashboard_crt }}.crt
+SSLCertificateKeyFile  {{ ssl_directory }}/{{ dashboard_crt }}.key
+
+<Files ~ "\.(cgi|shtml|phtml|php3?)$">
+SSLOptions +StdEnvVars
+</Files>
+SetEnvIf User-Agent ".*MSIE.*" \
+nokeepalive ssl-unclean-shutdown \
+downgrade-1.0 force-response-1.0
+CustomLog logs/ssl_request_log \
+"%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+#===============================================================
+# Reverse proxi defintion
+#===============================================================
+ProxyPass /uwp {{ dashboard_server }}
+ProxyPassReverse /uwp {{ dashboard_server }}
+
+Header edit Set-Cookie "^(JSESSIONID=.*; Path=)/3DPassport(?:/|)(.*?)$" "$1/$2"
+
+# Overwrite X-Forwarded-Proto declaration for port :8280, request are "https"
+RequestHeader set X-Forwarded-Proto "https"
+
+#CORS directives
+SetEnvIf Origin "^http(s)?://(.+\.)?(valmet.com)(:\d{1,5})?$" origin_is=$0
+Header always set Access-Control-Allow-Origin %{origin_is}e env=origin_is
+Header set Access-Control-Allow-Credentials "true"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "accept, x-requested-method, origin, x-requested-with, x-request"
+#===============================================================
+# Need for IE bug
+#===============================================================
+# Fix font issue in IE10+
+<Location ~ \.eot$>
+   Header unset Cache-Control
+   Header unset Pragma
+</Location>
+
+</VirtualHost>
+

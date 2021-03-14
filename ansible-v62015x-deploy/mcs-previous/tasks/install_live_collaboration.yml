@@ -1,0 +1,60 @@
+---
+
+- name: Check if server installer path exists
+  stat: path="{{mcs_ga_installer}}/ENOVIALiveCollaborationServer.Linux64"
+  register: check_path
+  tags: 
+    - install-server
+    - install-mcs
+
+
+- name: Server installer doesn't exist
+  fail: msg="server installer doesn't exist!!"
+  when: not check_path.stat.exists
+  tags: 
+    - install-server
+    - install-mcs
+  
+   
+- name: create the server dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_server_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2755
+  tags: 
+    - install-server
+    - install-mcs
+ 
+- name: Copy the Live Coll Server Answer file
+  remote_user: monitor
+  sudo: true
+  template: src="answer_server.j2" dest="{{ mcs_ga_installer }}/ENOVIALiveCollaborationServer.Linux64/1/answer_server.txt" mode=2777
+  when: update_database
+  tags: 
+   - install-server
+   - install-mcs
+  
+- name: Copy the Live Coll Server Answer file(database will not update)
+  remote_user: monitor
+  sudo: true
+  template: src="answer_server_nudb.yml" dest="{{ mcs_ga_installer }}/ENOVIALiveCollaborationServer.Linux64/1/answer_server.txt" mode=2777
+  when: not update_database
+  tags: 
+   - install-server
+   - install-mcs
+
+- name: Executing the Live Collaboration Server installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh < answer_server.txt
+  args:
+    chdir: /{{ mcs_ga_installer }}/ENOVIALiveCollaborationServer.Linux64/1
+  tags: 
+    - install-server
+    - install-mcs
+
+- name: Remove the Live Collaboration Server Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_ga_installer }}/ENOVIALiveCollaborationServer.Linux64/1/answer_server.txt" state=absent
+  tags: 
+    - install-server
+    - install-mcs

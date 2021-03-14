@@ -1,0 +1,37 @@
+#====================================
+# VirtualHost for 3DDash
+#====================================
+<VirtualHost *:{{ http_ssl_port }}>
+ServerName {{ dash_instance_common_name }}
+ServerAlias {{ dash_instance_common_name }}
+
+ErrorLog logs/{{ env_name }}_3ddash_error_log
+TransferLog logs/{{ env_name }}_3ddash_access_log
+LogLevel warn
+
+SSLEngine on
+SSLProxyEngine On
+
+SSLCertificateFile {{ ssl_certs_cert_path }}
+SSLCertificateKeyFile  {{ ssl_certs_privkey_path }}
+SSLCertificateChainFile {{ ssl_directory }}/valmet-ca.crt
+
+#DS_DO_NOT_MODIFY START
+# Apache configuration file for reverse proxy
+<Location /uwp>
+    SetEnvIf Host ^(.*?)(:[0-9]+|)$ custom_host=$1
+    RequestHeader set x-forwarded-hostname "%{custom_host}e"
+    RequestHeader set x-forwarded-port {{ http_ssl_port }}
+    RequestHeader set x-forwarded-proto https
+
+    ProxyPass http://127.0.0.1:{{dash_instance_port}}/uwp
+    ProxyPassReverse http://127.0.0.1:{{dash_instance_port}}/uwp
+
+    # Passport font fix
+    Header unset Cache-Control
+    Header unset Pragma
+</Location>
+#DS_DO_NOT_MODIFY END
+
+</VirtualHost>
+

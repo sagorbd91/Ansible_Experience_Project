@@ -1,0 +1,10 @@
+---
+
+- name: Install Passport
+  hosts: 3dpass_servers
+  vars_files:
+    - 3dpass/vars/main.yml
+    - 3dpass/vars/{{ env_name }}.yml
+  roles:
+    - 3dpass
+

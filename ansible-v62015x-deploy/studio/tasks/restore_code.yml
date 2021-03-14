@@ -1,0 +1,13 @@
+---
+
+
+- name: making untar of studio code 
+  remote_user: monitor
+  become: true
+  shell: tar -zxvf {{ code_backup_filename }}.tar.gz  -C {{ studio_env_path }}/
+  args:
+    chdir: /{{ code_backup_dir }}
+  tags: 
+    - code-restore
+    
+

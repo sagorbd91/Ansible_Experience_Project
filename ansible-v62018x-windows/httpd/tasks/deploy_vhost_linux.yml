@@ -1,0 +1,59 @@
+---
+
+- name: create the vhost dir or make sure it exist
+  file: path="{{ vhost_path }}" state=directory owner=root group=root mode=2755
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+    - deploy-3ddash-vhost
+
+
+- name: 3dcomment vhost (https) deploy
+  template: src="3dcomment.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3dcomment.conf"
+  tags:
+    - deploy-vhost
+    - install-reverseproxy
+
+
+- name: 3ddashboard vhost (https) deploy
+  template: src="3ddashboard.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3ddashboard.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+    
+- name: 3dnotification(https) vhost deploy
+  template: src="3dnotification.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3dnotification.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+  
+  
+- name: 3dpassport (https) vhost deploy
+  template: src="3dpassport.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3dpassport.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+    - deploy-3dpass-vhost
+  
+  
+- name: 3dspace (https) vhost deploy
+  template: src="3dspace.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3dspace.conf"
+  tags: 
+    - deploy-vhost
+    - install-reverseproxy
+
+- name: 3dswym (https) vhost deploy
+  template: src="3dswym.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-3dswym.conf"
+  tags: 
+    - deploy-vhost
+
+- name: fcscentral (https) vhost deploy
+  template: src="fcscentral.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-fcscentral.conf"
+  tags: 
+    - deploy-vhost
+    
+- name: fedsearch (https) vhost deploy
+  template: src="fedsearch.conf.j2" dest="{{ vhost_path }}/{{ env_name }}-fedsearch.conf"
+  tags: 
+    - deploy-vhost
+    

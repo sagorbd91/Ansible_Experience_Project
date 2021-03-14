@@ -1,0 +1,52 @@
+---
+
+mysql_port: 3306
+mysql_bind_address: "0.0.0.0"
+mysql_root_db_pass: "admin4321"
+mysql_current_pass: ""
+mysql_root_password_update: yes
+mysql_db_id: 7
+mysql_port: 3306
+mysql_allow_host: 
+
+mysql_pkgs:
+  - libselinux-python
+  - mysql-libs
+  - mysql-server
+  - MySQL-python
+
+mysql_service: mysqld
+mysql_conf_dir: "/etc"
+mysql_backup_dir: "/dbbackup/mysqlback"
+mysql_backup_file_timestamp: ""
+
+mysql_db:
+     - name: iam
+     - name: iam_cas
+     
+
+mysql_users:
+      - name: iam
+        pass: iam#
+        priv: "iam.*:ALL,GRANT/iam_cas.*:ALL,GRANT"
+        host: "%"
+       
+      - name: iam_admin
+        pass: iam_admin#
+        priv: "iam.*:ALL,GRANT/iam_cas.*:ALL,GRANT"
+        host: "%"
+        
+mysql_dash_db:
+      - name: 3ddashboard
+     
+mysql_dash_users:
+      - name: x3ds
+        pass: x3ds#
+        priv: "3ddashboard.*:ALL,GRANT"
+        host: "{{ mysql_allow_host }}"
+       
+      - name: x3dsadmin
+        pass: x3dsadmin#
+        priv: "*.*:CREATE,CREATE\ TEMPORARY\ TABLES,CREATE\ USER,CREATE\ VIEW,SHOW\ VIEW,DELETE,DROP,EXECUTE,GRANT\ OPTION,INDEX,INSERT,SELECT,SHOW\ DATABASES"
+        host: "{{ mysql_allow_host }}"
+    

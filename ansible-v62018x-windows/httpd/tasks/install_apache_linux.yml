@@ -1,0 +1,32 @@
+---
+
+- name: Install HTTPD and SSL
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ httpd_pkgs }}"
+  tags: 
+    - install_apache
+
+- name: Deploy httpd configuration file
+  template:
+    src: httpd.conf.linux.j2
+    dest: "{{ where_to_install }}/conf/httpd.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  tags: 
+    - deploy-httpd-conf
+    - install_apache
+
+- name: Deploy ssl configuration file
+  template:
+    src: ssl.conf.linux.j2
+    dest: "{{ where_to_install }}/conf.d/ssl.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  tags: 
+    - deploy-httpd-conf
+    - install_apache
+    

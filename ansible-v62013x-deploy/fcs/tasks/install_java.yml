@@ -1,0 +1,31 @@
+---
+- name: clear current java version or make sure dir is empty
+  remote_user: monitor
+  sudo: true
+  shell: rm -rf "{{ fcs_java_dir }}/*"
+  tags: 
+   - install-fcs
+   - install-java
+  
+- name: untar jdk inside instance
+  remote_user: monitor
+  sudo: true
+  unarchive: src="{{installer_path}}/{{java_installer}}" dest="{{ fcs_java_dir }}" owner={{ plm_user }} group={{ plm_group }} copy=no mode="u=rwx,g=rw"
+  tags: 
+   - install-fcs
+   - install-java
+   
+- name: get java path
+  shell: ls {{ fcs_java_dir }}
+  register: dir_content
+  tags: 
+   - install-fcs
+   - install-java  
+   
+- name: create symbolic link for the java path
+  remote_user: monitor
+  sudo: true
+  file: src="./{{ dir_content.stdout }}" dest="{{fcs_java_dir}}/jdk-fcs" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags: 
+   - install-fcs
+   - install-java

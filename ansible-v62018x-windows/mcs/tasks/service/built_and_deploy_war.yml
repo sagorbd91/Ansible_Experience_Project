@@ -1,0 +1,33 @@
+---
+
+- name: Deploy Build3DSpace_CAS.bat bat file to target
+  template: src="templates/build_deploy/Build3DSpace_CAS.bat.j2" dest="{{bin_dir}}\Build3DSpace_CAS.bat"
+  tags: 
+    - built_war
+    - copy-build-deploy
+    
+- name: Executing BuildDeploy3DSpace_CAS bat file
+  win_psexec:
+     command: '{{bin_dir}}\Build3DSpace_CAS.bat >> {{bin_dir}}\BuildDeploy3DSpace_CAS.xml'
+     elevated: yes
+  tags: 
+    - built_war
+    
+    
+- name: Deploy Deploy3DSpaceWar_CAS.bat.j2 bat file for multi instance
+  template: src="templates/build_deploy/Deploy3DSpaceWar_CAS.bat.j2" dest="{{bin_dir}}\Deploy3DSpaceWar_CAS_{{ item.key }}.bat"
+  with_dict: "{{ instances }}"
+  tags: 
+    - deploy_war_all_mcscas
+    - copy-build-deploy
+
+
+- name: Executing Deploy3DSpaceWar_CAS.bat for multi instance
+  win_psexec:
+     command: '{{bin_dir}}\Deploy3DSpaceWar_CAS_{{ item.key }}.bat >> {{bin_dir}}\BuildDeploy3DSpace_CAS.xml'
+     elevated: yes
+     with_dict: "{{ instances }}"
+  tags: 
+    - deploy_war_all_mcscas
+    
+  

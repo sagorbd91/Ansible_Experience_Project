@@ -1,0 +1,61 @@
+---
+
+- name: create symbolic link for java 7
+  remote_user: monitor
+  become: true
+  file: src="{{ java7_version_dir }}" dest="{{ mcs_java_path }}" owner={{ plm_user }} group={{ plm_group }} state=link force=yes
+  tags:
+     - ENOVIADataAndBehaviorAdministration
+  
+- name: create the dma dir for DataAndBehaviorAdministration or make sure it exist
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_dma_dir }}" state=directory owner={{plm_user}} group={{plm_group}} mode=2755
+  tags: 
+     - ENOVIADataAndBehaviorAdministration
+     - install-mcs
+     - install-apps-ga
+   
+- name: Copy the DataAndBehaviorAdministration Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_dma.j2" dest="{{ mcs_conf_dir }}/answer_dma.txt" mode=2777
+  when: update_database
+  tags: 
+     - ENOVIADataAndBehaviorAdministration
+     - install-mcs
+     - install-apps-ga
+   
+   
+- name: Copy the DataAndBehaviorAdministration Answer file to Installer Directory
+  remote_user: monitor
+  become: true
+  template: src="answer_dma_nudb.j2" dest="{{ mcs_conf_dir }}/answer_dma.txt" mode=2777
+  when: not update_database
+  tags: 
+     - ENOVIADataAndBehaviorAdministration
+     - install-mcs
+     - install-apps-ga
+
+- name: Executing the DataAndBehaviorAdministration installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < {{ mcs_conf_dir }}/answer_dma.txt
+  args:
+    chdir: /{{ mcs_apps_ga_installer }}/ENOVIADataAndBehaviorAdministration.Unix64/1
+  tags: 
+     - ENOVIADataAndBehaviorAdministration
+     - install-mcs
+     - install-apps-ga
+   
+   
+- name: Remove the DataAndBehaviorAdministration Answer file
+  remote_user: monitor
+  become: true
+  file: path="{{ mcs_conf_dir }}/answer_dma.txt" state=absent
+  tags: 
+     - ENOVIADataAndBehaviorAdministration
+     - install-mcs
+     - install-apps-ga
+
+
+

@@ -1,0 +1,22 @@
+---
+
+- name: copy mql bat file to target
+  template: src="templates/build_deploy/Compile3DSpaceCode.bat.j2" dest="{{bin_dir}}\Compile3DSpaceCode.bat"
+  vars:
+    shutdownPort: 
+    ajpPort: 
+    jvmsize: 
+    set_serviceNameTomEE: 
+    set_admin_user: 
+    serviceurl: 
+  tags: 
+    - compile-code
+    - post-activity
+    
+- name: run compile through mql
+  win_psexec:
+     command: '{{bin_dir}}\Compile3DSpaceCode.bat >> {{bin_dir}}\Compile3DSpaceCode.xml'
+     elevated: yes
+  tags: 
+    - compile-code
+    - post-activity

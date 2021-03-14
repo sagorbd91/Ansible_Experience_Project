@@ -1,0 +1,13 @@
+---
+
+- name: Stop 3DSwym Service
+  win_service: name=3DSwym_R2018x state=stopped
+  tags:
+     - stop-swym
+     - restart-swym
+
+- name: Start 3DSwym service
+  win_service: name=3DSwym_R2018x state=started
+  tags:
+     - start-swym
+     - restart-swym

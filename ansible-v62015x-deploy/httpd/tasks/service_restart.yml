@@ -1,0 +1,26 @@
+---
+
+- name: Stop httpd service 
+  service:
+    name: httpd
+    state: stopped
+  tags:
+    - service-stop
+    - install-reverseproxy
+
+- name: Start httpd service and enabled permanently
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  tags:
+    - service-start
+    - install-reverseproxy
+    
+    
+- name: ReStart httpd service 
+  service:
+    name: httpd
+    state: restarted
+  tags:
+    - service-restart

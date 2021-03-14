@@ -1,0 +1,13 @@
+#DS_DO_NOT_MODIFY START
+# Apache configuration file for reverse proxy
+<Location /3ddashboard>
+    SetEnvIf Host ^(.*?)(:[0-9]+|)$ custom_host=$1
+    RequestHeader set x-forwarded-hostname "%{custom_host}e"
+    RequestHeader set x-forwarded-port {{ dashboard_proxy_port }}
+    RequestHeader set x-forwarded-proto https
+
+    ProxyPass http://{{ dashboard_instance_server }}:{{ dashboard_instance_port }}/3ddashboard timeout=300
+    ProxyPassReverse http://{{ dashboard_instance_server }}:{{ dashboard_instance_port }}/3ddashboard
+</Location>
+#DS_DO_NOT_MODIFY END
+

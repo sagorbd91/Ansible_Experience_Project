@@ -1,0 +1,59 @@
+env_name: 'DEV2'
+fix_pack_version: ''
+
+#Installer path details
+installer_GA_path_3dsw: '{{ installer_path }}\3DSwym\ga\Windows64\1'
+installer_FP_path_3dsw: '{{ installer_path }}\3DSwym\{{ fix_pack_version }}\3DSwym.Windows64\1'
+
+
+#Installer path and parameters
+installation_path: 'C:\PLM\{{ env_name }}\3DSwym'
+installation_path_sw: '{{installation_path}}\Code'
+SHARED_DIR_Sw: '{{ installation_path }}\3DSwymData'
+LOG_DIR_Sw: '{{ installation_path }}\3DSwymLog'
+TEMP_DIR: '{{ installation_path }}\3DSwymTemp'
+DATA_DIR_Sw: '{{ installation_path_sw }}\win_b64\datadir'
+
+Java_Path: 'C:\PLM\{{ env_name }}\common\soft\java\jdk'
+instance_dir: '{{ installation_path_sw }}\win_b64\code'
+#Modify create_service.bat
+swym_command_dir: '{{ instance_dir }}\command'
+service_name: '3DSwym_R2018x'
+Jmx_port: '8289'
+
+
+#Database info
+DB_SERVER: 'V0626A\CATIASQLSERVER'
+DB_NAME_Social: 'x3dswym_social'
+DB_NAME_Media: 'x3dswym_media'
+DB_NAME_widget: 'x3dswym_widget'
+SwymDB_Admin_User: 'x3ds_admin'
+SwymDB_Admin_User_pwd: 'x3ds_admin#01'
+DB_MSSQL_USER: 'x3ds'
+DB_MSSQL_PASSWORD: 'x3ds#01'
+
+ENOVIA_USER_name: 'admin_platform'
+ENOVIA_USER_Pwd: 'Admpas_Dev2'
+smtp_host: 'smtp.valmet.com'
+mail_sender: 'test-admin.plm@valmet.com'
+TomEEConnectionPort: '8481'
+cert_repo: 'C:\plm\{{ env_name }}common\conf\ssl'
+
+#Update Time Out
+conf-dir: '{{ instance_dir }}\tomee\conf'
+
+
+#URL 
+X3DCSMA_3DPassportURL: 'https://3dpassport-18x{{ env_name.lower() }}.plm.valmet.com:8280/3dpassport'
+X3DCSMA_3DDashboardURL: 'https://3ddashboard-18x{{ env_name.lower() }}.plm.valmet.com:443/3ddashboard'
+X3DCSMA_3DCompassURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_6WTAGURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_3DSWYMURL: 'https://3dswym-18x{{ env_name.lower() }}.plm.valmet.com:8480/3dswym'
+X3DCSMA_3DSpaceURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_FEDERATED_SEARCH: 'https://federated-18x{{ env_name.lower() }}.plm.valmet.com:8980/federated'
+X3DCSMA_3DCommentURL: 'https://3dcomment-18x{{ env_name.lower() }}.plm.valmet.com:8780/3dcomment'
+X3DCSMA_3DNotificationURL: 'https://3dnotification-18x{{ env_name.lower() }}.plm.valmet.com:8880/3dnotification'
+X3DCSMA_FTSURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:19000'
+X3DCSMA_CloudViewURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:29000'
+X3DCSMA_ENOVIAV5: 'https://v0642a.vstage.co:443/enoviav5'
+fcsSrvURL: 'https://fcscentral-18x{{ env_name.lower() }}.plm.valmet.com:8580/enoviafcs'

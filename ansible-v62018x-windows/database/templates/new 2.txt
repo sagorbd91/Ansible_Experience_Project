@@ -1,0 +1,5 @@
+@echo off
+pushd {{ script_dump_location }}\logs
+for /f "tokens=*" %%a in ('dir /b /od') do set newest=%%a
+type "%newest%" 
+popd

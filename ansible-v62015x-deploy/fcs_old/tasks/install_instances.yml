@@ -1,0 +1,71 @@
+---
+
+- name: unarchiving tomcat 
+  remote_user: monitor
+  sudo: true
+  unarchive: src="{{installer_path}}/{{tomcat_installer}}" dest="{{ fcs_instance_path }}" owner={{ plm_user }} group={{ plm_group }} copy=no 
+  tags: 
+   - install-fcs
+   - install-instances
+  
+- name: create tomcat instances
+  file: dest="{{fcs_instance_path}}/{{ item.key }}" state=directory 
+  with_dict: instances
+  tags: 
+   - install-fcs
+   - install-instances
+
+
+- name: copy tomcat content to instance
+  remote_user: monitor
+  sudo: true
+  synchronize:
+     src: "{{fcs_instance_path}}/{{ tomcat_version }}/." 
+     dest: "{{fcs_instance_path}}/{{ item.key }}" 
+     checksum: yes 
+     recursive: yes
+     archive: no 
+  delegate_to: "{{inventory_hostname}}"
+  with_dict: instances
+  tags: 
+   - install-fcs
+   - install-instances
+
+- name: remove tomcat version
+  remote_user: monitor
+  sudo: true
+  file: path="{{fcs_instance_path}}/{{ tomcat_version }}" state=absent
+  tags: 
+      - install-fcs
+      - install-instances
+
+
+- name: chage ownership
+  remote_user: monitor
+  sudo: true
+  command: chown -R "{{plm_user}}":"{{plm_group}}" "{{fcs_instance_path}}/{{ item.key }}" 
+  with_dict: instances
+  tags: 
+   - install-fcs
+   - install-instances
+  
+  
+- name: deploy the war
+  shell: cp "{{fcs_code_dir}}/{{fcs_build_path}}" "{{fcs_instance_path}}/{{ item.key }}/webapps"  
+  delegate_to: "{{inventory_hostname}}"
+  with_dict: instances
+  tags: 
+      - install-fcs
+      - deploy-code
+      - install-instances
+
+- name: create link for logs
+  remote_user: monitor
+  sudo: true 
+  file: src="{{ fcs_log_dir }}/{{ item.key }}" dest="{{ fcs_instance_path }}/{{ item.key }}/logs" owner={{ plm_user }} group={{ plm_group }} state=link force=yes  
+  with_dict: instances
+  tags: 
+      - install-fcs
+      - deploy-code
+      - install-instances
+

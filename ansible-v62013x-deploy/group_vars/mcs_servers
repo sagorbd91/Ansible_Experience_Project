@@ -1,0 +1,27 @@
+plmmcs_user: "plmyma"
+env_name: mig4
+mcs_install_path: "{{ eplm_server_base_path }}/{{ env_name }}"
+mcs_install_rel_path: "/plm/{{env_name}}/mcs"
+mcs_instance_path: "{{mcs_install_rel_path}}/instances"
+mcs_code_dir: "{{mcs_install_rel_path}}/code"
+mcs_conf_dir: "{{mcs_install_rel_path}}/conf"
+mcs_log_dir: "{{mcs_install_rel_path}}/logs"
+mcs_java_dir: "{{mcs_install_rel_path}}/softs"
+mcs_build_path: "distrib/enovia.war"
+mcs_file_store_dir: "{{ apps_file_storage_dir }}/mcs"
+
+instances:
+  was_mcs_1:
+    app_name: mcs1-jkl
+    port_http: 9281
+    port_jmx: 9089
+    port_ajp: 9210
+    port_shutdown: 9206
+    port_redirect: 9244 
+  was_mcs_2:
+    app_name: mcs2-jkl
+    port_http: 9381
+    port_jmx: 9189
+    port_ajp: 9310
+    port_shutdown: 9306
+    port_redirect: 9344

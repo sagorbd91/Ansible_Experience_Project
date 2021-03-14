@@ -1,0 +1,13 @@
+---
+
+- name: Stop 3DComment Service
+  win_service: name=3DComment_R2018x state=stopped
+  tags: 
+     - stop-comment
+     - restart-comment
+  
+- name: Start 3DComment servce
+  win_service: name=3DComment_R2018x state=started
+  tags: 
+     - start-comment
+     - restart-comment

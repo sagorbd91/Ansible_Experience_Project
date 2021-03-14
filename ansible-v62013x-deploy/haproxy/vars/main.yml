@@ -1,0 +1,6 @@
+mode: http
+lb_port: 8080
+balance: roundrobin
+ports:
+    - 8281 
+    - 8381

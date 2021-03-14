@@ -1,0 +1,9 @@
+- name: Firing -> Run test script for 3DSwym
+  win_command: '{{ installation_path_sw }}\win_b64\code\command\run_test.bat'
+  register: outputListCommand
+  tags: 
+     - run_test
+- name: Printing -> Run test output
+  debug: msg={{ outputListCommand  }}
+  tags: 
+     - run_test

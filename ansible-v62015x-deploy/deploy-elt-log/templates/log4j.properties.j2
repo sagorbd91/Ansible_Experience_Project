@@ -1,0 +1,19 @@
+
+#log4j.rootCategory=WARN, stdout
+#log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+#log4j.appender.stdout.layout=org.apache.log4j.SimpleLayout
+
+lo4j.rootCategory=WARN, stdout
+log4j.appender.stdout=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.stdout.DatePattern='.'yyyy-MM-dd-HH
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{ISO8601}\t%p\t%m\n
+
+### for ELT ###
+log4j.logger.com.matrixone.ps.tomcat=debug, REX
+log4j.additivity.com.matrixone.ps.tomcat=false
+log4j.appender.REX=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.REX.File={{ ELT_LOG_PATH }}/requests.log
+log4j.appender.REX.DatePattern='.'yyyy-MM-dd-HH
+log4j.appender.REX.layout=org.apache.log4j.PatternLayout
+log4j.appender.REX.layout.ConversionPattern=%d{ISO8601}\t%p\t%m\n

@@ -1,0 +1,13 @@
+---
+    
+- name: execute backup command
+  raw: >
+      sqlcmd -U {{ db_user }} -P {{ db_password }} -S {{ db_server_name }} -Q " BACKUP DATABASE {{ db_name }} TO DISK = N'{{ db_backup_path|safe }}\{{ db_name }}_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}.bak' WITH COMPRESSION" 
+  register: backup_command_output
+  failed_when: "'BACKUP DATABASE successfully' not in backup_command_output.stdout"
+  tags: db_backup
+
+- debug: msg="{{ backup_command_output }}"
+  tags: db_backup
+
+  

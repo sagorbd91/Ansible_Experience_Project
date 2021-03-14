@@ -1,0 +1,53 @@
+env_name: 'DEV3'
+
+
+#Installer path details
+passport_installer_path_ga: '{{ installer_path }}\3DPassport\ga\3DPassport\Windows64\1'
+passport_installer_path_fp: '{{ installer_path }}\3DPassport\{{ fix_pack_version }}\3DPassport.Windows64\1'
+
+#Installation path details
+install_path: 'D:\PLM\{{ env_name }}\3DPassport'
+installation_path_pass: '{{ install_path }}\Code'
+Java_Path: 'D:\PLM\{{ env_name }}\common\soft\java\jdk'
+admin_platform_password: 'Admpas_Dev3'
+passport_instance_port: '8281'
+instance_dir: '{{ installation_path_pass }}\win_b64\code'
+#Modify create_service.bat
+pass_command_dir: '{{ instance_dir }}\command'
+service_name: '3DPassport_R2018x'
+Jmx_port: '8489'
+
+#passport application database information
+passport_database: 'passdb'
+passport_database_user_admin: 'x3dpassadmin'
+passport_database_user_admin_password: 'x3dpassadmin#01'
+passport_database_user: 'x3dpass'
+passport_database_user_password: 'x3dpass#01'
+#passport_database_host_port: 'V0626A.vstage.co:1433'
+passport_database_host_port: 'v0641a\CATIASQLSERVER'
+
+#passport token database information
+passport_token_database: 'passtkdb'
+passport_token_database_user: 'x3dpasstokens'
+passport_token_database_user_password: 'x3dpasstokens#01' 
+#passport_token_database_host_port: 'V0626A.vstage.co:1433'
+passport_token_database_host_port: 'v0641a\CATIASQLSERVER'
+
+#email and deploy information
+smtp_host: 'smtp.valmet.com'	 
+smtp_mail_sender: 'test-admin.plm@valmet.com'
+admin_platform_email: 'sarwar.kamal@valmetpartners.com'
+
+#Applications URL's are declare in group vars
+
+
+release_note: 'This is a release note'
+#pass_login_tempplate_dir: 'D:\PLM\DEV4\3DPassport\Code\win_b64\code\tomee\webapps\3dpassport\WEB-INF\uwaViews'
+pass_login_tempplate_dir: '{{windows_tmp_path}}'
+#pass_login_jsp_dir: 'D:\PLM\DEV4\3DPassport\Code\win_b64\code\tomee\webapps\3dpassport\WEB-INF\uwaViews'
+pass_login_jsp_dir: '{{windows_tmp_path}}'
+
+#Update Time Out
+conf-dir: '{{ instance_dir }}\tomee\conf'
+
+

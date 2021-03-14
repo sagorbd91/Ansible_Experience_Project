@@ -1,0 +1,29 @@
+---
+
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_fcs_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_fcs_ga.xml"
+  tags: install-fcs-ga
+
+- name: Copy fcs-ga installer from NFS to local
+  win_copy:
+    src: '{{ FCS_Installer_GA_Path }}'
+    dest: '{{ windows_tmp_path }}\fcscentral'
+    remote_src: True
+  tags: install-fcs-ga
+
+- name: Executing platform GA installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\fcscentral\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_fcs_ga.xml --xmlreport {{ windows_tmp_path }}\report_fcs_ga.xml'
+     elevated: yes
+  tags: install-fcs-ga
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_fcs_ga.xml" state=absent
+  tags: install-fcs-ga
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\fcscentral" state=absent
+  tags: 
+    - install-fcs-ga
+    - rmv-fcs-ga-folder
+    

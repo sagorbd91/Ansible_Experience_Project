@@ -1,0 +1,8 @@
+
+- name: Install 3dcomment
+  hosts: comment_servers
+  vars_files:
+      - 3dcomment/vars/main.yml
+      - 3dcomment/vars/{{ env_name }}.yml
+  roles:
+    - 3dcomment

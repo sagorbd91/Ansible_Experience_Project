@@ -1,0 +1,22 @@
+---
+- include: install_apache_WIN.yml
+  when: ansible_os_family == "Windows"
+  
+- include: install_apache_linux.yml
+  when: ansible_os_family == "RedHat"
+  
+- include: deploy_vhost_windows.yml
+  when: ansible_os_family == "Windows"
+  
+- include: deploy_vhost_linux.yml
+  when: ansible_os_family == "RedHat"
+  
+- include: deploy_fragment.yml
+- include: deploy_certs.yml
+
+
+- include: deploy_self_sign.yml
+#- include: create_cert.yml
+- include: copy_self_sign.yml
+
+

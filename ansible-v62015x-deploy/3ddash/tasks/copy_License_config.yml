@@ -1,0 +1,21 @@
+---
+
+- name: Ensure '/var/DassaultSystemes' folder exist
+  remote_user: monitor
+  become: true
+  file:
+      path: "{{ dash_ds_dir }}"
+      state: directory
+      owner: "{{ plm_user }}"
+      group: "{{ plm_group }}"
+      mode: "755"
+      recurse: "yes"
+  tags: 
+    - copy-config
+    - install-dashboard
+    
+- name: Copy CATIA license-server-config in '/var/DassaultSystemes/Licenses'
+  copy: src="DSLicSrv.txt" dest="{{ dash_license_dir }}/DSLicSrv.txt" mode=0777
+  tags: 
+    - copy-config
+    - install-dashboard

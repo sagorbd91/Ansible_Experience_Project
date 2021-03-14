@@ -1,0 +1,35 @@
+---
+
+- include: install_mysql_client.yml
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_instances.yml
+- include: copy_License_config.yml
+
+- name: install the services
+  remote_user: monitor
+  become: true
+  template: src="service.j2" dest="{{ service_dir }}/{{item.key}}" owner=root group=root mode="u=rwx,g=rx,o=rx"  
+  with_dict: "{{ instances }}"
+  tags: 
+    - install-services
+    - install-dashboard
+
+- name: start services
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started enabled=yes
+  with_dict: "{{ instances }}"
+  tags: 
+     - install-services
+     - install-dashboard
+    
+- include: open_firewall.yml
+- include: install_dashboard.yml
+- include: install_dashboard_fp.yml
+- include: install_local_reverseproxy.yml
+
+- include: import_ssl_cert.yml
+- include: restart_services.yml
+
+- include: uninstall_dashboard.yml

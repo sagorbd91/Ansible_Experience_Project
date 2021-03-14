@@ -1,0 +1,38 @@
+---
+
+- name: Update mxEnv.sh in server script for license
+  blockinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    marker: ""
+    block: |
+      #==============DSLS file access
+      export DSLS_CONFIG={{ mcs_conf_dir }}/DSLicSrv.txt
+  tags: 
+     - deploy-config
+     - install-mcs
+  
+  
+- name: Update mxEnv.sh in server script for mcsnocas
+  tags: deploy-config
+  blockinfile:
+    dest: "{{ mcs_server_dir }}/scripts/mxEnv.sh"
+    create: no
+    marker: ""
+    block: |
+      #==============FOR MCS 1 services distribution
+      export MX_SERVICE_ADMIN=http://{{inventory_hostname}}:{{item.value.port_http}}/enovia
+      export MX_SERVICE_PATH={{ mcs_instance_path }}/{{ item.key }}/webapps/enovia/WEB-INF/classes
+      export MX_CLASSPATH=$MX_CLASSPATH:{{mcs_instance_path}}/{{item.key}}/webapps/enovia/WEB-INF/classes:{{mcs_instance_path}}/{{item.key}}/webapps/enovia/WEB-INF/lib:{{mcs_server_dir}}/STAGING/ematrix/WEB-INF/classes:{{mcs_server_dir}}/STAGING/ematrix/WEB-INF/lib
+
+  with_dict: instances
+  tags: 
+     - deploy-config
+     - install-mcsfx
+    
+    
+    
+
+    
+  
+ 

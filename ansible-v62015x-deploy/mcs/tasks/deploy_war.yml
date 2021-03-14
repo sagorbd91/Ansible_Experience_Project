@@ -1,0 +1,159 @@
+---
+
+- name: Update instance startup.sh script
+  tags: 
+    - change-startup
+    - post-task
+  lineinfile:
+    dest: "{{ mcs_instance_path }}/{{instance_name}}/bin/startup.sh"
+    regexp: '. {{ mcs_code_dir }}/server/scripts/mxEnv.sh'
+    line: '#. {{ mcs_code_dir }}/server/scripts/mxEnv.sh'
+    
+- name: Copy War Setup answer file for nocas
+  template: src="answer_war_setup_nocas.j2" dest="{{ mcs_conf_dir }}/answer_war_setup.txt" mode=2777
+  when: not mcs_with_cas
+  tags: 
+     - deploy-war
+     - post-task
+     - built-war
+     
+- name: Copy War Setup answer file for cas
+  template: src="answer_war_setup_cas.j2" dest="{{ mcs_conf_dir }}/answer_war_setup.txt" mode=2777
+  when: mcs_with_cas
+  tags: 
+     - deploy-war
+     - post-task
+     - built-war
+   
+- name: clean previous build
+  shell: rm -rf {{ build_dir }}/*
+  tags: 
+     - deploy-war
+     - post-task
+     - built-war
+
+- name: Executing the War Setup installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./war_setup.sh < {{ mcs_conf_dir }}/answer_war_setup.txt
+  args:
+    chdir: /{{ mcs_server_dir }}/linux_a64/code/command
+  tags: 
+    - deploy-war
+    - post-task
+    - built-war
+   
+# Check Build was Successfull
+
+- name: Check Build Successfull
+  shell: cat {{ mcs_server_dir }}/logs/ematrixwar.log
+  register: build_result
+  tags: 
+     - deploy-war
+     - post-task
+     - built-war
+
+- fail: msg="Build Not Successfull"
+  when: "'Build Successfull' not in build_result.stdout"
+  tags: 
+     - deploy-war
+     - post-task
+     - built-war
+   
+- name: Remove the War Setup answer file
+  remote_user: "{{ plm_user }}"
+  file: path="{{ mcs_conf_dir }}/answer_war_setup.txt" state=absent
+  tags: 
+    - deploy-war
+    - post-task
+    - built-war
+   
+   
+- name: Stop Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=stopped
+  with_dict: "{{ instances }}"
+  tags: 
+   - deploy-war
+   - post-task
+
+# Remove temp and tomcat cache
+
+- name: Removing MCS's Temp..
+  shell: rm -rf {{ mcs_instance_path }}/{{ item }}/temp/*
+  with_items: "{{ instances }}"
+  tags: 
+    - deploy-war
+    - post-task
+
+- name: Removing MCS's Cache
+  shell: rm -rf {{ mcs_instance_path }}/{{ item }}/work/*
+  with_items: "{{ instances }}"
+  tags: 
+     - deploy-war
+     - post-task
+     
+- name: Removing war file
+  shell: rm -rf {{ mcs_instance_path }}/{{ item }}/webapps/internal*
+  with_items: "{{ instances }}"
+  when: not mcs_with_cas
+  tags: 
+     - deploy-war
+     - post-task
+     
+     
+- name: Removing war file
+  shell: rm -rf {{ mcs_instance_path }}/{{ item }}/webapps/3DSpace*
+  with_items: "{{ instances }}"
+  when: mcs_with_cas
+  tags: 
+     - deploy-war
+     - post-task
+
+  
+# Deploy The War
+
+- name: deploy the 3DSpace war
+  shell: cp "{{mcs_build_cas}}" "{{mcs_instance_path}}/{{ item.key }}/webapps"  
+  delegate_to: "{{inventory_hostname}}"
+  with_dict: "{{ instances }}"
+  when: mcs_with_cas
+  tags: 
+     - deploy-war
+     - post-task
+     
+- name: deploy the internal war
+  shell: cp "{{mcs_build_nocas}}" "{{mcs_instance_path}}/{{ item.key }}/webapps"  
+  delegate_to: "{{inventory_hostname}}"
+  with_dict: "{{ instances }}"
+  when: not mcs_with_cas
+  tags: 
+     - deploy-war
+     - post-task
+  
+     
+
+   
+- name: Start Tomcat instances.
+  remote_user: monitor
+  become: true
+  service: name={{ item.key }} state=started
+  with_dict: "{{ instances }}"
+  tags: 
+   - deploy-war
+   - post-task
+  
+   
+- name: wait for tomcat to start
+  local_action:
+    module: wait_for
+      host={{inventory_hostname}}
+      port={{ item.value.port_http }}
+      delay=60
+      timeout=240
+  with_dict: "{{ instances }}"
+  tags: 
+     - deploy-war
+     - post-task
+    
+    

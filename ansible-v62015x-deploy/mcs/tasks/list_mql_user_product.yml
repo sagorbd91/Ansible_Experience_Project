@@ -1,0 +1,14 @@
+---
+
+- name: Copy the script "list_mql_user_product.sh"
+  template: src="list_mql_user_product.sh.j2" dest="{{ mcs_bin_dir }}/list_mql_user_product.sh" owner={{ plm_user }} mode=0755
+  tags: list_mql_user_product
+
+- name: Run the script "list_mql_user_product.sh"
+  remote_user: "{{ plm_user }}"
+  shell: "{{ mcs_bin_dir }}/list_mql_user_product.sh"
+  tags: list_mql_user_product
+
+- name: Fetch file to Ansible  
+  fetch: src="/tmp/mql_list_user_product" dest="/tmp/mql_list_user_product" flat="yes"
+  tags: list_mql_user_product 

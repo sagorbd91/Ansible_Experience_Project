@@ -1,0 +1,21 @@
+---
+
+     
+- name: Copy the Studio Federation Toolkit fixpack Answer file to Installer Directory
+  template: src="answer_studio_toolkitfx.j2" dest="{{ mcs_installer_path }}/3dspace/{{ fix_pack_version }}/apps/ENOVIAStudioFederationToolkit.Linux64/1/answer_studio_toolkitfx.txt" mode=2777
+  tags: install-studiotoolkitfx
+
+- name: Executing the Studio Federation Toolkit fixpack installation script.
+  remote_user: "{{ plm_user }}"
+  shell: ./StartTUI.sh -installerPath {{ ds_installer_path }} < answer_studio_toolkitfx.txt
+  args:
+    chdir: /{{ mcs_installer_path }}/3dspace/{{ fix_pack_version }}/apps/ENOVIAStudioFederationToolkit.Linux64/1
+  tags: install-studiotoolkitfx
+   
+
+- name: Remove the Studio Federation Toolkit fixpack Answer file
+  remote_user: monitor
+  sudo: true
+  file: path="{{ mcs_installer_path }}/3dspace/{{ fix_pack_version }}/apps/ENOVIAStudioFederationToolkit.Linux64/1/answer_studio_toolkitfx.txt" state=absent
+  tags: install-studiotoolkitfx
+

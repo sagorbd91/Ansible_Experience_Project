@@ -1,0 +1,14 @@
+---
+
+- include: install_prerequisites.yml
+- include: create_dirs.yml
+- include: install_java.yml
+- include: install_fts.yml
+- include: install_fts_fix_pack.yml
+- include: open_firewall.yml
+- include: deploy_script.yml
+- include: FtsService.yml
+- include: restart_fts.yml
+- include: uninstall_fts.yml
+
+

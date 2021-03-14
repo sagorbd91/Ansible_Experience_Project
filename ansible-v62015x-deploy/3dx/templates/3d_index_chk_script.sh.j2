@@ -1,0 +1,12 @@
+#!/bin/bash
+
+today=$(date +'%Y%m%d%H%M')
+get_log_msg=$(tail -n1 {{ e3dx_rel_path }}/logs/3DINDEXATION-launch-report_$(date +'%Y%m%d').log | grep -o "NO lock file ==> INDEXATION START")
+index_running_msg="NO lock file ==> INDEXATION START"
+
+if [[ ( "$get_log_msg" != "$index_running_msg" ) || ( "$get_log_msg" == *"No such file or directory"* ) ]]; then
+echo problem
+else
+echo running
+fi
+

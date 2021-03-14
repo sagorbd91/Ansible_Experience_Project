@@ -1,0 +1,14 @@
+---
+    
+- name: copy pinpoint from NFS
+  remote_user: "{{ plm_user }}" 
+  synchronize:
+      src: "{{ installer_path }}/3dsearch/fp1616/pinpoints/SR00341537/CP0131V6R2015xT14PP1.AllOS/1/linux_a64/code/bin/libCATMultiProcTaskLogItf.so" 
+      dest: "{{ e3dx_install_path }}/linux_a64/code/bin/"
+      checksum: yes
+      recursive: yes
+      archive: no
+  delegate_to: "{{inventory_hostname}}"
+  tags: 
+   - copy-pinpoint
+   - install-3dx-fp

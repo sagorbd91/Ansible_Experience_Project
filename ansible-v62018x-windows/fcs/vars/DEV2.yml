@@ -1,0 +1,38 @@
+env_name: 'DEV2'
+fix_pack_version: ''
+
+#Installer path
+FCS_Installer_GA_Path: '{{installer_path}}\FCS\ga\FileCollaborationServer.Windows64\1'
+FCS_Installer_FP_Path: '{{installer_path}}\FCS\{{ fix_pack_version }}\FileCollaborationServer.Windows64\1'
+
+
+#Installation path
+fcscentral_file_dir: 'C:\PLM\{{ env_name }}\Fcscentral'
+fcscentral_file_store_dir: '{{ fcscentral_file_dir }}\stores'
+TARGET_PATH: '{{ fcscentral_file_dir }}\Code'
+instance_dir: '{{ TARGET_PATH }}\win_b64\code'
+#Edit create_service.bat
+fcs_command_dir: '{{ instance_dir }}\command'
+service_name: 'FileCollaborationServer_R2018x'
+Jmx_port: '8589'
+
+#Update Time Out
+conf-dir: '{{ instance_dir }}\tomee\conf'
+
+
+#URL 
+X3DCSMA_3DPassportURL: 'https://3dpassport-18x{{ env_name.lower() }}.plm.valmet.com:8280/3dpassport'
+X3DCSMA_3DDashboardURL: 'https://3ddashboard-18x{{ env_name.lower() }}.plm.valmet.com:443/3ddashboard'
+X3DCSMA_3DCompassURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_6WTAGURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_3DSWYMURL: 'https://3dswym-18x{{ env_name.lower() }}.plm.valmet.com:8480/3dswym'
+X3DCSMA_3DSpaceURL: 'https://3dspace-18x{{ env_name.lower() }}.plm.valmet.com:8180/3dspace'
+X3DCSMA_FEDERATED_SEARCH: 'https://federated-18x{{ env_name.lower() }}.plm.valmet.com:8980/federated'
+X3DCSMA_3DCommentURL: 'https://3dcomment-18x{{ env_name.lower() }}.plm.valmet.com:8780/3dcomment'
+X3DCSMA_3DNotificationURL: 'https://3dnotification-18x{{ env_name.lower() }}.plm.valmet.com:8880/3dnotification'
+X3DCSMA_FTSURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:19000'
+X3DCSMA_CloudViewURL: 'http://3dftsearch-18x{{ env_name.lower() }}.plm.valmet.com:29000'
+X3DCSMA_ENOVIAV5: 'https://v0642a.vstage.co:443/enoviav5'
+fcsSrvURL: 'https://fcscentral-18x{{ env_name.lower() }}.plm.valmet.com:8580/enoviafcs'
+
+Java_Path: 'C:\PLM\{{ env_name }}\common\soft\java\jdk'

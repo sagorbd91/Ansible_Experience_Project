@@ -1,0 +1,8 @@
+---
+
+- name: run mcs search through mql
+  win_psexec:
+     command: '{{mcs_server_dir}}\win_b64\code\command\FullTextSearch_PostInstall.bat >> {{windows_tmp_path}}\Report_mcs_search.xml'
+     elevated: yes
+  tags: 
+    - mcs-search-full

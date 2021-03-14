@@ -1,0 +1,80 @@
+---
+
+- name: Create 'data' Directory if not exists
+  remote_user: "monitor"
+  become: true
+  file:  path={{mcs_bin_dir}}/data/export-user-data state=directory owner={{ plm_user }} group={{ plm_group }} mode=0755
+  tags: 
+   - dump_persom_list
+
+- name: Create the Person List file by executing mql command
+  remote_user: "{{ plm_user }}"
+  shell: ./mql -c "set context user {{ mql_user }} password {{ mql_password }}; list person;" > {{mcs_bin_dir}}/data/PO-list-person.txt
+  args:
+    chdir: /{{ mcs_server_dir }}/scripts
+  tags: 
+   - dump_persom_list
+
+- name: Edit and remove unnecessary lines from 'PO-list-person.txt'
+  remote_user: "{{ plm_user }}"
+  shell: sed -i '1,5d' {{mcs_bin_dir}}/data/PO-list-person.txt
+  tags: 
+   - dump_persom_list
+
+- name: Check 'PO-imported-person.txt' File exists or not ?
+  remote_user: "monitor"
+  become: true
+  stat: path="{{ mcs_bin_dir }}/data/PO-imported-person.txt"
+  register: check_poimp_file
+  tags: 
+   - dump_persom_list
+
+- name: Copy 'PO-imported-person.txt' File if not exists
+  remote_user: "monitor"
+  become: true
+  template: src="PO-imported-person.txt.j2" dest="/{{mcs_bin_dir}}/data/PO-imported-person.txt" owner={{ plm_user }} group={{ plm_group }}  mode=0777
+  when: check_poimp_file.stat.exists == false
+  tags: 
+   - dump_persom_list
+
+- name: Compare 'PO-list-person.txt' with 'PO-imported-person.txt' and create 'PO-export-person.txt' file to Export MCS user
+  remote_user: "{{ plm_user }}"
+  shell: comm -2 -3 <(sort PO-list-person.txt) <(sort PO-imported-person.txt) > PO-export-person.txt
+  args:
+    chdir: /{{mcs_bin_dir}}/data
+    executable: /bin/bash
+  tags: 
+   - dump_persom_list
+
+- name: Copy the 'Export-script.sh'
+  remote_user: "monitor"
+  become: true
+  template: src="Export-script.sh.j2" dest="/{{ mcs_server_dir }}/scripts/Export-script.sh" owner={{ plm_user }} group={{ plm_group }}  mode=0777
+  tags: export-v6-user
+
+- name: Clean previous 'exported-user-data' before new Export
+  remote_user: "{{ plm_user }}"
+  shell: rm -rf *
+  args:
+    chdir: /{{mcs_bin_dir}}/data/export-user-data
+  tags: export-v6-user
+    
+- name: Execuing the script 'Export-script.sh' 
+  remote_user: "{{ plm_user }}"
+  shell: ./Export-script.sh > /tmp/Export-user-script.log
+  args:
+    chdir: /{{ mcs_server_dir }}/scripts
+  tags: export-v6-user
+
+- name: Check if exported file exists or not
+  stat: path="{{ mcs_bin_dir }}/data/POexport-*"
+  register: check_exp_file
+  tags: export-v6-user
+  
+  
+- name: Import V6 user
+  debug: msg="User exported in exported_v6_user"
+  when: check_exp_file.stat.exists
+  tags: export-v6-user
+  
+    

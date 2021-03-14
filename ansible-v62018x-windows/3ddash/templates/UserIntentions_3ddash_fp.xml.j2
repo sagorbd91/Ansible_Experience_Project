@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Media mediaLevel="420.2" mediaName="CODE\win_b64\X3D_DASH.media\media">
+	<SetVariable name="Java@jdk">
+		<SetJavaPath value="{{ Java_Path }}"/>
+	</SetVariable>
+	<SetVariable name="installEmbeddedServerJRE">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="uwp_sqlserver_server">
+		<SetText value="{{ uwp_sql_server }}"/>
+	</SetVariable>
+	<SetVariable name="uwp_sqlserver_database_name">
+		<SetText value="{{ uwp_sqlserver_database_name }}"/>
+	</SetVariable>
+	<SetVariable name="uwp_sqlserver_setup_database_user">
+		<SetText value="{{ uwp_sqlserver_setup_database_user }}"/>
+	</SetVariable>
+	<SetVariable name="uwp_sqlserver_setup_database_password">
+		<SetText value="{{ uwp_sqlserver_setup_database_password }}"/>
+	</SetVariable>
+	<SetVariable name="uwp_sqlserver_database_user">
+		<SetText value="{{ uwp_sqlserver_database_user }}"/>
+	</SetVariable>
+	<SetVariable name="uwp_sqlserver_database_password">
+		<SetText value="{{ uwp_sqlserver_database_password }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DPassportURL">
+		<SetText value="{{ X3DCSMA_3DPassportURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DDashboardURL">
+		<SetText value="{{ X3DCSMA_3DDashboardURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_3DCompassURL">
+		<SetText value="{{ X3DCSMA_3DCompassURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_6WTAGURL">
+		<SetText value="{{ X3DCSMA_6WTAGURL }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_SMTP_HOST">
+		<SetText value="{{ X3DCSMA_SMTP_HOST }}"/>
+	</SetVariable>
+	<SetVariable name="X3DCSMA_SMTP_MAIL_SENDER">
+		<SetText value="{{ X3DCSMA_SMTP_MAIL_SENDER }}"/>
+	</SetVariable>
+	<SetVariable name="install_Embedded_TomEE">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="TomEEConnectionPort">
+		<SetPort value="{{ TomEEConnectionPort }}"/>
+	</SetVariable>
+	<SetVariable name="dsi_database_type"/>
+	<SetVariable name="dsi_database_type?oracle">
+		<SetBoolean value="false"/>
+	</SetVariable>
+	<SetVariable name="dsi_database_type?sqlserver">
+		<SetBoolean value="true"/>
+	</SetVariable>
+	<SetVariable name="dsi_domain_untrusted">
+		<SetText value="{{ dsi_domain_untrusted }}"/>
+	</SetVariable>
+	<SetVariable name="dsi_shared_dir">
+		<SetPath value="{{ dsi_shared_dir }}"/>
+	</SetVariable>
+	<SetVariable name="FinishPanel"/>
+	<SetVariable name="dsi_uwaProxy_domainWhiteList">
+		<SetText value=".*"/>
+	</SetVariable>
+	<SetVariable name="DSYWelcomePanel">
+        <SetWelcome value="true"/>
+	</SetVariable>
+</Media>

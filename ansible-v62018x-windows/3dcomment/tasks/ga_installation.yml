@@ -1,0 +1,26 @@
+---
+
+- name: Copy UserIntention file to target
+  template: src="templates/UserIntentions_3dcomment_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_3dcomment_ga.xml"
+  tags: install-3dcomment-ga
+ 
+- name: Copy 3DComment installer from NFS to local
+  win_copy:
+    src: '{{ installer_path_3comm }}'
+    dest: '{{ windows_tmp_path }}\3dcomment'
+    remote_src: True
+  tags: install-3dcomment-ga  
+
+- name: Executing platform GA installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\3dcomment\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_3dcomment_ga.xml --xmlreport {{ windows_tmp_path }}\Report_3dcomment_ga.xml'
+     elevated: yes
+  tags: install-3dcomment-ga
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_3dcomment_ga.xml" state=absent
+  tags: install-3dcomment-ga
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\3dcomment" state=absent
+  tags: install-3dcomment-ga

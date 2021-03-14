@@ -1,0 +1,88 @@
+---
+
+- name: create the base dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ system_apps_dir }}" state=directory owner=root group=root mode=2777
+  tags: 
+   - install-fcs
+   - create_dirs
+    
+- name: create the base dir or make sure it exist
+  remote_user: monitor
+  sudo: true
+  file: path="{{ eplm_server_base_path }}" state=directory owner=root group=root mode=2777
+  tags: 
+   - install-fcs
+   - create_dirs  
+
+- name: create symbolic link
+  remote_user: monitor
+  sudo: true
+  file: src="{{ eplm_server_base_path }}" dest="/plm" state=link owner=root group=root mode=2777
+  tags: 
+  - install-fcs
+  - create_dirs
+
+- name: create the apps env
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_install_path }}" state=directory owner=root group=root mode=2777
+  tags: 
+   - install-fcs
+   - create_dirs
+
+
+- name: create the fcs dir
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_install_rel_path }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode=2777
+  tags: 
+   - install-fcs
+   - create_dirs
+  
+- name: create the tomcat instance dir
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_instance_path }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=rw"
+  tags: 
+    - install-fcs
+    - create_dirs
+    
+- name: create the soft dir for JDK
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_java_dir }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=rw"
+  tags: 
+    - install-fcs
+    - create_dirs
+
+- name: create the dir for logs
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_log_dir }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=r"
+  tags: 
+    - install-fcs
+    - create_dirs
+
+- name: create the dir for logs
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_log_dir }}/{{ item }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=rw"
+  with_items: 
+   - code
+   - elt
+  tags: 
+    - install-fcs
+    - create_dirs
+
+
+- name: create the dir for instance logs
+  remote_user: monitor
+  sudo: true
+  file: path="{{ fcs_log_dir }}/{{ item.key }}" state=directory owner={{ plm_user }} group={{ plm_group }} mode="u=rwx,g=r"
+  with_dict: instances
+  tags: 
+    - install-fcs
+    - create_dirs
+

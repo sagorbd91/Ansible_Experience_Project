@@ -1,0 +1,31 @@
+---
+
+- name: Generate Matrix-R file
+  remote_user: "{{ plm_user }}"
+  shell: ./mql -install -user {{db2_connection_user}} -password {{db2_connection_user_pass}} -host {{db2_database_name}} -driver 'DB2/CLI' -tablespace {{db2_data_tablespace}} -indexspace {{db2_index_tablespace}}
+  args:
+    chdir: /{{ studio_code_dir }}/scripts
+  ignore_errors: yes
+  tags: 
+    - generate-matrix
+    - install-studio
+    
+- name: Check if Matrix-R file generate or not
+  remote_user: "{{ plm_user }}"
+  stat: path="{{studio_conf_dir}}/MATRIX-R"
+  register: check_file
+  tags: 
+    - generate-matrix
+    - install-studio
+    - chk-mtrx
+
+
+- name: Matrix-R doesn't exist
+  remote_user: "{{ plm_user }}"
+  fail: msg="Matrix-R doesn't exist!!"
+  when: check_file.stat.exists == False
+  tags: 
+    - generate-matrix
+    - install-studio
+    - chk-mtrx
+

@@ -1,0 +1,7 @@
+---
+- name: Install ksh shell
+  remote_user: monitor
+  become: true
+  yum: name=ksh state=present
+  tags: 
+   - install-studio

@@ -1,0 +1,38 @@
+env_name: DEV3
+
+
+# Services
+3dcomment_ser: 3DComment_R2018x
+3ddash_ser: 3DDashboard_R2018x
+3dpass_ser: 3DPassport_R2018x
+3dSpaceIndex_ser: 3DEXPERIENCE R2018x 3DSpace Index
+3dswym_ser: 3DSwym_R2018x
+3dx_ser: 3DEXPERIENCE R2018x PICDaemonService
+fcs_ser: FileCollaborationServer_R2018x
+fed_search_ser: federated_R2018x
+mcs_cas_ser: 3DSpaceTomEE_R2018x
+mcs_nocas_ser: 3DSpaceTomEENoCAS_R2018x
+notification_ser: 3DEXPERIENCE R2018x 3DNotification Node
+zabbix_ser_ser: Zabbix Agent
+bits_ser: TestService
+
+service_names:
+   - 3DPassport_R2018x
+   - 3DDashboard_R2018x
+   - federated_R2018x
+   - 3DSpaceTomEE_R2018x
+   - 3DSpaceTomEENoCAS_R2018x
+   - 3DEXPERIENCE R2018x 3DSpace Index
+   - 3DEXPERIENCE R2018x PICDaemonService
+   - 3DEXPERIENCE R2018x 3DNotification Node
+   - 3DComment_R2018x
+   - 3DSwym_R2018x
+   - 3DEXPERIENCE R2018x 3DSwym ExternalConverterSvc
+   - FileCollaborationServer_R2018x
+   
+test_service_names:
+   - TestService
+    
+# User credentials
+Enovia_User_Name: enoviaadmin
+Enovia_User_password: enovia@admin

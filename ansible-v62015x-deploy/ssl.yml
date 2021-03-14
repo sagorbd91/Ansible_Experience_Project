@@ -1,0 +1,8 @@
+---
+
+- name: Generate SSL Certificate
+  hosts: ssl_servers
+  remote_user: "{{ plm_user }}"
+  become: false
+  roles:
+      - { role: ssl-cert  }

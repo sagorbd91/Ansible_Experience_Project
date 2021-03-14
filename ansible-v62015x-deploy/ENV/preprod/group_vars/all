@@ -1,0 +1,23 @@
+env_name:
+plm_group: "plm"
+system_apps_dir: "/data/apps"
+eplm_server_base_path: "{{system_apps_dir}}/plm"
+mount_dest_dir: /data/nfs-mount
+#mount_src_dir: jkls0326vm12a:/data
+mount_src_dir: jkls0326vm12a:/data/sources
+apps_file_storage_dir: "/data/apps-storage"
+service_dir: /etc/init.d
+#installer_path: "{{ mount_dest_dir }}/sources/dsproducts/enoviav6/r2015x/server-side"
+installer_path: "{{ mount_dest_dir }}/dsproducts/enoviav6/r2015x/server-side"
+ds_installer_path: "{{ installer_path }}/installer/ga/DS_Installer.Linux64"
+ds_fp_installer_path: "{{ installer_path }}/installer/{{fix_pack_version}}/DS_Installer.Linux64"
+java8_installer: "{{ mount_dest_dir }}/jdk/jdk-8u92-linux-x64.tar.gz"
+java_installer: "{{ mount_dest_dir }}/jdk/jdk-7u67-linux-x64.tar.gz"
+tomcat_installer: "{{ mount_dest_dir }}/tomcat/apache-tomcat-7.0.57.tar.gz"
+tomcat_version: apache-tomcat-7.0.57
+tomee_installer: "{{ mount_dest_dir }}/tomee/apache-tomee-1.7.2-plus.tar"
+mysql_driver: "{{ mount_dest_dir }}/db-driver/mysql-connector-java-5.1.35.tar.gz"
+tomee_version: apache-tomee-plus-1.7.2
+port_loadbalancer: 8080
+zabbix_server_ip: jkls0326vm73a
+fix_pack_version: "fp1616"

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+today=$(date +'%Y%m%d%H%M')
+echo $today
+script_time=`tail -n2 {{ e3dx_bin_dir }}/indexation-launch.log | cut -d= -f2`
+
+echo $script_time
+count="$(($today-$script_time))"
+echo $count
+if [[ ( "$count" -gt 10 ) ]]; then
+echo disable
+else
+echo enable
+fi

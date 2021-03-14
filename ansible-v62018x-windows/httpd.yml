@@ -1,0 +1,11 @@
+---
+
+- hosts: httpd_servers
+  vars_files:
+      - /home/users/as_user/ansible/.sudo_pass
+      - httpd/vars/main.yml
+      - httpd/vars/{{env_name}}.yml
+  remote_user: monitor
+  become: true
+  roles:
+      - { role: httpd }

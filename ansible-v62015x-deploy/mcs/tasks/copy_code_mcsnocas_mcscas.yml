@@ -1,0 +1,68 @@
+---
+
+- name: check mcscas code dir exits or not
+  stat: path={{ mcs_code_dir }}
+  register: code_dir_stat
+  tags: 
+    - copy-mcs-code
+    
+- name: Rename code dir
+  command: mv {{ mcs_code_dir }} {{ mcs_install_rel_path }}/code_bck
+  when: code_dir_stat.stat.exists
+  tags: 
+    - copy-mcs-code
+    
+- name: copy mcsnocas code dir to mcscas
+  command: cp -r /plm/{{env_name}}/mcsnocas/code {{ mcs_install_rel_path }}
+  when: code_dir_stat.stat.exists
+  tags: 
+    - copy-mcs-code
+    
+- name: copy mxEnv.sh in server/script dir
+  template: src="templates/script_to_copy/mxEnv.sh.j2" dest="{{ mcs_server_dir }}/scripts/mxEnv.sh" 
+  tags: 
+    - copy-mcs-script
+    
+- name: copy mql.j2 in server/script dir
+  template: src="templates/script_to_copy/mql.j2" dest="{{ mcs_server_dir }}/scripts/mql" 
+  tags: 
+    - copy-mcs-script
+    
+- name: copy mxmrun.sh in server/script dir
+  template: src="templates/script_to_copy/mxmrun.sh.j2" dest="{{ mcs_server_dir }}/scripts/mxmrun.sh" 
+  tags: 
+    - copy-mcs-script
+    
+    
+- name: copy mailListener.sh in server/script dir
+  template: src="templates/script_to_copy/mailListener.sh.j2" dest="{{ mcs_server_dir }}/scripts/mailListener.sh" 
+  tags: 
+    - copy-mcs-script
+    
+    
+  
+- name: copy war_setup.sh in server/linux/code/command dir
+  template: src="templates/script_to_copy/linux_war_setup.sh.j2" dest="{{ mcs_server_dir }}/linux_a64/code/command/war_setup.sh" 
+  tags: 
+    - copy-mcs-script
+    
+- name: copy mxmrun.sh in server/linux/code/command dir
+  template: src="templates/script_to_copy/linux_mxmrun.sh.j2" dest="{{ mcs_server_dir }}/linux_a64/code/command/mxmrun.sh" 
+  tags: 
+    - copy-mcs-script
+    
+- name: copy mxmrunEnv.sh in server/linux/code/command dir
+  template: src="templates/script_to_copy/linux_mxmrunEnv.sh.j2" dest="{{ mcs_server_dir }}/linux_a64/code/command/mxmrunEnv.sh" 
+  tags: 
+    - copy-mcs-script
+    
+- name: copy mailListener.xml in server/linux/etc dir
+  template: src="templates/script_to_copy/linux_mailListener.xml.j2" dest="{{ mcs_server_dir }}/linux_a64/etc/mailListener.xml" 
+  tags: 
+    - copy-mcs-script
+    
+- name: copy enovia.install in server dir
+  template: src="templates/script_to_copy/server_enovia.install.j2" dest="{{ mcs_server_dir }}/enovia.install" 
+  tags: 
+    - copy-mcs-script
+

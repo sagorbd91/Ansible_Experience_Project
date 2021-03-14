@@ -1,0 +1,31 @@
+---
+- name: Stop MCSCAS Service
+  win_service: name=3DSpaceTomEE_R2018x state=stopped
+  tags: install-platform-fp
+
+- name: Stop MCSNOCAS Service
+  win_service: name=3DSpaceTomEENoCAS_R2018x state=stopped
+  tags: install-platform-fp
+
+- name: Copy platform Fixpack UserIntention file to target
+  template: src="templates/user_intention_platform/UserIntentions_fp.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_fp.xml"
+  tags: install-platform-fp
+  
+- name: Copy MCS-Platform Fixpack installer from NFS to local
+  win_copy:
+    src: '{{ platform_FP_installer_path }}'
+    dest: '{{ windows_tmp_path }}'
+    remote_src: True
+  tags: install-platform-fp
+ 
+- name: Executing platform Fp installer
+  win_command: '{{windows_tmp_path}}\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_fp.xml --xmlreport C:\Temp\ReportMcsPlatformFP.xml'
+  tags: install-platform-fp
+
+- name: Remove the user Intension file
+  win_file: path="{{windows_tmp_path}}\UserIntentions_fp.xml" state=absent
+  tags: install-platform-fp
+
+- name: Remove the installer folder.
+  win_file: path="{{windows_tmp_path}}\1" state=absent
+  tags: install-platform-fp

@@ -1,0 +1,49 @@
+---
+   
+     
+- name: Check VPMAdminV6GA.adm exits or not
+  stat: path={{r15x_vplm_environment_dir}}/VPMAdminV6GA.adm
+  register: file_stat
+  tags:
+    - migration-new-typing-preactivity
+    - change_adminsitration_mode
+
+- name: Copy VPMAdminV6GA.adm
+  command: cp {{r15x_vplm_environment_dir}}/VPMAdminV6GA.adm {{r15x_vplm_environment_dir}}/VPMAdminV6GA.adm.orig
+  when: file_stat.stat.exists
+  tags:
+    - migration-new-typing-preactivity
+    - change_adminsitration_mode
+    
+    
+- name: Check VPMAdminV6LA.adm exits or not
+  stat: path={{r15x_vplm_environment_dir}}/VPMAdminV6LA.adm
+  register: file_stat
+  tags:
+    - migration-new-typing-preactivity
+    - change_adminsitration_mode
+
+
+- name: Change admin mode VPMAdminV6LA.adm
+  command: cp {{r15x_vplm_environment_dir}}/VPMAdminV6LA.adm {{r15x_vplm_environment_dir}}/VPMAdminV6GA.adm
+  when: file_stat.stat.exists
+  tags:
+    - migration-new-typing-preactivity
+    - change_adminsitration_mode
+
+     
+     
+- name: Run the VPLMxV1Types-UpgradeDeployment-R216.mql script   
+  shell: nohup time ./mql -c "set context user creator password creator.; run {{r15x_server_dir}}/Apps/VPMMultiDiscipline/V6R2015x/mql/VPLMxV1Types-UpgradeDeployment-R216.mql;quit;" 2>&1 > {{r15x_server_dir}}/logs/mql-VPLMxV1Types-UpgradeDeployment-R216.txt &
+  args:
+   chdir: /{{ r15x_server_script_dir }}
+  tags: 
+    - migration-new-typing-preactivity1
+    
+
+- name: Run the VPLMxV1Types-UpgradeDeployment-R417.mql script   
+  shell: nohup time ./mql -c "set context user creator password creator.; run {{r15x_server_dir}}/Apps/VPMMultiDiscipline/V6R2015x/mql/VPLMxV1Types-UpgradeDeployment-R417.mql;quit;" 2>&1 > {{r15x_server_dir}}/logs/mql-VPLMxV1Types-UpgradeDeployment-R417.txt &
+  args:
+    chdir: /{{ r15x_server_script_dir }}
+  tags:
+    - migration-new-typing-preactivity2

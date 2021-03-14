@@ -1,0 +1,109 @@
+---
+
+- name: Allow frontend ports in iptable rules of mcs nocas on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ frontend_port_mcs_nocas }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow frontend ports in iptable rules of mcs cas on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ frontend_port_mcs_cas }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow frontend ports in iptable rules of fcs central on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ frontend_port_fcs_central }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow frontend ports in iptable rules of fcs remote1 on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ frontend_port_fcs_remote1 }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow frontend ports in iptable rules of fcs remote2 on Reverse Proxy Server for RHEL6
+  command: iptables -I INPUT -p tcp -m tcp --dport {{ frontend_port_fcs_remote2 }} -j ACCEPT
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: save iptables
+  command: service iptables save
+  become: true
+  when: ansible_distribution_major_version == "6"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow frontend ports in iptable rules of mcs nocas on  Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ frontend_port_mcs_nocas }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow frontend ports in iptable rules of mcs cas on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ frontend_port_mcs_cas }}/tcp --permaneknt
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+
+- name: Allow frontend ports in iptable rules of fcs central Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ frontend_port_fcs_central }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+      
+- name: Allow frontend ports in iptable rules of fcs remote1 on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ frontend_port_fcs_remote1 }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+- name: Allow frontend ports in iptable rules of fcs remote2 on Reverse Proxy Server for RHEL7
+  shell: firewall-cmd --add-port={{ frontend_port_fcs_remote2 }}/tcp --permanent
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+  
+- name: Reload Iptables for RHEL7
+  shell: firewall-cmd --reload
+  become: true
+  when: ansible_distribution_major_version == "7"
+  ignore_errors: yes
+  tags:
+    - service-firewall
+    
+
+   
+   
+
+
+
+
+
+      
+
+

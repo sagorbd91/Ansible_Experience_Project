@@ -1,0 +1,56 @@
+
+plm_user: "monitor"
+
+
+mcs_cas_server: "http://lb-mcscas-preprod-plm.valmet.com:18180/3DSpace"
+mcs_cas_server_unsecured: "http://lb-unsecured-3dspace-preprod-plm.valmet.com:8181/3DSpace"
+mcs_no_cas_server: "http://lb-untrusted-3dspace-preprod-plm.valmet.com:18282/internal"
+fcs_central_server: "http://lb-fcscentral-preprod-plm.valmet.com:18580/enoviafcs"
+passport_server: "http://i1-3dpassport-{{ env_name }}-plm.valmet.com:{{passport_tomcat_port}}/3DPassport/"
+
+
+passport_server_common_name: "3dpassport-{{ env_name }}-plm.valmet.com"
+mcs_server_common_name: "3dspace-{{ env_name }}-plm.valmet.com"
+mcs_unsecured_common_name: "unsecured-3dspace-{{ env_name }}-plm.valmet.com"
+mcs_untrusted_common_name: "untrusted-3dspace-{{ env_name }}-plm.valmet.com  "
+#fcs_server_common_name: "secured-fcscentral-{{ env_name }}-plm.valmet.com"
+fcs_server_common_name: "fcscentral-{{ env_name }}-plm.valmet.com"
+#server_common_name: "{{ env_name }}-plm.valmet.com"
+
+http_port: "80"
+http_ssl_port: "443"
+passport_proxy_port: "8280"
+passport_tomcat_port: "8281"
+mcs_cas_proxy_port: "8180"
+mcs_cas_http_port: "8080"
+mcs_no_cas_http_port: "8282"
+fcs_central_http_port: "8580"
+
+passport_crt: "{{env_name}}-3dpass"
+mcs_cas_crt: "{{env_name}}-3dspace"
+fcs_crt: "{{env_name}}-fcssecured"
+
+http_install_path: "/etc/httpd"
+vhost_path: "{{ http_install_path }}/vhost"
+ssl_directory: "{{ http_install_path }}/ssl"
+ssl_certs_mode: 755
+ssl_cert_pass: "changeit"
+ssl_certs_generate_self_signed: true
+ssl_certs_key_size: "2048"
+ssl_certs_country: "FI"
+ssl_certs_locality: "Helsinki"
+ssl_certs_organization: "3DPLM"
+ssl_certs_state: "Helsinki"
+ssl_certs_common_name: "secured-fcscentral-{{ env_name }}-plm.valmet.com"
+ssl_certs_days: "365"
+ssl_certs_fields: "/C={{ssl_certs_country}}/ST={{ssl_certs_state}}/L={{ssl_certs_locality}}/O={{ssl_certs_organization}}/CN={{ssl_certs_common_name}}"
+
+httpd_pkgs:
+      - httpd
+      - mod_ssl
+      - openssl
+      
+ssl_certs:
+      - "{{ fcs_crt }}"
+      
+      

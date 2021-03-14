@@ -1,0 +1,27 @@
+---
+
+- name: Copy cloudview-ga UserIntention file to target
+  template: src="templates/UserIntentions_Cloud_ga.xml.j2" dest="{{windows_tmp_path}}\UserIntentions_Cloud_ga.xml"
+  tags: install-cloudview-ga
+ 
+- name: Copy cloudview-ga installer from NFS to local
+  win_copy:
+    src: '{{ cloudview_installer_path_ga }}'
+    dest: '{{ windows_tmp_path }}\CloudView'
+    remote_src: True
+  tags: install-cloudview-ga   
+
+- name: Executing cloudview-ga installer
+  win_psexec:
+     command: '{{ windows_tmp_path }}\CloudView\1\StartTUI.exe --silent {{ windows_tmp_path }}\UserIntentions_Cloud_ga.xml --xmlreport {{ windows_tmp_path }}\report_cloudview_ga.xml'
+     elevated: yes
+  tags: install-cloudview-ga
+
+- name: Remove the user Intension file of cloudview-ga
+  win_file: path="{{windows_tmp_path}}\UserIntentions_Cloud_ga.xml" state=absent
+  tags: install-cloudview-ga
+
+- name: Remove the installer folder cloudview-ga
+  win_file: path="{{windows_tmp_path}}\CloudView" state=absent
+  tags: install-cloudview-ga
+
